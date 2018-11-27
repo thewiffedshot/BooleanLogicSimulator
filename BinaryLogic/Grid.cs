@@ -51,7 +51,7 @@ namespace BinaryLogic
 
         public void ChangeColor(Color color)
         {
-            throw new NotImplementedException();
+            Color = color;
         }
 
         public void Draw(IRenderer renderer, Color background)
