@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BinaryLogic.Interfaces
+namespace BooleanLogicSimulator
 {
-    public interface ISelectable
+    class WinFormsRenderer
     {
-        void Select(int mouseX, int mouseY);
-        void Deselect();
     }
 }

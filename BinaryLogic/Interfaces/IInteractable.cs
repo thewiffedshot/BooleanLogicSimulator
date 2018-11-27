@@ -6,9 +6,7 @@ using System.Threading.Tasks;
 
 namespace BinaryLogic.Interfaces
 {
-    public interface ISelectable
+    public interface IInteractable : ISelectable, IDrawable
     {
-        void Select(int mouseX, int mouseY);
-        void Deselect();
     }
 }

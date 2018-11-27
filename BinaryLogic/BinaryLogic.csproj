@@ -41,19 +41,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\ANDGate.cs" />
     <Compile Include="Arc.cs" />
     <Compile Include="Circle.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="ComponentHitbox.cs" />
+    <Compile Include="Components\Button.cs" />
+    <Compile Include="Components\Light.cs" />
+    <Compile Include="Components\NOTGate.cs" />
+    <Compile Include="Components\Switch.cs" />
+    <Compile Include="Components\XORGate.cs" />
     <Compile Include="Grid.cs" />
+    <Compile Include="InHitbox.cs" />
+    <Compile Include="Input.cs" />
     <Compile Include="Interfaces\IClickable.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
     <Compile Include="Interfaces\IGraphics.cs" />
     <Compile Include="Interfaces\IHoldable.cs" />
+    <Compile Include="Interfaces\IInteractable.cs" />
     <Compile Include="Interfaces\ISelectable.cs" />
     <Compile Include="Line.cs" />
+    <Compile Include="Components\ORGate.cs" />
+    <Compile Include="OutHitbox.cs" />
+    <Compile Include="Output.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rectangle.cs" />
+    <Compile Include="Scene.cs" />
+    <Compile Include="Wire.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BinaryLogic.Interfaces
+namespace BinaryLogic
 {
-    public interface ISelectable
+    public class Scene
     {
-        void Select(int mouseX, int mouseY);
-        void Deselect();
     }
 }
