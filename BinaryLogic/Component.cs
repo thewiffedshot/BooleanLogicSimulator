@@ -11,11 +11,16 @@ namespace BinaryLogic
 {
     public abstract class Component : IInteractable
     {
-        Rectangle rectangle = new Rectangle(new Point(0,0), 10, 10);
+        // Need to define component fields.
 
         public abstract void ChangeColor(Color color);
         public abstract void Deselect();
-        public abstract void Draw(IGraphics graphics);
+        public abstract void Draw(IRenderer renderer);
         public abstract void Select(int mouseX, int mouseY);
+
+        public void Delete(Scene scene)
+        {
+            scene.components.Remove(this);
+        }
     }
 }

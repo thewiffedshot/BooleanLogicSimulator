@@ -9,7 +9,7 @@ namespace BinaryLogic.Interfaces
 {
     public interface IDrawable
     {
-        void Draw(IGraphics graphics);
-        void ChangeColor(Color color)
+        void Draw(IRenderer renderer);
+        void ChangeColor(Color color);
     }
 }

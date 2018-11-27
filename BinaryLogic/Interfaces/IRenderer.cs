@@ -7,10 +7,11 @@ using System.Drawing;
 
 namespace BinaryLogic.Interfaces
 {
-    public interface IGraphics
+    public interface IRenderer
     {
         void DrawArc(Arc arc);
         void DrawLine(Arc line);
         void DrawCircle(Circle circle);
+        void Clear(Color clearColor);
     }
 }

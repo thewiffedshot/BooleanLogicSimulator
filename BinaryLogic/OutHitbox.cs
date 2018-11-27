@@ -15,7 +15,7 @@ namespace BinaryLogic
             throw new NotImplementedException();
         }
 
-        public void Draw(IGraphics graphics)
+        public void Draw(IRenderer renderer)
         {
             throw new NotImplementedException();
         }

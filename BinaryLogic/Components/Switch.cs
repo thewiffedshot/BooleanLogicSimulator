@@ -25,7 +25,7 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public override void Draw(IGraphics graphics)
+        public override void Draw(IRenderer renderer)
         {
             throw new NotImplementedException();
         }

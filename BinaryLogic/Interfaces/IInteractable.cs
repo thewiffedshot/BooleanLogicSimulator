@@ -8,5 +8,6 @@ namespace BinaryLogic.Interfaces
 {
     public interface IInteractable : ISelectable, IDrawable
     {
+        void Delete(Scene scene);
     }
 }

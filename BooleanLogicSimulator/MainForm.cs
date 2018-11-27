@@ -12,7 +12,7 @@ using BinaryLogic.Interfaces;
 
 namespace BooleanLogicSimulator
 {
-    public partial class MainForm : Form, IGraphics
+    public partial class MainForm : Form, IRenderer
     {
         public MainForm()
         {

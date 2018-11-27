@@ -56,7 +56,7 @@
     <Compile Include="Input.cs" />
     <Compile Include="Interfaces\IClickable.cs" />
     <Compile Include="Interfaces\IDrawable.cs" />
-    <Compile Include="Interfaces\IGraphics.cs" />
+    <Compile Include="Interfaces\IRenderer.cs" />
     <Compile Include="Interfaces\IHoldable.cs" />
     <Compile Include="Interfaces\IInteractable.cs" />
     <Compile Include="Interfaces\ISelectable.cs" />
