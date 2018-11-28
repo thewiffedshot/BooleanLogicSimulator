@@ -9,9 +9,9 @@ namespace BinaryLogic.Interfaces
 {
     public interface IRenderer
     {
-        void DrawArc(Arc arc);
-        void DrawLine(Arc line);
-        void DrawCircle(Circle circle);
+        void DrawArc(Arc arc, Color color, uint thickness);
+        void DrawLine(Line line, Color color, uint thickness);
+        void DrawCircle(Circle circle, Color color, uint thickness);
         void Clear(Color clearColor);
     }
 }

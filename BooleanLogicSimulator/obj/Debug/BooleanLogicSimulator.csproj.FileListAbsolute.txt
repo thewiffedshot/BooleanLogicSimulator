@@ -1,0 +1,12 @@
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BooleanLogicSimulator.exe.config
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BooleanLogicSimulator.exe
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BooleanLogicSimulator.pdb
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BinaryLogic.dll
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BinaryLogic.pdb
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.csprojResolveAssemblyReference.cache
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.MainForm.resources
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.Properties.Resources.resources
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.csproj.GenerateResource.Cache
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.csproj.CoreCompileInputs.cache
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.exe
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.pdb

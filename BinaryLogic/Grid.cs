@@ -26,27 +26,27 @@ namespace BinaryLogic
             Color = color;
             Thickness = thickness;
 
-            // TODO.
+            Interval -= (uint)windowSize.X % Interval;
 
         }
 
         public Grid(Point windowSize, Color color)
         {
-            Interval = 15;
+            Interval = 5;
             Color = color;
             Thickness = GridThickness.Normal;
 
-            // TODO.
+            Interval -= (uint)windowSize.X % Interval;
 
         }
 
         public Grid(Point windowSize)
         {
-            Interval = 15;
-            Color = Color.Gray;
+            Interval = 5;
+            Color = Color.Black;
             Thickness = GridThickness.Normal;
 
-            // TODO.
+            Interval -= (uint)windowSize.X % Interval;
         }
 
         public void ChangeColor(Color color)
@@ -58,8 +58,15 @@ namespace BinaryLogic
         {
             Clear(renderer, background);
 
-            // TODO.
-            throw new NotImplementedException();
+            for (uint y = 0; y < WindowSize.Y; y += Interval)
+            {
+                renderer.DrawLine(new Line(new Point(0, (int)y), new Point(WindowSize.X, (int)y)), Color, (uint)Thickness);
+            }
+
+            for (uint x = 0; x < WindowSize.X; x += Interval)
+            {
+                renderer.DrawLine(new Line(new Point((int)x, 0), new Point((int)x, WindowSize.Y)), Color, (uint)Thickness);
+            }
         }
 
         public void Clear(IRenderer renderer, Color background)

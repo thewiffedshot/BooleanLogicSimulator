@@ -1,0 +1,6 @@
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BinaryLogic\bin\Debug\BinaryLogic.dll
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BinaryLogic\bin\Debug\BinaryLogic.pdb
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BinaryLogic\obj\Debug\BinaryLogic.csprojResolveAssemblyReference.cache
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BinaryLogic\obj\Debug\BinaryLogic.csproj.CoreCompileInputs.cache
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BinaryLogic\obj\Debug\BinaryLogic.dll
+C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BinaryLogic\obj\Debug\BinaryLogic.pdb

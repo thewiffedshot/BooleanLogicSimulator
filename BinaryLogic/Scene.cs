@@ -14,7 +14,7 @@ namespace BinaryLogic
         Grid grid;
         public static Point Offset { get; set; }
         public Color Background { get; set; }
-        public List<Component> components;
+        public List<Component> components = new List<Component>(0);
 
         public Scene(Grid grid, Color background, IRenderer renderer)
         {
@@ -23,19 +23,24 @@ namespace BinaryLogic
             this.renderer = renderer;
         }
 
-        void AddComponent(Component component)
+        public void SetRenderer(IRenderer renderer)
+        {
+            this.renderer = renderer;
+        }
+
+        public void AddComponent(Component component)
         {
             components.Add(component);
             Draw();
         }
 
-        void Draw()
+        public void Draw()
         {
             Clear();
             
             foreach (Component component in components)
             {
-                component.Draw(renderer);
+                //component.Draw(renderer);
             }
         }
 
