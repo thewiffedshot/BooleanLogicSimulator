@@ -10,3 +10,15 @@ C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimula
 C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.csproj.CoreCompileInputs.cache
 C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.exe
 C:\Users\thewiffedshot\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.pdb
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BooleanLogicSimulator.exe.config
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BooleanLogicSimulator.exe
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BooleanLogicSimulator.pdb
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BinaryLogic.dll
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\bin\Debug\BinaryLogic.pdb
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.csprojResolveAssemblyReference.cache
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.MainForm.resources
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.Properties.Resources.resources
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.csproj.GenerateResource.Cache
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.csproj.CoreCompileInputs.cache
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.exe
+C:\Users\SovietDoggo\Documents\GitHub\BooleanLogicSimulator\BooleanLogicSimulator\obj\Debug\BooleanLogicSimulator.pdb

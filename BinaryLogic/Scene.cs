@@ -47,7 +47,7 @@ namespace BinaryLogic
         public void Clear()
         {
             renderer.Clear(Background);
-            grid.Draw(renderer, Background);
+            grid.Draw(renderer);
         }
     }
 }

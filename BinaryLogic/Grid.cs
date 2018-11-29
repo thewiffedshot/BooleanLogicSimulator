@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using BinaryLogic.Interfaces;
+using Point = BinaryLogic.Point;
 
 namespace BinaryLogic
 {
@@ -18,35 +19,42 @@ namespace BinaryLogic
         public static Color Color { get; set; }
         public uint Interval { get; private set; }
         public GridThickness Thickness { get; set; }
-        public Point[][] PointField { get; private set; } // Probably will be it's own type
+        public PointField Field { get; private set; } // Probably will be it's own type
 
         public Grid(Point windowSize, uint interval, Color color, GridThickness thickness)
         {
             Interval = interval;
             Color = color;
             Thickness = thickness;
+            WindowSize = windowSize;
 
             Interval -= (uint)windowSize.X % Interval;
 
+            Field = new PointField(this);
         }
 
         public Grid(Point windowSize, Color color)
         {
-            Interval = 5;
+            Interval = 50;
             Color = color;
-            Thickness = GridThickness.Normal;
+            Thickness = GridThickness.Small;
+            WindowSize = windowSize;
 
             Interval -= (uint)windowSize.X % Interval;
 
+            Field = new PointField(this);
         }
 
         public Grid(Point windowSize)
         {
-            Interval = 5;
+            Interval = 50;
             Color = Color.Black;
-            Thickness = GridThickness.Normal;
+            Thickness = GridThickness.Small;
+            WindowSize = windowSize;
 
             Interval -= (uint)windowSize.X % Interval;
+
+            Field = new PointField(this);
         }
 
         public void ChangeColor(Color color)
@@ -54,10 +62,8 @@ namespace BinaryLogic
             Color = color;
         }
 
-        public void Draw(IRenderer renderer, Color background)
+        public void Draw(IRenderer renderer)
         {
-            Clear(renderer, background);
-
             for (uint y = 0; y < WindowSize.Y; y += Interval)
             {
                 renderer.DrawLine(new Line(new Point(0, (int)y), new Point(WindowSize.X, (int)y)), Color, (uint)Thickness);

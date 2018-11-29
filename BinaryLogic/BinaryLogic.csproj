@@ -64,6 +64,8 @@
     <Compile Include="Components\ORGate.cs" />
     <Compile Include="OutHitbox.cs" />
     <Compile Include="Output.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="PointField.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="Scene.cs" />

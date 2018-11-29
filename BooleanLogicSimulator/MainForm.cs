@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BinaryLogic;
 using BinaryLogic.Interfaces;
+using Point = BinaryLogic.Point;
 
 namespace BooleanLogicSimulator
 {
