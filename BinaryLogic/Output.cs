@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace BinaryLogic
 {
-    class Output
+    public class Output
     {
+        public List<Component> components;
+        public bool Signal { get; set; }
     }
 }

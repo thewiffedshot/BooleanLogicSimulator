@@ -6,7 +6,25 @@ using System.Threading.Tasks;
 
 namespace BinaryLogic
 {
-    class Input
+    public class Input
     {
+        public List<Component> components = new List<Component>(0);
+        public bool Signal { get; set; }
+
+        void Set()
+        {
+            foreach (Component component in components)
+            {
+                Signal = false;
+
+                foreach (Output output in component.outputs)
+                {
+                    if (output.Signal == true)
+                    {
+                        Signal = true;
+                    }
+                }
+            }
+        }
     }
 }
