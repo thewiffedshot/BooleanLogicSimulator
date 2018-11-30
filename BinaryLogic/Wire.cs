@@ -33,7 +33,7 @@ namespace BinaryLogic
                     result.Add(output);
 
                     if (output.outputs != null)
-                        output.Set(signal, this);
+                        output.Set(signal);
 
                     return result;
                 }
@@ -64,7 +64,13 @@ namespace BinaryLogic
 
         public override void Process()
         {
-            throw new NotImplementedException();
+            Signal = false;
+
+            foreach (Component component in inputs[0])
+            {
+                if (component.Signal == true)
+                    Signal = true;
+            }
         }
     }
 }

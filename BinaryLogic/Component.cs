@@ -14,7 +14,7 @@ namespace BinaryLogic
     public abstract class Component : IInteractable
     {
         public uint ID { get; private set; }
-        public bool Signal { get; private set; }
+        public bool Signal { get; protected set; }
         public List<Component>[] inputs;
         public List<Component> outputs;
 
@@ -57,16 +57,9 @@ namespace BinaryLogic
 
         public abstract void Process();
 
-        public void Set(bool signal, Component sender)
+        public void Set(bool signal)
         {
             Signal = signal;
-
-            foreach (List<Component> inputSlot in inputs)
-                foreach (Component component in inputSlot)
-                {
-                    // TODO
-                }
-
             Process();
             Transmit(outputs, Signal);
         }
@@ -76,6 +69,20 @@ namespace BinaryLogic
         public void Delete(Scene scene)
         {
             scene.components.Remove(this);
+
+            foreach (List<Component> inputSlot in inputs)
+                foreach (Component component in inputSlot)
+                {
+                    component.outputs.Remove(this);
+                }
+            
+            foreach (Component component in outputs)
+                foreach (List<Component> inputSlot in component.inputs)
+                {
+                    inputSlot.Remove(this);
+                }
+
+            scene.Draw();
         }
     }
 }
