@@ -9,21 +9,65 @@ using System.Drawing;
 
 namespace BinaryLogic
 {
+    public enum ComponentType { AND, OR, XOR, NOT, Wire };
+
     public abstract class Component : IInteractable
     {
         public uint ID { get; private set; }
         public bool Signal { get; private set; }
-        public List<Component> inputs;
+        public List<Component>[] inputs;
         public List<Component> outputs;
+
+        public Component(ComponentType componentType)
+        {
+            switch (componentType)
+            {
+                case ComponentType.AND:
+                    inputs = new List<Component>[2];
+                    inputs[0] = new List<Component>(0);
+                    inputs[1] = new List<Component>(0);
+                    break;
+                case ComponentType.OR:
+                    inputs = new List<Component>[2];
+                    inputs[0] = new List<Component>(0);
+                    inputs[1] = new List<Component>(0);
+                    break;
+                case ComponentType.XOR:
+                    inputs = new List<Component>[2];
+                    inputs[0] = new List<Component>(0);
+                    inputs[1] = new List<Component>(0);
+                    break;
+                case ComponentType.NOT:
+                    inputs = new List<Component>[1];
+                    inputs[0] = new List<Component>(0);
+                    break;
+                case ComponentType.Wire:
+                    inputs = new List<Component>[1];
+                    inputs[0] = new List<Component>(0);
+                    break;
+                default:
+                    throw new ArgumentException("No such component type registered in enumeration.");
+            }
+        }
 
         public abstract void ChangeColor(Color color);
         public abstract void Deselect();
         public abstract void Draw(IRenderer renderer);
         public abstract void Select(int mouseX, int mouseY);
 
+        public abstract void Process();
+
         public void Set(bool signal, Component sender)
         {
             Signal = signal;
+
+            foreach (List<Component> inputSlot in inputs)
+                foreach (Component component in inputSlot)
+                {
+                    // TODO
+                }
+
+            Process();
             Transmit(outputs, Signal);
         }
 
