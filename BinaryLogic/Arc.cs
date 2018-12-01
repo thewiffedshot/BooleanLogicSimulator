@@ -21,7 +21,7 @@ namespace BinaryLogic
             leads[1] = botLead;
         }
 
-        public void Move(Direction direction, int units = 1)
+        public void Move(Direction direction, float units = 1)
         {
             switch (direction)
             {

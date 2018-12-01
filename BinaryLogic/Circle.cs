@@ -11,15 +11,15 @@ namespace BinaryLogic
     public class Circle
     {
         public Point position;
-        public uint radius;
+        public float radius;
 
-        public Circle(Point pos, uint radius)
+        public Circle(Point pos, float radius)
         {
             position = pos;
             this.radius = radius;
         }
 
-        public void Move(Direction direction, int units = 1)
+        public void Move(Direction direction, float units = 1)
         {
             switch (direction)
             {

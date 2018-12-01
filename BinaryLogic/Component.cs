@@ -9,16 +9,23 @@ using System.Drawing;
 
 namespace BinaryLogic
 {
-    public enum ComponentType { AND, OR, XOR, NOT, Wire };
+    public enum ComponentType { AND, OR, XOR, NOT, Wire, Switch, Button, Light };
 
     public abstract class Component : IInteractable
     {
         public uint ID { get; private set; }
+        public ComponentHitbox hitbox;
+
         public bool Signal { get; protected set; }
         public List<Component>[] inputs;
         public List<Component> outputs;
+         
+        Line[] lines = new Line[0];
+        Arc[] arcs = new Arc[0];
+        Circle[] circles = new Circle[0];
 
-        public Component(ComponentType componentType)
+
+        public Component(ComponentType componentType, ComponentHitbox hitbox)
         {
             switch (componentType)
             {
@@ -45,15 +52,27 @@ namespace BinaryLogic
                     inputs = new List<Component>[1];
                     inputs[0] = new List<Component>(0);
                     break;
+                case ComponentType.Switch:
+                    inputs = new List<Component>[0];
+                    break;
+                case ComponentType.Button:
+                    inputs = new List<Component>[0];
+                    break;
+                case ComponentType.Light:
+                    inputs = new List<Component>[1];
+                    inputs[0] = new List<Component>(0);
+                    break;
                 default:
                     throw new ArgumentException("No such component type registered in enumeration.");
             }
+
+            this.hitbox = hitbox;
         }
 
         public abstract void ChangeColor(Color color);
         public abstract void Deselect();
         public abstract void Draw(IRenderer renderer);
-        public abstract void Select(int mouseX, int mouseY);
+        public abstract void Select(Point location);
 
         public abstract void Process();
 
@@ -83,6 +102,11 @@ namespace BinaryLogic
                 }
 
             scene.Draw();
+        }
+
+        public void Translate(Scene scene, Direction direction, float units)
+        {
+            hitbox.Translate(direction, scene.GetGridInterval() * units);
         }
     }
 }

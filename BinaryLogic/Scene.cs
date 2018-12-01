@@ -8,6 +8,8 @@ using BinaryLogic.Interfaces;
 
 namespace BinaryLogic
 {
+    public enum Keys { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y }
+
     public class Scene
     {
         IRenderer renderer;
@@ -40,7 +42,7 @@ namespace BinaryLogic
             
             foreach (Component component in components)
             {
-                //component.Draw(renderer);
+                component.Draw(renderer);
             }
         }
 
@@ -48,6 +50,19 @@ namespace BinaryLogic
         {
             renderer.Clear(Background);
             grid.Draw(renderer);
+        }
+
+        public void KeyStroke(Keys key)
+        {
+            switch (key)
+            {
+
+            }
+        }
+        
+        public float GetGridInterval()
+        {
+            return grid.Interval;
         }
     }
 }

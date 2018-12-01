@@ -5,17 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BinaryLogic.Interfaces;
+using Point = BinaryLogic.Point;
 
 namespace BinaryLogic.Components
 {
     public class Switch : Component, IClickable
     {
+        public Switch(Scene scene, Point position)
+            : base(ComponentType.Switch, new ComponentHitbox(new Rectangle(position, 2 * scene.GetGridInterval(), 2 * scene.GetGridInterval())))
+        {
+
+        }
+
         public override void ChangeColor(Color color)
         {
             throw new NotImplementedException();
         }
 
-        public void Click(int mouseX, int mouseY)
+        public void Click(Point location)
         {
             throw new NotImplementedException();
         }
@@ -30,7 +37,17 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public override void Select(int mouseX, int mouseY)
+        public override void Process()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Select(Point location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override List<Component> Transmit(List<Component> outputs, bool signal)
         {
             throw new NotImplementedException();
         }

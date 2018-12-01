@@ -16,6 +16,9 @@ namespace BinaryLogic
             hitbox = rectangle;
         }
 
-        
+        public void Translate(Direction direction, float units = 1)
+        {
+            hitbox.Move(direction, units);
+        }
     }
 }

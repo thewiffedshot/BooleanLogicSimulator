@@ -11,8 +11,10 @@ namespace BinaryLogic
 {
     class Wire : Component
     {
-        public Wire() : base(ComponentType.Wire)
+        public Wire(Scene scene, Line wire) 
+            : base(ComponentType.Wire, null)
         {
+            
         }
 
         public override List<Component> Transmit(List<Component> outputs, bool signal)
@@ -57,7 +59,7 @@ namespace BinaryLogic
             throw new NotImplementedException();
         }
 
-        public override void Select(int mouseX, int mouseY)
+        public override void Select(Point location)
         {
             throw new NotImplementedException();
         }

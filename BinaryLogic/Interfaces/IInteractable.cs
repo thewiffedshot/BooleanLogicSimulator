@@ -9,5 +9,6 @@ namespace BinaryLogic.Interfaces
     public interface IInteractable : ISelectable, IDrawable
     {
         void Delete(Scene scene);
+        void Translate(Scene scene, Direction direction, float units);
     }
 }
