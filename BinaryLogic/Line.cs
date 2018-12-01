@@ -17,7 +17,7 @@ namespace BinaryLogic
             points = new Point[]{ point1, point2 };
         }
 
-        public void Move(Direction direction, int units = 1)
+        public void Move(Direction direction, float units = 1)
         {
             switch (direction)
             {
