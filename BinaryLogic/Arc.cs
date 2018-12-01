@@ -21,7 +21,7 @@ namespace BinaryLogic
             leads[1] = botLead;
         }
 
-        public void Move(Direction direction, int units)
+        public void Move(Direction direction, int units = 1)
         {
             switch (direction)
             {
@@ -48,37 +48,6 @@ namespace BinaryLogic
                     ends[1].X -= units;
                     leads[0].X -= units;
                     leads[1].X -= units;
-                    break;
-            }
-        }
-
-        public void Move(Direction direction)
-        {
-            switch (direction)
-            {
-                case Direction.Up:
-                    ends[0].Y--;
-                    ends[1].Y--;
-                    leads[0].Y--;
-                    leads[1].Y--;
-                    break;
-                case Direction.Down:
-                    ends[0].Y++;
-                    ends[1].Y++;
-                    leads[0].Y++;
-                    leads[1].Y++;
-                    break;
-                case Direction.Right:
-                    ends[0].X++;
-                    ends[1].X++;
-                    leads[0].X++;
-                    leads[1].X++;
-                    break;
-                case Direction.Left:
-                    ends[0].X--;
-                    ends[1].X--;
-                    leads[0].X--;
-                    leads[1].X--;
                     break;
             }
         }
