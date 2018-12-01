@@ -10,6 +10,10 @@ namespace BinaryLogic.Components
 {
     public class Button : Component, IHoldable
     {
+        public Button(ComponentType componentType, ComponentHitbox hitbox) : base(componentType, hitbox, 3)
+        {
+        }
+
         public override void ChangeColor(Color color)
         {
             throw new NotImplementedException();
@@ -25,7 +29,12 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public void Pressed(int mouseX, int mouseY)
+        public void Pressed(Point location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Process()
         {
             throw new NotImplementedException();
         }
@@ -35,7 +44,17 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public override void Select(int mouseX, int mouseY)
+        public override bool Select(Point location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Translate(Direction direction, float units)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override List<Component> Transmit(List<Component> outputs, bool signal)
         {
             throw new NotImplementedException();
         }
