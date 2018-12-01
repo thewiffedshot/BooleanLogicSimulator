@@ -10,17 +10,21 @@ namespace BinaryLogic
     public class Rectangle
     {
         public Point position;
-        public uint Width { get; set; }
-        public uint Height { get; set; }
+        public float Width { get; set; }
+        public float Height { get; set; }
 
-        public Rectangle(Point pos, uint width, uint height)
+        public Rectangle(Point pos, float width, float height)
         {
             position = pos;
             Width = width;
             Height = height;
         }
 
-        public void Move(Direction direction, int units)
+<<<<<<< HEAD
+        public void Move(Direction direction, float units = 1)
+=======
+        public void Move(Direction direction, int units = 1)
+>>>>>>> 3cf4ebbf91bac9ebf188752bda121bc35def502d
         {
             switch (direction)
             {
@@ -35,25 +39,6 @@ namespace BinaryLogic
                     break;
                 case Direction.Left:
                     position.X -= units;
-                    break;
-            }
-        }
-
-        public void Move(Direction direction)
-        {
-            switch (direction)
-            {
-                case Direction.Up:
-                    position.Y--;
-                    break;
-                case Direction.Down:
-                    position.Y++;
-                    break;
-                case Direction.Right:
-                    position.X++;
-                    break;
-                case Direction.Left:
-                    position.X--;
                     break;
             }
         }
