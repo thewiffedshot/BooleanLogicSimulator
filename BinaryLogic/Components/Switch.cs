@@ -12,7 +12,7 @@ namespace BinaryLogic.Components
     public class Switch : Component, IClickable
     {
         public Switch(Scene scene, Point position)
-            : base(ComponentType.Switch, new ComponentHitbox(new Rectangle(position, 2 * scene.GetGridInterval(), 2 * scene.GetGridInterval())))
+            : base(ComponentType.Switch, new ComponentHitbox(new Rectangle(position, 2 * scene.GetGridInterval(), 2 * scene.GetGridInterval())), 3)
         {
 
         }
@@ -42,7 +42,12 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public override void Select(Point location)
+        public override bool Select(Point location)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Translate(Direction direction, float units)
         {
             throw new NotImplementedException();
         }

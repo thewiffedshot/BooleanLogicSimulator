@@ -5,10 +5,12 @@ using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
 using BinaryLogic.Interfaces;
+using Point = BinaryLogic.Point;
 
 namespace BinaryLogic
 {
-    public enum Keys { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y }
+    public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y }
+    public enum MouseKey { Left, Right, Middle }
 
     public class Scene
     {
@@ -17,6 +19,7 @@ namespace BinaryLogic
         public static Point Offset { get; set; }
         public Color Background { get; set; }
         public List<Component> components = new List<Component>(0);
+        public Component SelectedComponent { get; private set; }
 
         public Scene(Grid grid, Color background, IRenderer renderer)
         {
@@ -36,6 +39,11 @@ namespace BinaryLogic
             Draw();
         }
 
+        public void SelectComponent(Point location)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Draw()
         {
             Clear();
@@ -52,11 +60,21 @@ namespace BinaryLogic
             grid.Draw(renderer);
         }
 
-        public void KeyStroke(Keys key)
+        public void MouseClick(MouseKey key, Point location)
         {
             switch (key)
             {
+                default:
+                throw new NotImplementedException();
+            }
+        }
 
+        public void KeyStroke(Key key)
+        {
+            switch (key)
+            {
+                default:
+                throw new NotImplementedException();
             }
         }
         

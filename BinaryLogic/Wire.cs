@@ -12,9 +12,10 @@ namespace BinaryLogic
     class Wire : Component
     {
         public Wire(Scene scene, Line wire) 
-            : base(ComponentType.Wire, null)
+            : base(ComponentType.Wire, null, 3)
         {
-            
+            lines = new Line[1];
+            lines[0] = wire;
         }
 
         public override List<Component> Transmit(List<Component> outputs, bool signal)
@@ -44,24 +45,32 @@ namespace BinaryLogic
             return null;
         }
 
-        public override void ChangeColor(Color color)
-        {
-            throw new NotImplementedException();
-        }
-
         public override void Deselect()
         {
-            throw new NotImplementedException();
+            ChangeColor(Color.Black);
         }
 
         public override void Draw(IRenderer renderer)
         {
-            throw new NotImplementedException();
+            renderer.DrawLine(lines[0], Color, 3);
         }
 
-        public override void Select(Point location)
+        public override bool Select(Point location)
         {
-            throw new NotImplementedException();
+            Point higher = lines[0].points.OrderBy(y => y.Y).First();
+            Point lower = lines[0].points.OrderBy(y => y.Y).Last();
+
+            Point colinear = new Point(higher.Y - lower.Y,
+                                       higher.X - lower.X);
+
+            float parameter = (higher.X - lower.X) / colinear.X;
+
+            float lineX = colinear.X * parameter + higher.X;
+            float lineY = colinear.Y * parameter + higher.Y;
+
+            return Math.Abs(lineX - location.X) <= Thickness &&
+                   Math.Abs(lineY - location.Y) <= Thickness &&
+                   location.Y > lower.Y && location.Y < higher.Y;
         }
 
         public override void Process()
@@ -73,6 +82,11 @@ namespace BinaryLogic
                 if (component.Signal == true)
                     Signal = true;
             }
+        }
+
+        public override void Translate(Direction direction, float units)
+        {
+            throw new NotImplementedException();
         }
     }
 }

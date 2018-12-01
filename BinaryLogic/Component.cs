@@ -17,16 +17,21 @@ namespace BinaryLogic
         public ComponentHitbox hitbox;
 
         public bool Signal { get; protected set; }
+        public Color Color { get; protected set; }
+
         public List<Component>[] inputs;
         public List<Component> outputs;
          
-        Line[] lines = new Line[0];
-        Arc[] arcs = new Arc[0];
-        Circle[] circles = new Circle[0];
+        protected Line[] lines = new Line[0];
+        protected Arc[] arcs = new Arc[0];
+        protected Circle[] circles = new Circle[0];
+        protected uint Thickness { get; set; }
 
 
-        public Component(ComponentType componentType, ComponentHitbox hitbox)
+        public Component(ComponentType componentType, ComponentHitbox hitbox, uint thickness)
         {
+            Color = Color.Black;
+
             switch (componentType)
             {
                 case ComponentType.AND:
@@ -67,12 +72,18 @@ namespace BinaryLogic
             }
 
             this.hitbox = hitbox;
+            Thickness = thickness;
         }
 
-        public abstract void ChangeColor(Color color);
+        public virtual void ChangeColor(Color color)
+        {
+            Color = color;
+        }
+        
         public abstract void Deselect();
         public abstract void Draw(IRenderer renderer);
-        public abstract void Select(Point location);
+        public abstract bool Select(Point location);
+        public abstract void Translate(Direction direction, float units);
 
         public abstract void Process();
 
@@ -85,9 +96,9 @@ namespace BinaryLogic
 
         public abstract List<Component> Transmit(List<Component> outputs, bool signal);
 
-        public void Delete(Scene scene)
+        public void Delete(List<Component> components)
         {
-            scene.components.Remove(this);
+            components.Remove(this);
 
             foreach (List<Component> inputSlot in inputs)
                 foreach (Component component in inputSlot)
@@ -100,13 +111,6 @@ namespace BinaryLogic
                 {
                     inputSlot.Remove(this);
                 }
-
-            scene.Draw();
-        }
-
-        public void Translate(Scene scene, Direction direction, float units)
-        {
-            hitbox.Translate(direction, scene.GetGridInterval() * units);
         }
     }
 }
