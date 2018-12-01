@@ -20,11 +20,7 @@ namespace BinaryLogic
             Height = height;
         }
 
-<<<<<<< HEAD
-        public void Move(Direction direction, float units = 1)
-=======
         public void Move(Direction direction, int units = 1)
->>>>>>> 3cf4ebbf91bac9ebf188752bda121bc35def502d
         {
             switch (direction)
             {
