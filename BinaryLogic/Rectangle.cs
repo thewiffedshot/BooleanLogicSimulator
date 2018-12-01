@@ -20,7 +20,7 @@ namespace BinaryLogic
             Height = height;
         }
 
-        public void Move(Direction direction, int units)
+        public void Move(Direction direction, int units = 1)
         {
             switch (direction)
             {
@@ -35,25 +35,6 @@ namespace BinaryLogic
                     break;
                 case Direction.Left:
                     position.X -= units;
-                    break;
-            }
-        }
-
-        public void Move(Direction direction)
-        {
-            switch (direction)
-            {
-                case Direction.Up:
-                    position.Y--;
-                    break;
-                case Direction.Down:
-                    position.Y++;
-                    break;
-                case Direction.Right:
-                    position.X++;
-                    break;
-                case Direction.Left:
-                    position.X--;
                     break;
             }
         }
