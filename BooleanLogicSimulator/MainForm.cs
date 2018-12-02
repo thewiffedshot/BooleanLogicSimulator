@@ -18,6 +18,7 @@ namespace BooleanLogicSimulator
         Grid grid;
         Scene scene;
         WinFormsRenderer renderer;
+        Point localMousePosition = new Point(0, 0);
 
         public MainForm()
         {
@@ -32,9 +33,53 @@ namespace BooleanLogicSimulator
         {
             base.OnPaint(e);
 
-            renderer = new WinFormsRenderer(e.Graphics);
             scene.SetRenderer(renderer);
             scene.Draw();
+        }
+
+        private Key GetKey(KeyEventArgs args)
+        {
+            switch (args.KeyCode)
+            {
+                case Keys.Up:
+                    return Key.Up;
+                case Keys.Down:
+                    return Key.Down;
+                case Keys.Left:
+                    return Key.Left;
+                case Keys.Right:
+                    return Key.T;
+                case Keys.Shift:
+                    return Key.Shift;
+                case Keys.Control:
+                    return Key.Control;
+                case Keys.Space:
+                    return Key.Space;
+                case Keys.Q:
+                    return Key.Q;
+                case Keys.W:
+                    return Key.W;
+                case Keys.E:
+                    return Key.E;
+                case Keys.R:
+                    return Key.R;
+                case Keys.T:
+                    return Key.T;
+                case Keys.Y:
+                    return Key.Y;
+                default:
+                    return Key.Invalid;
+            }
+        }
+
+        private void MainForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            scene.KeyStroke(GetKey(e), localMousePosition);
+        }
+
+        private void MainForm_MouseMove(object sender, MouseEventArgs e)
+        {
+            localMousePosition = new Point(e.Location.X, e.Location.Y);
         }
     }
 }

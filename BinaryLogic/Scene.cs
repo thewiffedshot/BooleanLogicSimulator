@@ -5,11 +5,12 @@ using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
 using BinaryLogic.Interfaces;
+using BinaryLogic.Components;
 using Point = BinaryLogic.Point;
 
 namespace BinaryLogic
 {
-    public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y }
+    public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y, Invalid }
     public enum MouseKey { Left, Right, Middle }
 
     public class Scene
@@ -35,13 +36,34 @@ namespace BinaryLogic
 
         public void AddComponent(Component component)
         {
+            uint id = 0;
+
+            foreach (Component c in components)
+                id++;
+
+            component.ID = id;
+
             components.Add(component);
             Draw();
         }
 
         public void SelectComponent(Point location)
         {
-            throw new NotImplementedException();
+            Component selected = components
+                                 .Where(c => c.Select(location))
+                                 .OrderBy(c => c.ID)
+                                 .LastOrDefault();
+
+            if (SelectedComponent == selected)
+                DeselectComponent(selected);
+            else
+                SelectedComponent = selected;
+        }
+
+        public void DeselectComponent(Component component)
+        {
+            SelectedComponent = null;
+            component.ChangeColor(Component.DefaultColor);
         }
 
         public void Draw()
@@ -64,8 +86,36 @@ namespace BinaryLogic
         {
             switch (key)
             {
+                case MouseKey.Left:
+                    SelectComponent(location);
+                    break;
                 default:
                 throw new NotImplementedException();
+            }
+        }
+
+        public void KeyStroke(Key key, Point mouseLocation)
+        {
+            float minDistance = float.MaxValue;
+            Point closest = null;
+
+            for (uint y = 0; y < grid.Field.points.GetLength(1); y++)
+                for (uint x = 0; x < grid.Field.points.GetLength(0); x++)
+                {
+                    float distance = Point.Distance(grid.Field.points[x, y], mouseLocation);
+
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                        closest = grid.Field.points[x, y];
+                    }
+                }
+            
+            switch (key)
+            {
+                case Key.T:
+                    AddComponent(new Switch(this, closest));
+                    break;
             }
         }
 
@@ -74,10 +124,10 @@ namespace BinaryLogic
             switch (key)
             {
                 default:
-                throw new NotImplementedException();
+                    throw new NotImplementedException();
             }
         }
-        
+
         public float GetGridInterval()
         {
             return grid.Interval;

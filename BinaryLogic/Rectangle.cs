@@ -54,8 +54,8 @@ namespace BinaryLogic
         {
             renderer.DrawLine(new Line(position, new Point(position.X + Width, position.Y)), Color, 3);
             renderer.DrawLine(new Line(new Point(position.X + Width, position.Y), new Point(position.X + Width, position.Y + Height)), Color, 3);
-            renderer.DrawLine(new Line(new Point(position.X, position.Y + Height), position), Color, 3);
             renderer.DrawLine(new Line(position, new Point(position.X, position.Y + Height)), Color, 3);
+            renderer.DrawLine(new Line(new Point(position.X + Width, position.Y + Height), new Point(position.X, position.Y + Height)), Color, 3);
         }
 
         public void ChangeColor(Color color)

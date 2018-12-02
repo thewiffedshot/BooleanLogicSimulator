@@ -13,11 +13,12 @@ namespace BinaryLogic
 
     public abstract class Component : IInteractable
     {
-        public uint ID { get; private set; }
+        public uint ID { get; set; }
         public ComponentHitbox hitbox;
 
         public bool Signal { get; protected set; }
         public Color Color { get; protected set; }
+        public readonly static Color DefaultColor = Color.Black;
 
         public List<Component>[] inputs;
         public List<Component> outputs;
@@ -29,7 +30,7 @@ namespace BinaryLogic
         protected uint Thickness { get; set; }
 
 
-        public Component(ComponentType componentType, ComponentHitbox hitbox, uint thickness)
+        public Component(ComponentType componentType, ComponentHitbox hitbox, uint thickness = 3)
         {
             Color = Color.Black;
 
