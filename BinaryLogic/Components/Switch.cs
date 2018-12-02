@@ -69,6 +69,8 @@ namespace BinaryLogic.Components
 
         public override void Draw(IRenderer renderer)
         {
+
+
             foreach (Line line in lines)
                 renderer.DrawLine(line, Color, Thickness);
 
@@ -104,6 +106,16 @@ namespace BinaryLogic.Components
                     break;
             }
 
+            Scale(scene);
+        }
+
+        public override List<Component> Transmit(List<Component> outputs, bool signal)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Scale(Scene scene)
+        {
             Point indent = scene.ScaleFactor * (Position + new Point(XIndent, YIndent));
 
             rectangles[0] = new Rectangle(indent, 2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor,
@@ -117,11 +129,6 @@ namespace BinaryLogic.Components
                                           rectangles[1].position.Y + rectangles[1].Height / 4),
                                 new Point(rectangles[1].position.X + rectangles[1].Width,
                                           rectangles[1].position.Y + rectangles[1].Height / 4));
-        }
-
-        public override List<Component> Transmit(List<Component> outputs, bool signal)
-        {
-            throw new NotImplementedException();
         }
     }
 }

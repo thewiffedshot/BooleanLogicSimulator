@@ -88,5 +88,10 @@ namespace BinaryLogic
         {
             throw new NotImplementedException();
         }
+
+        public override void Scale(Scene scene)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

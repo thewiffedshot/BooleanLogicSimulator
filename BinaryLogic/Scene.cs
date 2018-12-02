@@ -10,7 +10,7 @@ using Point = BinaryLogic.Point;
 
 namespace BinaryLogic
 {
-    public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y, Invalid }
+    public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y, Plus, Minus, Invalid }
     public enum MouseKey { Left, Right, Middle }
 
     public class Scene
@@ -119,15 +119,12 @@ namespace BinaryLogic
                 case Key.T:
                     AddComponent(new Switch(this, closest));
                     break;
-            }
-        }
-
-        public void KeyStroke(Key key)
-        {
-            switch (key)
-            {
-                default:
-                    throw new NotImplementedException();
+                case Key.Plus:
+                    Scale(0.25f);
+                    break;
+                case Key.Minus:
+                    Scale(-0.25f);
+                    break;
             }
         }
 
@@ -138,13 +135,18 @@ namespace BinaryLogic
 
         public void Scale(float scale)
         {
-            if (scale < 0)
-                throw new ArgumentOutOfRangeException();
+            if (ScaleFactor + scale > 0)
+            {
+                ScaleFactor += scale;
+                grid.Scale(ScaleFactor);
 
-            ScaleFactor = scale;
-            grid.Scale(scale);
+                foreach (Component component in components)
+                {
+                    component.Scale(this);
+                }
 
-            Draw();
+                Draw();
+            }
         }
     }
 }

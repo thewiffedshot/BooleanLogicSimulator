@@ -34,6 +34,11 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
+        public override void Scale(Scene scene)
+        {
+            throw new NotImplementedException();
+        }
+
         public override bool Select(Point location)
         {
             throw new NotImplementedException();

@@ -67,6 +67,10 @@ namespace BooleanLogicSimulator
                     return Key.T;
                 case Keys.Y:
                     return Key.Y;
+                case Keys.Add:
+                    return Key.Plus;
+                case Keys.Subtract:
+                    return Key.Minus;
                 default:
                     return Key.Invalid;
             }
@@ -75,6 +79,8 @@ namespace BooleanLogicSimulator
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             scene.KeyStroke(GetKey(e), localMousePosition);
+
+            e.Handled = true;
         }
 
         private void MainForm_MouseMove(object sender, MouseEventArgs e)

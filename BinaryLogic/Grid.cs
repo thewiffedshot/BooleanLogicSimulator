@@ -19,9 +19,11 @@ namespace BinaryLogic
         public uint Interval { get; private set; }
         public GridThickness Thickness { get; set; }
         public PointField Field { get; private set; } // Probably will be it's own type
+        private float ScaleFactor { get; set; }
 
         public Grid(Point windowSize, uint interval, Color color, GridThickness thickness)
         {
+            ScaleFactor = 1;
             Interval = interval;
             Color = color;
             Thickness = thickness;
@@ -32,6 +34,7 @@ namespace BinaryLogic
 
         public Grid(Point windowSize, Color color)
         {
+            ScaleFactor = 1;
             Interval = 35;
             Color = color;
             Thickness = GridThickness.Small;
@@ -42,6 +45,7 @@ namespace BinaryLogic
 
         public Grid(Point windowSize)
         {
+            ScaleFactor = 1;
             Interval = 35;
             Color = Color.Black;
             Thickness = GridThickness.Small;
@@ -57,10 +61,9 @@ namespace BinaryLogic
 
         public void Scale(float scale)
         {
-            if (scale < 0)
-                throw new ArgumentException();
+            ScaleFactor += scale;
 
-            Interval = (uint)(Interval * scale);
+            Interval = (uint)(ScaleFactor * scale);
             Field = new PointField(this);
         }
 
