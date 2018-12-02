@@ -15,6 +15,7 @@ namespace BinaryLogic
     {
         public uint ID { get; set; }
         public Point Position { get; protected set; }
+        public Point StartPosition { get; set; }
         public ComponentHitbox hitbox;
         protected InHitbox[] inHitboxes;
         protected OutHitbox outHitbox;

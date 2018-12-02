@@ -16,7 +16,7 @@ namespace BinaryLogic
     public class Scene
     {
         IRenderer renderer;
-        Grid grid;
+        public Grid Grid { get; set; }
         public float ScaleFactor { get; private set; }
         public Point Offset { get; set; }
         public Color Background { get; set; }
@@ -25,7 +25,7 @@ namespace BinaryLogic
 
         public Scene(Grid grid, Color background, IRenderer renderer)
         {
-            this.grid = grid;
+            Grid = grid;
             Background = background;
             this.renderer = renderer;
             ScaleFactor = 1;
@@ -82,7 +82,7 @@ namespace BinaryLogic
         public void Clear()
         {
             renderer.Clear(Background);
-            grid.Draw(renderer);
+            Grid.Draw(renderer);
         }
 
         public void MouseClick(MouseKey key, Point location)
@@ -99,20 +99,7 @@ namespace BinaryLogic
 
         public void KeyStroke(Key key, Point mouseLocation)
         {
-            float minDistance = float.MaxValue;
-            Point closest = null;
-
-            for (uint y = 0; y < grid.Field.points.GetLength(1); y++)
-                for (uint x = 0; x < grid.Field.points.GetLength(0); x++)
-                {
-                    float distance = Point.Distance(grid.Field.points[x, y], mouseLocation);
-
-                    if (distance < minDistance)
-                    {
-                        minDistance = distance;
-                        closest = grid.Field.points[x, y];
-                    }
-                }
+            Point closest = Grid.SnapToGrid(mouseLocation);
             
             switch (key)
             {
@@ -130,7 +117,7 @@ namespace BinaryLogic
 
         public float GetGridInterval()
         {
-            return grid.Interval;
+            return Grid.Interval;
         }
 
         public void Scale(float scale)
@@ -138,7 +125,7 @@ namespace BinaryLogic
             if (ScaleFactor + scale > 0)
             {
                 ScaleFactor += scale;
-                grid.Scale(ScaleFactor);
+                Grid.Scale(scale);
 
                 foreach (Component component in components)
                 {

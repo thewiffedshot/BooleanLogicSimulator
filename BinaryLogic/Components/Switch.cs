@@ -15,6 +15,8 @@ namespace BinaryLogic.Components
             : base(ComponentType.Switch, new ComponentHitbox(new Rectangle(position, 2 * scene.GetGridInterval(), 2 * scene.GetGridInterval())), 3)
         {
             Position = position;
+            StartPosition = position;
+
             rectangles = new Rectangle[2];
             lines = new Line[1];
 
@@ -116,7 +118,11 @@ namespace BinaryLogic.Components
 
         public override void Scale(Scene scene)
         {
-            Point indent = scene.ScaleFactor * (Position + new Point(XIndent, YIndent));
+            Position = scene.ScaleFactor * StartPosition;
+
+            Position = scene.Grid.SnapToGrid(Position);
+
+            Point indent = Position + scene.ScaleFactor * new Point(XIndent, YIndent);
 
             rectangles[0] = new Rectangle(indent, 2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor,
                                                   2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor);
