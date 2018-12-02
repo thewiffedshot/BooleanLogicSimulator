@@ -25,6 +25,7 @@ namespace BinaryLogic
         protected Line[] lines = new Line[0];
         protected Arc[] arcs = new Arc[0];
         protected Circle[] circles = new Circle[0];
+        protected Rectangle[] rectangles = new Rectangle[0];
         protected uint Thickness { get; set; }
 
 
