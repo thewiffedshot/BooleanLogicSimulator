@@ -27,6 +27,16 @@ namespace BinaryLogic
             return new Point(p1.X - p2.X, p1.Y - p2.Y);
         }
 
+        public static Point operator *(float scalar, Point p)
+        {
+            return new Point(p.X * scalar, p.Y * scalar);
+        }
+
+        public static Point operator *(Point p, float scalar)
+        {
+            return new Point(p.X * scalar, p.Y * scalar);
+        }
+
         public static float Distance(Point p1, Point p2)
         {
             Point p = p1 - p2;

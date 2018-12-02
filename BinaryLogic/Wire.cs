@@ -11,7 +11,7 @@ namespace BinaryLogic
 {
     class Wire : Component
     {
-        public Wire(Scene scene, Line wire) 
+        public Wire(Scene scene, Line wire)
             : base(ComponentType.Wire, null, 3)
         {
             lines = new Line[1];
@@ -84,7 +84,7 @@ namespace BinaryLogic
             }
         }
 
-        public override void Translate(Direction direction, float units)
+        public override void Translate(Scene scene, Direction direction, uint units = 1)
         {
             throw new NotImplementedException();
         }

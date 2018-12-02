@@ -14,15 +14,20 @@ namespace BinaryLogic
     public abstract class Component : IInteractable
     {
         public uint ID { get; set; }
+        public Point Position { get; protected set; }
         public ComponentHitbox hitbox;
+        protected InHitbox[] inHitboxes;
+        protected OutHitbox outHitbox;
 
-        public bool Signal { get; protected set; }
         public Color Color { get; protected set; }
         public readonly static Color DefaultColor = Color.Black;
 
+        public bool Signal { get; protected set; }
         public List<Component>[] inputs;
         public List<Component> outputs;
          
+        public float XIndent { get; protected set; }
+        public float YIndent { get; protected set; }
         protected Line[] lines = new Line[0];
         protected Arc[] arcs = new Arc[0];
         protected Circle[] circles = new Circle[0];
@@ -30,9 +35,13 @@ namespace BinaryLogic
         protected uint Thickness { get; set; }
 
 
-        public Component(ComponentType componentType, ComponentHitbox hitbox, uint thickness = 3)
+        public Component(ComponentType componentType, ComponentHitbox hitbox, uint thickness = 3, float xIndent = 3, float yIndent = 3)
         {
             Color = Color.Black;
+            XIndent = xIndent;
+            YIndent = yIndent;
+            this.hitbox = hitbox;
+            Thickness = thickness;
 
             switch (componentType)
             {
@@ -72,9 +81,6 @@ namespace BinaryLogic
                 default:
                     throw new ArgumentException("No such component type registered in enumeration.");
             }
-
-            this.hitbox = hitbox;
-            Thickness = thickness;
         }
 
         public virtual void ChangeColor(Color color)
@@ -85,7 +91,7 @@ namespace BinaryLogic
         public abstract void Deselect();
         public abstract void Draw(IRenderer renderer);
         public abstract bool Select(Point location);
-        public abstract void Translate(Direction direction, float units);
+        public abstract void Translate(Scene scene, Direction direction, uint units);
 
         public abstract void Process();
 
@@ -98,9 +104,9 @@ namespace BinaryLogic
 
         public abstract List<Component> Transmit(List<Component> outputs, bool signal);
 
-        public void Delete(List<Component> components)
+        public void Delete(Scene scene)
         {
-            components.Remove(this);
+            scene.components.Remove(this);
 
             foreach (List<Component> inputSlot in inputs)
                 foreach (Component component in inputSlot)

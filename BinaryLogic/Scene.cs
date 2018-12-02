@@ -17,7 +17,8 @@ namespace BinaryLogic
     {
         IRenderer renderer;
         Grid grid;
-        public static Point Offset { get; set; }
+        public float ScaleFactor { get; private set; }
+        public Point Offset { get; set; }
         public Color Background { get; set; }
         public List<Component> components = new List<Component>(0);
         public Component SelectedComponent { get; private set; }
@@ -27,6 +28,8 @@ namespace BinaryLogic
             this.grid = grid;
             Background = background;
             this.renderer = renderer;
+            ScaleFactor = 1;
+            Offset = new Point(0, 0);
         }
 
         public void SetRenderer(IRenderer renderer)
@@ -131,6 +134,17 @@ namespace BinaryLogic
         public float GetGridInterval()
         {
             return grid.Interval;
+        }
+
+        public void Scale(float scale)
+        {
+            if (scale < 0)
+                throw new ArgumentOutOfRangeException();
+
+            ScaleFactor = scale;
+            grid.Scale(scale);
+
+            Draw();
         }
     }
 }

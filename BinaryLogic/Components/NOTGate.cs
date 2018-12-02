@@ -39,7 +39,7 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public override void Translate(Direction direction, float units)
+        public override void Translate(Scene scene, Direction direction, uint units = 1)
         {
             throw new NotImplementedException();
         }

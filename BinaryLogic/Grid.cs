@@ -15,7 +15,6 @@ namespace BinaryLogic
     public class Grid
     {
         public Point WindowSize { get; private set; }
-        public static uint Scale { get; set; }
         public static Color Color { get; set; }
         public uint Interval { get; private set; }
         public GridThickness Thickness { get; set; }
@@ -28,31 +27,25 @@ namespace BinaryLogic
             Thickness = thickness;
             WindowSize = windowSize;
 
-            Interval -= (uint)windowSize.X % Interval;
-
             Field = new PointField(this);
         }
 
         public Grid(Point windowSize, Color color)
         {
-            Interval = 50;
+            Interval = 35;
             Color = color;
             Thickness = GridThickness.Small;
             WindowSize = windowSize;
-
-            Interval -= (uint)windowSize.X % Interval;
 
             Field = new PointField(this);
         }
 
         public Grid(Point windowSize)
         {
-            Interval = 50;
+            Interval = 35;
             Color = Color.Black;
             Thickness = GridThickness.Small;
             WindowSize = windowSize;
-
-            Interval -= (uint)windowSize.X % Interval;
 
             Field = new PointField(this);
         }
@@ -60,6 +53,15 @@ namespace BinaryLogic
         public void ChangeColor(Color color)
         {
             Color = color;
+        }
+
+        public void Scale(float scale)
+        {
+            if (scale < 0)
+                throw new ArgumentException();
+
+            Interval = (uint)(Interval * scale);
+            Field = new PointField(this);
         }
 
         public void Draw(IRenderer renderer)
