@@ -76,6 +76,21 @@ namespace BooleanLogicSimulator
             }
         }
 
+        private MouseKey GetMouseKey(MouseEventArgs args)
+        {
+            switch (args.Button)
+            {
+                case MouseButtons.Left:
+                    return MouseKey.Left;
+                case MouseButtons.Right:
+                    return MouseKey.Right;
+                case MouseButtons.Middle:
+                    return MouseKey.Middle;
+                default:
+                    return MouseKey.Invalid;
+            }
+        }
+
         private void MainForm_KeyDown(object sender, KeyEventArgs e)
         {
             scene.KeyStroke(GetKey(e), localMousePosition);
@@ -86,6 +101,11 @@ namespace BooleanLogicSimulator
         private void MainForm_MouseMove(object sender, MouseEventArgs e)
         {
             localMousePosition = new Point(e.Location.X, e.Location.Y);
+        }
+
+        private void MainForm_MouseDown(object sender, MouseEventArgs e)
+        {
+            scene.MouseClick(GetMouseKey(e), localMousePosition);
         }
     }
 }

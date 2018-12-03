@@ -8,7 +8,7 @@ using BinaryLogic.Interfaces;
 
 namespace BinaryLogic
 {
-    public class ComponentHitbox : IDrawable
+    public class ComponentHitbox : IDrawable, IClickable
     {
         Rectangle hitbox;
 
@@ -22,6 +22,14 @@ namespace BinaryLogic
             throw new NotImplementedException();
         }
 
+        public bool Click(Point location)
+        {
+            return location.X > hitbox.position.X &&
+                   location.X < hitbox.position.X + hitbox.Width &&
+                   location.Y > hitbox.position.Y &&
+                   location.Y < hitbox.position.Y + hitbox.Height;
+        }
+
         public void Draw(IRenderer renderer)
         {
             hitbox.Draw(renderer);
@@ -30,6 +38,11 @@ namespace BinaryLogic
         public void Translate(Direction direction, float units = 1)
         {
             hitbox.Move(direction, units);
+        }
+
+        public void SetPostition(Point position)
+        {
+            hitbox.position = position;
         }
     }
 }

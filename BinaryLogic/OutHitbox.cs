@@ -15,8 +15,7 @@ namespace BinaryLogic
 
         public OutHitbox(Point position, float radius)
         {
-            hitbox = new Circle(hitbox.position = position,
-                                hitbox.radius = radius);
+            hitbox = new Circle(position, radius);
         }
 
         public bool Click(Point location)
@@ -31,7 +30,7 @@ namespace BinaryLogic
 
         public void Draw(IRenderer renderer)
         {
-            throw new NotImplementedException();
+            renderer.DrawCircle(hitbox, Color.Green, 3);
         }
     }
 }

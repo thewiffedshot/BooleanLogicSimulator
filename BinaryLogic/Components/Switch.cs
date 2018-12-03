@@ -20,7 +20,9 @@ namespace BinaryLogic.Components
             rectangles = new Rectangle[2];
             lines = new Line[1];
 
+            hitbox.SetPostition(Position);
             Point indent = position + new Point(XIndent, YIndent);
+
 
             rectangles[0] = new Rectangle(indent, 2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor, 
                                                   2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor);
@@ -28,6 +30,8 @@ namespace BinaryLogic.Components
             rectangles[1] = new Rectangle(indent + new Point(10 * scene.ScaleFactor, 5 * scene.ScaleFactor), 
                                                                 rectangles[0].Width - 20 * scene.ScaleFactor, 
                                                                 rectangles[0].Height - 10 * scene.ScaleFactor);
+
+            outHitbox = new OutHitbox(new Point(position.X + rectangles[0].Width, position.Y + rectangles[0].Height / 2), scene.ScaleFactor * 7.5f);
 
             lines[0] = new Line(new Point(rectangles[1].position.X, 
                                           rectangles[1].position.Y + rectangles[1].Height / 4), 
@@ -61,7 +65,7 @@ namespace BinaryLogic.Components
 
         public bool Click(Point location)
         {
-            throw new NotImplementedException();
+            return hitbox.Click(location);
         }
 
         public override void Deselect()
@@ -71,13 +75,13 @@ namespace BinaryLogic.Components
 
         public override void Draw(IRenderer renderer)
         {
-
-
             foreach (Line line in lines)
                 renderer.DrawLine(line, Color, Thickness);
 
             foreach (Rectangle rectangle in rectangles)
                 rectangle.Draw(renderer);
+
+            outHitbox.Draw(renderer);
         }
 
         public override void Process()
@@ -87,7 +91,7 @@ namespace BinaryLogic.Components
 
         public override bool Select(Point location)
         {
-            throw new NotImplementedException();
+            return Click(location);
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)
@@ -130,6 +134,11 @@ namespace BinaryLogic.Components
             rectangles[1] = new Rectangle(indent + new Point(10 * scene.ScaleFactor, 5 * scene.ScaleFactor),
                                                                 rectangles[0].Width - 20 * scene.ScaleFactor,
                                                                 rectangles[0].Height - 10 * scene.ScaleFactor);
+
+            ChangeColor(Color);
+
+            outHitbox = new OutHitbox(new Point(Position.X + rectangles[0].Width, Position.Y + rectangles[0].Height / 2), scene.ScaleFactor * 7.5f);
+            hitbox.SetPostition(Position);
 
             lines[0] = new Line(new Point(rectangles[1].position.X,
                                           rectangles[1].position.Y + rectangles[1].Height / 4),

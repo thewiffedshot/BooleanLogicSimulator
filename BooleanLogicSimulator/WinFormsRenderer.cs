@@ -32,7 +32,13 @@ namespace BooleanLogicSimulator
 
         public void DrawCircle(Circle circle, Color color, uint thickness)
         {
-            throw new NotImplementedException();
+            using (Pen pen = new Pen(color, thickness))
+            {
+                SolidBrush brush = new SolidBrush(color);      
+
+                //gfx.DrawEllipse(pen, circle.position.X, circle.position.Y, circle.radius, circle.radius);
+                gfx.FillEllipse(brush, circle.position.X, circle.position.Y, circle.radius, circle.radius);
+            }
         }
 
         public void DrawLine(Line line, Color color, uint thickness)

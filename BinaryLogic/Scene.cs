@@ -11,9 +11,9 @@ using Point = BinaryLogic.Point;
 namespace BinaryLogic
 {
     public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y, Plus, Minus, Invalid }
-    public enum MouseKey { Left, Right, Middle }
+    public enum MouseKey { Left, Right, Middle, Invalid }
 
-    public class Scene
+    public class Scene // TODO: Must incorporate settable tickrate.
     {
         IRenderer renderer;
         public Grid Grid { get; set; }
@@ -22,6 +22,7 @@ namespace BinaryLogic
         public Color Background { get; set; }
         public List<Component> components = new List<Component>(0);
         public Component SelectedComponent { get; private set; }
+        public uint GlobalID { get; set; }
 
         public Scene(Grid grid, Color background, IRenderer renderer)
         {
@@ -39,12 +40,7 @@ namespace BinaryLogic
 
         public void AddComponent(Component component)
         {
-            uint id = 0;
-
-            foreach (Component c in components)
-                id++;
-
-            component.ID = id;
+            component.ID = GlobalID++;
 
             components.Add(component);
             Draw();
@@ -60,18 +56,29 @@ namespace BinaryLogic
             if (SelectedComponent == selected)
                 DeselectComponent(selected);
             else
+            {
+                DeselectComponent(SelectedComponent);
                 SelectedComponent = selected;
+                SelectedComponent.ChangeColor(Color.Orange);
+            }
+
+            Draw(false);
         }
 
         public void DeselectComponent(Component component)
         {
-            SelectedComponent = null;
-            component.ChangeColor(Component.DefaultColor);
+            if (SelectedComponent != null)
+            {
+                component.ChangeColor(Component.DefaultColor);
+                SelectedComponent = null;
+                component.ChangeColor(Component.DefaultColor);
+            }
         }
 
-        public void Draw()
+        public void Draw(bool componentsOnly = false)
         {
-            Clear();
+            if (!componentsOnly)
+                Clear();
             
             foreach (Component component in components)
             {

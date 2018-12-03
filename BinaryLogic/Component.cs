@@ -17,7 +17,7 @@ namespace BinaryLogic
         public Point Position { get; protected set; }
         public Point StartPosition { get; set; }
         public ComponentHitbox hitbox;
-        protected InHitbox[] inHitboxes;
+        protected InHitbox[] inHitboxes = new InHitbox[0];
         protected OutHitbox outHitbox;
 
         public Color Color { get; protected set; }
