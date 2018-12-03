@@ -14,13 +14,13 @@ namespace BinaryLogic.Components
         public Switch(Scene scene, Point position)
             : base(ComponentType.Switch, new ComponentHitbox(new Rectangle(position, 2 * scene.GetGridInterval(), 2 * scene.GetGridInterval())), 3)
         {
+            StartPosition = position / scene.ScaleFactor;
             Position = position;
-            StartPosition = position;
 
             rectangles = new Rectangle[2];
             lines = new Line[1];
 
-            Point indent = scene.ScaleFactor * position + new Point(XIndent, YIndent);
+            Point indent = position + new Point(XIndent, YIndent);
 
             rectangles[0] = new Rectangle(indent, 2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor, 
                                                   2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor);

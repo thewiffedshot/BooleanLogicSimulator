@@ -16,7 +16,7 @@ namespace BinaryLogic
             if (grid == null)
                 throw new ArgumentNullException("Grid not defined.");
 
-            points = new Point[(int)grid.WindowSize.X / grid.Interval, (int)grid.WindowSize.Y / grid.Interval];
+            points = new Point[(int)(grid.WindowSize.X / grid.Interval), (int)(grid.WindowSize.Y / grid.Interval)];
 
             for (uint y = 0, j = 0; y < points.GetLength(1); y++, j += grid.Interval)
             {

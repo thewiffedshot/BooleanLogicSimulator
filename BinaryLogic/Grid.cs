@@ -20,8 +20,7 @@ namespace BinaryLogic
         public uint Interval { get; private set; }
         public GridThickness Thickness { get; set; }
         public PointField Field { get; private set; }
-        private float ScaleFactor { get; set; }
-
+        public float ScaleFactor { get; private set; }
         public Grid(Point windowSize, uint interval, Color color, GridThickness thickness)
         {
             ScaleFactor = 1;
