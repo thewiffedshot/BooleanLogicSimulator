@@ -98,6 +98,13 @@ namespace BinaryLogic
             {
                 case MouseKey.Left:
                     SelectComponent(location);
+                    Draw();
+                    break;
+                case MouseKey.Right:
+                    foreach (IClickable c in components)
+                        c.Click(location);
+
+                    Draw();
                     break;
                 default:
                 throw new NotImplementedException();

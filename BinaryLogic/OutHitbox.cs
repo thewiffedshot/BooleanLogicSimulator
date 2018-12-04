@@ -18,9 +18,9 @@ namespace BinaryLogic
             hitbox = new Circle(position, radius);
         }
 
-        public bool Click(Point location)
+        public void Click(Point location)
         {
-            return Point.Distance(location, hitbox.position) <= hitbox.radius;
+            //return Point.Distance(location, hitbox.position) <= hitbox.radius;
         }
 
         public void ChangeColor(Color color)

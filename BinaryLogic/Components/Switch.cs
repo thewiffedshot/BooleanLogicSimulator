@@ -16,6 +16,7 @@ namespace BinaryLogic.Components
         {
             StartPosition = position / scene.ScaleFactor;
             Position = position;
+            Signal = false;
 
             rectangles = new Rectangle[2];
             lines = new Line[1];
@@ -45,13 +46,13 @@ namespace BinaryLogic.Components
 
             if (Signal)
             {
-                lines[0].points[0].Y = rectangles[1].position.Y + rectangles[1].Height / 4;
-                lines[0].points[1].Y = rectangles[1].position.Y + rectangles[1].Height / 4;
+                lines[0].points[0].Y = rectangles[1].position.Y + 3 * rectangles[1].Height / 4;
+                lines[0].points[1].Y = rectangles[1].position.Y + 3 * rectangles[1].Height / 4;
             }
             else
             {
-                lines[0].points[0].Y = rectangles[1].position.Y + 3 * rectangles[1].Height / 4;
-                lines[0].points[1].Y = rectangles[1].position.Y + 3 * rectangles[1].Height / 4;
+                lines[0].points[0].Y = rectangles[1].position.Y + rectangles[1].Height / 4;
+                lines[0].points[1].Y = rectangles[1].position.Y + rectangles[1].Height / 4;
             }
         }
 
@@ -63,9 +64,10 @@ namespace BinaryLogic.Components
                 rectangle.ChangeColor(color);
         }
 
-        public bool Click(Point location)
+        public void Click(Point location)
         {
-            return hitbox.Click(location);
+            if (hitbox.Clicked(location))
+                Flip();
         }
 
         public override void Deselect()
@@ -91,7 +93,7 @@ namespace BinaryLogic.Components
 
         public override bool Select(Point location)
         {
-            return Click(location);
+            return hitbox.Clicked(location);
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)
@@ -140,10 +142,17 @@ namespace BinaryLogic.Components
             outHitbox = new OutHitbox(new Point(Position.X + rectangles[0].Width, Position.Y + rectangles[0].Height / 2), scene.ScaleFactor * 7.5f);
             hitbox.SetPostition(Position);
 
+            float yLine = 0;
+
+            if (Signal)
+                yLine = 3 * rectangles[1].Height / 4;
+            else
+                yLine = rectangles[1].Height / 4;
+
             lines[0] = new Line(new Point(rectangles[1].position.X,
-                                          rectangles[1].position.Y + rectangles[1].Height / 4),
+                                          rectangles[1].position.Y + yLine),
                                 new Point(rectangles[1].position.X + rectangles[1].Width,
-                                          rectangles[1].position.Y + rectangles[1].Height / 4));
+                                          rectangles[1].position.Y + yLine));
         }
     }
 }

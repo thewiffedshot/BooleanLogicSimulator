@@ -19,6 +19,7 @@ namespace BinaryLogic
         public ComponentHitbox hitbox;
         protected InHitbox[] inHitboxes = new InHitbox[0];
         protected OutHitbox outHitbox;
+        public delegate bool clickAction(Point location);
 
         public Color Color { get; protected set; }
         public readonly static Color DefaultColor = Color.Black;

@@ -9,6 +9,6 @@ namespace BinaryLogic.Interfaces
 {
     public interface IClickable
     {
-        bool Click(Point location);
+        void Click(Point location);
     }
 }

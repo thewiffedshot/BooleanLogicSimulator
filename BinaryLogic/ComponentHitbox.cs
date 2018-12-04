@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using BinaryLogic.Interfaces;
+using Point = BinaryLogic.Point;
 
 namespace BinaryLogic
 {
-    public class ComponentHitbox : IDrawable, IClickable
+    public class ComponentHitbox : IDrawable
     {
         Rectangle hitbox;
 
@@ -22,7 +23,7 @@ namespace BinaryLogic
             throw new NotImplementedException();
         }
 
-        public bool Click(Point location)
+        public bool Clicked(Point location)
         {
             return location.X > hitbox.position.X &&
                    location.X < hitbox.position.X + hitbox.Width &&
