@@ -13,5 +13,6 @@ namespace BinaryLogic.Interfaces
         void DrawLine(Line line, Color color, uint thickness);
         void DrawCircle(Circle circle, Color color, uint thickness);
         void Clear(Color clearColor);
+        void ClearArea(Rectangle area, Color clearColor);
     }
 }

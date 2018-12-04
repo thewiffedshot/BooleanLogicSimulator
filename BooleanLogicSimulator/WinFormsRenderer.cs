@@ -25,6 +25,14 @@ namespace BooleanLogicSimulator
             gfx.Clear(clearColor);
         }
 
+        public void ClearArea(BinaryLogic.Rectangle area, Color color)
+        {
+            using (Pen pen = new Pen(color))
+            {
+                gfx.DrawRectangle(pen, area.position.X, area.position.Y, area.Width, area.Height);
+            }
+        }
+
         public void DrawArc(Arc arc, Color color, uint thickness)
         {
             throw new NotImplementedException();

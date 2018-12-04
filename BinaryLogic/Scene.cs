@@ -59,10 +59,12 @@ namespace BinaryLogic
             {
                 DeselectComponent(SelectedComponent);
                 SelectedComponent = selected;
-                SelectedComponent.ChangeColor(Color.Orange);
+
+                if (SelectedComponent != null)
+                    SelectedComponent.ChangeColor(Color.Orange);
             }
 
-            Draw(false);
+            Draw(true);
         }
 
         public void DeselectComponent(Component component)
