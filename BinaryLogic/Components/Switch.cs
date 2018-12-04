@@ -21,7 +21,7 @@ namespace BinaryLogic.Components
             rectangles = new Rectangle[2];
             lines = new Line[1];
 
-            hitbox.SetPostition(Position);
+            hitbox.Position = Position;
             Point indent = position + new Point(XIndent, YIndent);
 
 
@@ -93,7 +93,24 @@ namespace BinaryLogic.Components
 
         public override bool Select(Point location)
         {
-            return hitbox.Clicked(location);
+            bool result = hitbox.Clicked(location);
+
+            foreach (InHitbox hitbox in inHitboxes)
+            {
+                if (hitbox.Clicked(location))
+                {
+                    result = false;
+                    CreateWire(this, hitbox.Position, false);
+                }
+            }
+
+            if (outHitbox.Clicked(location))
+            {
+                result = false;
+                CreateWire(this, outHitbox.Position, false);
+            }
+
+            return result;
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)
@@ -140,7 +157,7 @@ namespace BinaryLogic.Components
             ChangeColor(Color);
 
             outHitbox = new OutHitbox(new Point(Position.X + rectangles[0].Width, Position.Y + rectangles[0].Height / 2), scene.ScaleFactor * 7.5f);
-            hitbox.SetPostition(Position);
+            hitbox.Position = Position;
 
             float yLine = 0;
 

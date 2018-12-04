@@ -96,6 +96,11 @@ namespace BinaryLogic
         public abstract void Translate(Scene scene, Direction direction, uint units);
         public abstract void Scale(Scene scene);
 
+        protected void CreateWire(Component sender, Point position, bool output)
+        {
+
+        }
+
         public abstract void Process();
 
         public void Set(bool signal)

@@ -9,18 +9,19 @@ using Point = BinaryLogic.Point;
 
 namespace BinaryLogic
 {
-    public class OutHitbox : IDrawable, IClickable
+    public class OutHitbox : IDrawable
     {
         Circle hitbox;
+        public Point Position { get { return hitbox.position; } set { hitbox.position = value; } }
 
         public OutHitbox(Point position, float radius)
         {
             hitbox = new Circle(position, radius);
         }
 
-        public void Click(Point location)
+        public bool Clicked(Point location)
         {
-            //return Point.Distance(location, hitbox.position) <= hitbox.radius;
+            return Point.Distance(location, hitbox.position) <= hitbox.radius;
         }
 
         public void ChangeColor(Color color)

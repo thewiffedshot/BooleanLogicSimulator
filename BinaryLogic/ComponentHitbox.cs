@@ -12,6 +12,7 @@ namespace BinaryLogic
     public class ComponentHitbox : IDrawable
     {
         Rectangle hitbox;
+        public Point Position { get { return hitbox.position; } set { hitbox.position = value; } }
 
         public ComponentHitbox(Rectangle rectangle)
         {
@@ -39,11 +40,6 @@ namespace BinaryLogic
         public void Translate(Direction direction, float units = 1)
         {
             hitbox.Move(direction, units);
-        }
-
-        public void SetPostition(Point position)
-        {
-            hitbox.position = position;
         }
     }
 }

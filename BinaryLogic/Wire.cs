@@ -32,8 +32,10 @@ namespace BinaryLogic
                 }
                 else
                 {
-                    var result = new List<Component>();
-                    result.Add(output);
+                    var result = new List<Component>(0)
+                    {
+                        output
+                    };
 
                     if (output.outputs != null)
                         output.Set(signal);
@@ -91,7 +93,7 @@ namespace BinaryLogic
 
         public override void Scale(Scene scene)
         {
-            throw new NotImplementedException();
+            throw new NotImplementedException(); // TODO: Deceptively hard.
         }
     }
 }
