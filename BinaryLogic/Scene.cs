@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 using BinaryLogic.Interfaces;
 using BinaryLogic.Components;
 using Point = BinaryLogic.Point;
+using System.Timers; // TODO: Must incorporate settable tickrate.
 
 namespace BinaryLogic
 {
     public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y, Plus, Minus, Invalid }
     public enum MouseKey { Left, Right, Middle, Invalid }
 
-    public class Scene // TODO: Must incorporate settable tickrate.
+    public class Scene 
     {
         IRenderer renderer;
         public Grid Grid { get; set; }
@@ -22,6 +23,14 @@ namespace BinaryLogic
         public Color Background { get; set; }
         public List<Component> components = new List<Component>(0);
         public Component SelectedComponent { get; private set; }
+
+        public bool WirePlacementMode { get; private set; }
+        public Point WireStart { get; private set; }
+        public Point MouseLocation { get; private set; }
+        public bool WireInput { get; private set; }
+        public Component WireInputComponent { get; private set; }
+        public Component WireOutputComponent { get; private set; }
+
         public uint GlobalID { get; set; }
 
         public Scene(Grid grid, Color background, IRenderer renderer)
@@ -49,7 +58,7 @@ namespace BinaryLogic
         public void SelectComponent(Point location)
         {
             Component selected = components
-                                 .Where(c => c.Select(location))
+                                 .Where(c => c.Select(location, this))
                                  .OrderBy(c => c.ID)
                                  .LastOrDefault();
 
@@ -79,12 +88,27 @@ namespace BinaryLogic
 
         public void Draw(bool componentsOnly = false)
         {
-            if (!componentsOnly)
-                Clear();
-            
-            foreach (Component component in components)
+            if (WirePlacementMode)
             {
-                component.Draw(renderer);
+                if (!componentsOnly)
+                    Clear();
+
+                renderer.DrawLine(new Line(WireStart, MouseLocation), Color.Black, 3);
+
+                foreach (Component component in components)
+                {
+                    component.Draw(renderer);
+                }
+            }
+            else
+            {
+                if (!componentsOnly)
+                    Clear();
+
+                foreach (Component component in components)
+                {
+                    component.Draw(renderer);
+                }
             }
         }
 
@@ -94,22 +118,85 @@ namespace BinaryLogic
             Grid.Draw(renderer);
         }
 
+        public void WireMode(Point start, Component sender, bool input = false)
+        {
+            WirePlacementMode = true;
+            WireInput = input;
+            WireStart = start;
+
+            if (WireInput)
+                WireInputComponent = sender;
+            else
+                WireOutputComponent = sender;
+        }
+
+        public void MouseMove(Point location)
+        {
+            MouseLocation = location;
+
+            if (WirePlacementMode)
+            {
+                Draw();
+            }
+        }
+
         public void MouseClick(MouseKey key, Point location)
         {
             switch (key)
             {
                 case MouseKey.Left:
-                    SelectComponent(location);
-                    Draw();
+                    if (WirePlacementMode)
+                    {
+                        if (WireInput)
+                        {
+                            WireOutputComponent = components.Where(c => c.InputClicked(location) != null)
+                                                            .OrderBy(c => c.ID)
+                                                            .LastOrDefault();
+                        }
+                        else
+                        {
+                            WireInputComponent = components.Where(c => c.OutputClicked(location) != null)
+                                                            .OrderBy(c => c.ID)
+                                                            .LastOrDefault();
+                        }
+
+                        AddComponent(new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent));
+                        WirePlacementMode = false;
+                        WireStart = null;
+                        WireInputComponent = null;
+                        WireOutputComponent = null;
+                    }
+                    else
+                    {
+                        SelectComponent(location);
+                        Draw();
+                    }
                     break;
                 case MouseKey.Right:
-                    foreach (IClickable c in components)
-                        c.Click(location);
+                    if (WirePlacementMode)
+                    {
+                        WirePlacementMode = false;
+                        WireStart = null;
+                        WireInputComponent = null;
+                        WireOutputComponent = null;
+                    }
+                    else
+                    { 
+                        foreach (IClickable c in components)
+                            c.Click(location);
 
-                    Draw();
+                        Draw();
+                    }
                     break;
                 default:
-                throw new NotImplementedException();
+                    if (WirePlacementMode)
+                    {
+                        WirePlacementMode = false;
+                        WireStart = null;
+                        WireInputComponent = null;
+                        WireOutputComponent = null;
+                    }
+                    throw new NotImplementedException();
             }
         }
 
@@ -117,6 +204,7 @@ namespace BinaryLogic
         {
             Point closest = Grid.SnapToGrid(mouseLocation);
             
+            if (!WirePlacementMode)
             switch (key)
             {
                 case Key.T:

@@ -91,23 +91,23 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public override bool Select(Point location)
+        public override bool Select(Point location, Scene sender)
         {
             bool result = hitbox.Clicked(location);
 
-            foreach (InHitbox hitbox in inHitboxes)
-            {
-                if (hitbox.Clicked(location))
-                {
-                    result = false;
-                    CreateWire(this, hitbox.Position, false);
-                }
-            }
+            InHitbox i = InputClicked(location);
+            OutHitbox o = OutputClicked(location);
 
-            if (outHitbox.Clicked(location))
+            if (i != null)
             {
                 result = false;
-                CreateWire(this, outHitbox.Position, false);
+                sender.WireMode(location, this);
+            }
+
+            if (o != null)
+            {
+                result = false;
+                sender.WireMode(location, this, true);
             }
 
             return result;

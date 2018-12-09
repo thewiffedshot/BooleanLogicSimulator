@@ -17,8 +17,8 @@ namespace BinaryLogic
         public Point Position { get; protected set; }
         public Point StartPosition { get; set; }
         public ComponentHitbox hitbox;
-        protected InHitbox[] inHitboxes = new InHitbox[0];
-        protected OutHitbox outHitbox;
+        public InHitbox[] inHitboxes = new InHitbox[0];
+        public OutHitbox outHitbox;
         public delegate bool clickAction(Point location);
 
         public Color Color { get; protected set; }
@@ -92,13 +92,31 @@ namespace BinaryLogic
         
         public abstract void Deselect();
         public abstract void Draw(IRenderer renderer);
-        public abstract bool Select(Point location);
+        public abstract bool Select(Point location, Scene sender);
         public abstract void Translate(Scene scene, Direction direction, uint units);
         public abstract void Scale(Scene scene);
 
-        protected void CreateWire(Component sender, Point position, bool output)
+        public InHitbox InputClicked(Point location)
         {
+            foreach (InHitbox hitbox in inHitboxes)
+            {
+                if (hitbox.Clicked(location))
+                {
+                    return hitbox;
+                }
+            }
 
+            return null;
+        }
+
+        public OutHitbox OutputClicked(Point location)
+        {
+            if (outHitbox.Clicked(location))
+            {
+                return outHitbox;
+            }
+
+            return null;
         }
 
         public abstract void Process();

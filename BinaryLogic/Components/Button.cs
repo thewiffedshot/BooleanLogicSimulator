@@ -49,7 +49,7 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public override bool Select(Point location)
+        public override bool Select(Point location, Scene sender)
         {
             throw new NotImplementedException();
         }

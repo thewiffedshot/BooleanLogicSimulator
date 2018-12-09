@@ -101,6 +101,7 @@ namespace BooleanLogicSimulator
         private void MainForm_MouseMove(object sender, MouseEventArgs e)
         {
             localMousePosition = new Point(e.Location.X, e.Location.Y);
+            scene.MouseMove(localMousePosition);
         }
 
         private void MainForm_MouseDown(object sender, MouseEventArgs e)

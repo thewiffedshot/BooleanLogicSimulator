@@ -9,7 +9,7 @@ namespace BinaryLogic.Interfaces
 {
     public interface ISelectable
     {
-        bool Select(Point location);
+        bool Select(Point location, Scene sender);
         void Deselect();
     }
 }

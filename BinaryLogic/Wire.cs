@@ -11,14 +11,33 @@ namespace BinaryLogic
 {
     class Wire : Component
     {
-        public Wire(Scene scene, Line wire)
+        Line startLine;
+        InHitbox inConnected;   // Input hitbox of component were wire ends.
+        OutHitbox outConnected; // Output hitbox of component were wire starts.
+
+        public Wire(Scene scene, Line wire, Component input, Component output)
             : base(ComponentType.Wire, null, 3)
         {
+            inputs = new List<Component>[1];
+
+            if (input != null)
+            {
+                inputs[0] = new List<Component>(1);
+                inputs[0][0] = input;
+                outConnected = input.outHitbox;
+            }
+
+            outputs = new List<Component>(1);
+
+            if (output != null)
+                outputs[0] = output;
+
             lines = new Line[1];
             lines[0] = wire;
+            startLine = wire;
         }
 
-        public override List<Component> Transmit(List<Component> outputs, bool signal)
+        public override List<Component> Transmit(List<Component> outputs, bool signal) // TODO: Breadth first search.
         {
             List<Component> found = new List<Component>(0);
 
@@ -57,7 +76,7 @@ namespace BinaryLogic
             renderer.DrawLine(lines[0], Color, 3);
         }
 
-        public override bool Select(Point location)
+        public override bool Select(Point location, Scene sender)
         {
             Point higher = lines[0].points.OrderBy(y => y.Y).First();
             Point lower = lines[0].points.OrderBy(y => y.Y).Last();
@@ -91,9 +110,15 @@ namespace BinaryLogic
             throw new NotImplementedException();
         }
 
-        public override void Scale(Scene scene)
+        public override void Scale(Scene scene) // TODO: Deceptively hard.
         {
-            throw new NotImplementedException(); // TODO: Deceptively hard.
+            if (inputs[0][0] != null)
+                lines[0].points[0] = inputs[0][0].outHitbox.Position; // Future implementations will need to include 'inConnected' field for multiple component outputs support.
+
+            if (outputs[0] != null)
+                lines[0].points[1] = outConnected.Position;
+            else
+                lines[0].points[1] = scene.ScaleFactor * startLine.points[1];
         }
     }
 }
