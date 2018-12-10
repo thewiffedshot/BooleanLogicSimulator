@@ -11,10 +11,28 @@ namespace BinaryLogic
     public class Line
     {
         public Point[] points = new Point[2];
+        public float Parameter { get; private set; }
+        public Vector CollinearVector { get; private set; }
 
         public Line(Point point1, Point point2)
         {
             points = new Point[]{ point1, point2 };
+
+            SetParameter();
+        }
+
+        private void SetParameter()
+        {
+            Point higher = points.OrderBy(y => y.Y).First();
+            Point lower = points.OrderBy(y => y.Y).Last();
+
+            CollinearVector = new Vector(higher.X - lower.X,
+                                         higher.Y - lower.Y);
+
+            if (CollinearVector.X != 0)
+                Parameter = (higher.X - lower.X) / CollinearVector.X;
+            if (CollinearVector.Y != 0)
+                Parameter = (higher.Y - lower.Y) / CollinearVector.Y;
         }
 
         public void Move(Direction direction, uint units = 1)

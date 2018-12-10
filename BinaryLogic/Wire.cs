@@ -12,8 +12,9 @@ namespace BinaryLogic
     class Wire : Component
     {
         Line startLine;
-        InHitbox inConnected;   // Input hitbox of component were wire ends.
-        OutHitbox outConnected; // Output hitbox of component were wire starts.
+        int length = 0;
+        InHitbox inConnected;   // Input hitbox of component where wire ends.
+        OutHitbox outConnected; // Output hitbox of component where wire starts.
 
         public Wire(Scene scene, Line wire, Component input, Component output)
             : base(ComponentType.Wire, null, 3)
@@ -32,11 +33,17 @@ namespace BinaryLogic
             outputs = new List<Component>(0);
 
             if (output != null)
+            {
                 outputs[0] = output;
+
+                inConnected = output.inHitboxes.Where(h => h.Clicked(wire.points[1])).SingleOrDefault();
+            }
 
             lines = new Line[1];
             lines[0] = wire;
             startLine = wire;
+
+            length = (int)Point.Distance(startLine.points[0], startLine.points[1]);
         }
 
         public override List<Component> Transmit(List<Component> outputs, bool signal) // TODO: Breadth first search.
@@ -114,16 +121,22 @@ namespace BinaryLogic
 
         public override void Scale(Scene scene) // TODO: Deceptively hard.
         {
-            if (inputs[0][0] != null)
-                lines[0].points[0] = inputs[0][0].outHitbox.Position; // Future implementations will need to include 'inConnected' field for multiple component outputs support.
+            Point startPoint = new Point(0, 0);
 
-            if (outputs.Count > 0)
-                lines[0].points[1] = outConnected.Position;
-            else
+            if (outConnected != null)
             {
-                Point delta = scene.ScaleFactor * startLine.points[1] - startLine.points[1];
-                lines[0].points[1] = scene.ScaleFactor * startLine.points[1] - delta;
+                startPoint = outConnected.Position;
+                //lines[0].points[0] = inputs[0][0].outHitbox.Position; // Future implementations will need to include 'inConnected' field for multiple component outputs support.
             }
+            else if (inConnected != null)
+            {
+                startPoint = inConnected.Position;
+            }
+
+            Point endPoint = startPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+
+            lines[0].points[0] = scene.ScaleFactor * startPoint;  // TODO: Finish wire scaling and get to important stuff.
+            lines[0].points[1] = endPoint;
         }
     }
 }

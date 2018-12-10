@@ -22,9 +22,19 @@ namespace BinaryLogic
             return new Point(p1.X + p2.X, p1.Y + p2.Y);
         }
 
+        public static Point operator +(Point p1, Vector p2)
+        {
+            return new Point((int)(p1.X + p2.X), (int)(p1.Y + p2.Y));
+        }
+
         public static Point operator -(Point p1, Point p2)
         {
             return new Point(p1.X - p2.X, p1.Y - p2.Y);
+        }
+
+        public static Point operator -(Point p1, Vector p2)
+        {
+            return new Point((int)(p1.X - p2.X), (int)(p1.Y - p2.Y));
         }
 
         public static Point operator *(int scalar, Point p)
