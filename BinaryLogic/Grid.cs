@@ -19,7 +19,7 @@ namespace BinaryLogic
         public uint StartInterval { get; private set; }
         public uint Interval { get; private set; }
         public GridThickness Thickness { get; set; }
-        public PointField Field { get; private set; }
+        //public PointField Field { get; private set; }
         public float ScaleFactor { get; private set; }
         public Grid(Point windowSize, uint interval, Color color, GridThickness thickness)
         {
@@ -30,7 +30,7 @@ namespace BinaryLogic
             Thickness = thickness;
             WindowSize = windowSize;
 
-            Field = new PointField(this);
+            //Field = new PointField(this);
         }
 
         public Grid(Point windowSize, Color color)
@@ -42,7 +42,7 @@ namespace BinaryLogic
             Thickness = GridThickness.Small;
             WindowSize = windowSize;
 
-            Field = new PointField(this);
+            //Field = new PointField(this);
         }
 
         public Grid(Point windowSize)
@@ -54,7 +54,7 @@ namespace BinaryLogic
             Thickness = GridThickness.Small;
             WindowSize = windowSize;
 
-            Field = new PointField(this);
+            //Field = new PointField(this);
         }
 
         public void ChangeColor(Color color)
@@ -67,17 +67,17 @@ namespace BinaryLogic
             ScaleFactor += scale;
 
             Interval = (uint)(ScaleFactor * StartInterval);
-            Field = new PointField(this);
+            //Field = new PointField(this);
         }
 
         public void Draw(IRenderer renderer)
         {
-            for (uint y = 0; y < WindowSize.Y; y += Interval)
+            for (float y = 0; y < WindowSize.Y; y += Interval)
             {
                 renderer.DrawLine(new Line(new Point(0, (int)y), new Point(WindowSize.X, (int)y)), Color, (uint)Thickness);
             }
 
-            for (uint x = 0; x < WindowSize.X; x += Interval)
+            for (float x = 0; x < WindowSize.X; x += Interval)
             {
                 renderer.DrawLine(new Line(new Point((int)x, 0), new Point((int)x, WindowSize.Y)), Color, (uint)Thickness);
             }
@@ -85,22 +85,8 @@ namespace BinaryLogic
 
         public Point SnapToGrid(Point point)
         {
-            float minDistance = float.MaxValue;
-            Point closest = null;
-
-            for (uint y = 0; y < Field.points.GetLength(1); y++)
-                for (uint x = 0; x < Field.points.GetLength(0); x++)
-                {
-                    float distance = Point.Distance(Field.points[x, y], point);
-
-                    if (distance < minDistance)
-                    {
-                        minDistance = distance;
-                        closest = Field.points[x, y];
-                    }
-                }
-
-            return closest;
+            return new Point(point.X - (point.X % (int)Interval),
+                             point.Y - (point.Y % (int)Interval));
         }
 
         public void Clear(IRenderer renderer, Color background)

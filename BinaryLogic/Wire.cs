@@ -22,12 +22,14 @@ namespace BinaryLogic
 
             if (input != null)
             {
-                inputs[0] = new List<Component>(1);
-                inputs[0][0] = input;
+                inputs[0] = new List<Component>()
+                {
+                    input
+                };
                 outConnected = input.outHitbox;
             }
 
-            outputs = new List<Component>(1);
+            outputs = new List<Component>(0);
 
             if (output != null)
                 outputs[0] = output;
@@ -115,10 +117,13 @@ namespace BinaryLogic
             if (inputs[0][0] != null)
                 lines[0].points[0] = inputs[0][0].outHitbox.Position; // Future implementations will need to include 'inConnected' field for multiple component outputs support.
 
-            if (outputs[0] != null)
+            if (outputs.Count > 0)
                 lines[0].points[1] = outConnected.Position;
             else
-                lines[0].points[1] = scene.ScaleFactor * startLine.points[1];
+            {
+                Point delta = scene.ScaleFactor * startLine.points[1] - startLine.points[1];
+                lines[0].points[1] = scene.ScaleFactor * startLine.points[1] - delta;
+            }
         }
     }
 }

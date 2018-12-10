@@ -39,7 +39,7 @@ namespace BinaryLogic
             hitbox.Draw(renderer);
         }
 
-        public void Translate(Direction direction, float units = 1)
+        public void Translate(Direction direction, uint units = 1)
         {
             hitbox.Move(direction, units);
         }

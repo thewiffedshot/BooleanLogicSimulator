@@ -13,10 +13,10 @@ namespace BinaryLogic
     {
         public Point position;
         public Color Color { get; private set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
-        public Rectangle(Point pos, float width, float height)
+        public Rectangle(Point pos, int width, int height)
         {
             position = pos;
             Width = width;
@@ -24,28 +24,28 @@ namespace BinaryLogic
             Color = Color.Black;
         }
 
-        public Rectangle(Point pos, float width, float height, Color color)
+        public Rectangle(Point pos, int width, int height, Color color)
         {
             position = pos;
             Width = width;
             Height = height;
         }
 
-        public void Move(Direction direction, float units = 1)
+        public void Move(Direction direction, uint units = 1)
         {
             switch (direction)
             {
                 case Direction.Up:
-                    position.Y -= units;
+                    position.Y -= (int)units;
                     break;
                 case Direction.Down:
-                    position.Y += units;
+                    position.Y += (int)units;
                     break;
                 case Direction.Right:
-                    position.X += units;
+                    position.X += (int)units;
                     break;
                 case Direction.Left:
-                    position.X -= units;
+                    position.X -= (int)units;
                     break;
             }
         }

@@ -17,25 +17,25 @@ namespace BinaryLogic
             points = new Point[]{ point1, point2 };
         }
 
-        public void Move(Direction direction, float units = 1)
+        public void Move(Direction direction, uint units = 1)
         {
             switch (direction)
             {
                 case Direction.Up:
-                    points[0].Y -= units;
-                    points[1].Y -= units;
+                    points[0].Y -= (int)units;
+                    points[1].Y -= (int)units;
                     break;
                 case Direction.Down:
-                    points[0].Y += units;
-                    points[1].Y += units;
+                    points[0].Y += (int)units;
+                    points[1].Y += (int)units;
                     break;
                 case Direction.Right:
-                    points[0].X += units;
-                    points[1].X += units;
+                    points[0].X += (int)units;
+                    points[1].X += (int)units;
                     break;
                 case Direction.Left:
-                    points[0].X -= units;
-                    points[1].X -= units;
+                    points[0].X -= (int)units;
+                    points[1].X -= (int)units;
                     break;
             }
         }

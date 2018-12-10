@@ -12,7 +12,7 @@ namespace BinaryLogic.Components
     public class Switch : Component, IClickable
     {
         public Switch(Scene scene, Point position)
-            : base(ComponentType.Switch, new ComponentHitbox(new Rectangle(position, 2 * scene.GetGridInterval(), 2 * scene.GetGridInterval())), 3)
+            : base(ComponentType.Switch, new ComponentHitbox(new Rectangle(position, (int)(2 * scene.GetGridInterval()), (int)(2 * scene.GetGridInterval()))), 3)
         {
             StartPosition = position / scene.ScaleFactor;
             Position = position;
@@ -22,17 +22,17 @@ namespace BinaryLogic.Components
             lines = new Line[1];
 
             hitbox.Position = Position;
-            Point indent = position + new Point(XIndent, YIndent);
+            Point indent = position + new Point((int)XIndent, (int)YIndent);
 
 
-            rectangles[0] = new Rectangle(indent, 2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor, 
-                                                  2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor);
+            rectangles[0] = new Rectangle(indent, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
+                                                  (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
 
-            rectangles[1] = new Rectangle(indent + new Point(10 * scene.ScaleFactor, 5 * scene.ScaleFactor), 
-                                                                rectangles[0].Width - 20 * scene.ScaleFactor, 
-                                                                rectangles[0].Height - 10 * scene.ScaleFactor);
+            rectangles[1] = new Rectangle(indent + new Point((int)(10 * scene.ScaleFactor), (int)(5 * scene.ScaleFactor)),
+                                                                (int)(rectangles[0].Width - 20 * scene.ScaleFactor),
+                                                                (int)(rectangles[0].Height - 10 * scene.ScaleFactor));
 
-            outHitbox = new OutHitbox(new Point(position.X + rectangles[0].Width, position.Y + rectangles[0].Height / 2), scene.ScaleFactor * 7.5f);
+            outHitbox = new OutHitbox(new Point(position.X + rectangles[0].Width, position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f));
 
             lines[0] = new Line(new Point(rectangles[1].position.X, 
                                           rectangles[1].position.Y + rectangles[1].Height / 4), 
@@ -46,16 +46,16 @@ namespace BinaryLogic.Components
 
             if (Signal)
             {
-                lines[0].points[0].Y = rectangles[1].position.Y + 3 * rectangles[1].Height / 4;
-                lines[0].points[1].Y = rectangles[1].position.Y + 3 * rectangles[1].Height / 4;
+                lines[0].points[0].Y = (int)(rectangles[1].position.Y + 3 * (float)rectangles[1].Height / 4); // Constants must be explicitly noted.
+                lines[0].points[1].Y = (int)(rectangles[1].position.Y + 3 * (float)rectangles[1].Height / 4);
             }
             else
             {
-                lines[0].points[0].Y = rectangles[1].position.Y + rectangles[1].Height / 4;
-                lines[0].points[1].Y = rectangles[1].position.Y + rectangles[1].Height / 4;
+                lines[0].points[0].Y = (int)(rectangles[1].position.Y + (float)rectangles[1].Height / 4);
+                lines[0].points[1].Y = (int)(rectangles[1].position.Y + (float)rectangles[1].Height / 4);
             }
         }
-
+        
         public override void ChangeColor(Color color)
         {
             Color = color;
@@ -118,16 +118,16 @@ namespace BinaryLogic.Components
             switch (direction)
             {
                 case Direction.Down:
-                    Position.Y += scene.GetGridInterval() * units;
+                    Position.Y += (int)(scene.GetGridInterval() * units);
                     break;
                 case Direction.Up:
-                    Position.Y -= scene.GetGridInterval() * units;
+                    Position.Y -= (int)(scene.GetGridInterval() * units);
                     break;
                 case Direction.Left:
-                    Position.X -= scene.GetGridInterval() * units;
+                    Position.X -= (int)(scene.GetGridInterval() * units);
                     break;
                 case Direction.Right:
-                    Position.X += scene.GetGridInterval() * units;
+                    Position.X += (int)(scene.GetGridInterval() * units);
                     break;
             }
 
@@ -145,18 +145,18 @@ namespace BinaryLogic.Components
 
             Position = scene.Grid.SnapToGrid(Position);
 
-            Point indent = Position + scene.ScaleFactor * new Point(XIndent, YIndent);
+            Point indent = Position + scene.ScaleFactor * new Point((int)XIndent, (int)YIndent);
 
-            rectangles[0] = new Rectangle(indent, 2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor,
-                                                  2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor);
+            rectangles[0] = new Rectangle(indent, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
+                                                  (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
 
-            rectangles[1] = new Rectangle(indent + new Point(10 * scene.ScaleFactor, 5 * scene.ScaleFactor),
-                                                                rectangles[0].Width - 20 * scene.ScaleFactor,
-                                                                rectangles[0].Height - 10 * scene.ScaleFactor);
+            rectangles[1] = new Rectangle(indent + new Point((int)(10 * scene.ScaleFactor), (int)(5 * scene.ScaleFactor)),
+                                                                (int)(rectangles[0].Width - 20 * scene.ScaleFactor),
+                                                                (int)(rectangles[0].Height - 10 * scene.ScaleFactor));
 
             ChangeColor(Color);
 
-            outHitbox = new OutHitbox(new Point(Position.X + rectangles[0].Width, Position.Y + rectangles[0].Height / 2), scene.ScaleFactor * 7.5f);
+            outHitbox = new OutHitbox(new Point(Position.X + rectangles[0].Width, Position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f));
             hitbox.Position = Position;
 
             float yLine = 0;
@@ -167,9 +167,9 @@ namespace BinaryLogic.Components
                 yLine = rectangles[1].Height / 4;
 
             lines[0] = new Line(new Point(rectangles[1].position.X,
-                                          rectangles[1].position.Y + yLine),
+                                          (int)(rectangles[1].position.Y + yLine)),
                                 new Point(rectangles[1].position.X + rectangles[1].Width,
-                                          rectangles[1].position.Y + yLine));
+                                          (int)(rectangles[1].position.Y + yLine)));
         }
     }
 }

@@ -182,8 +182,9 @@ namespace BinaryLogic
                     }
                     else
                     { 
-                        foreach (IClickable c in components)
-                            c.Click(location);
+                        foreach (Component c in components)
+                            if (c is IClickable)
+                                ((IClickable)c).Click(location);
 
                         Draw();
                     }
@@ -219,7 +220,7 @@ namespace BinaryLogic
             }
         }
 
-        public float GetGridInterval()
+        public uint GetGridInterval()
         {
             return Grid.Interval;
         }

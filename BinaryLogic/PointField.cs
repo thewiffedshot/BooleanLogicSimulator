@@ -7,9 +7,9 @@ using Point = BinaryLogic.Point;
 
 namespace BinaryLogic
 {
-    public class PointField
+    public class PointField // Deprecated. (for now)
     {
-        public Point[,] points;
+        /*public Point[,] points;
 
         public PointField(Grid grid)
         {
@@ -25,6 +25,6 @@ namespace BinaryLogic
                     points[x,y] = new Point(i, j);
                 }
             }
-        }
+        }*/
     }
 }

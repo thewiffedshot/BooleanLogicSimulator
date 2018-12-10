@@ -8,10 +8,10 @@ namespace BinaryLogic
 {
     public class Point
     {
-        public float X { get; set; }
-        public float Y { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
 
-        public Point(float x, float y)
+        public Point(int x, int y)
         {
             X = x;
             Y = y;
@@ -27,25 +27,46 @@ namespace BinaryLogic
             return new Point(p1.X - p2.X, p1.Y - p2.Y);
         }
 
-        public static Point operator *(float scalar, Point p)
+        public static Point operator *(int scalar, Point p)
         {
             return new Point(p.X * scalar, p.Y * scalar);
+        }
+
+        public static Point operator *(Point p, int scalar)
+        {
+            return new Point(p.X * scalar, p.Y * scalar);
+        }
+
+        public static Point operator /(int scalar, Point p)
+        {
+            return new Point(p.X / scalar, p.Y / scalar);
+        }
+
+        public static Point operator /(Point p, int scalar)
+        {
+            return new Point(p.X / scalar, p.Y / scalar);
+        }
+
+        public static Point operator *(float scalar, Point p)
+        {
+            return new Point((int)(p.X * scalar), (int)(p.Y * scalar));
         }
 
         public static Point operator *(Point p, float scalar)
         {
-            return new Point(p.X * scalar, p.Y * scalar);
+            return new Point((int)(p.X * scalar), (int)(p.Y * scalar));
         }
 
         public static Point operator /(float scalar, Point p)
         {
-            return new Point(p.X / scalar, p.Y / scalar);
+            return new Point((int)(p.X / scalar), (int)(p.Y / scalar));
         }
 
         public static Point operator /(Point p, float scalar)
         {
-            return new Point(p.X / scalar, p.Y / scalar);
+            return new Point((int)(p.X / scalar), (int)(p.Y / scalar));
         }
+
 
         public static float Distance(Point p1, Point p2)
         {

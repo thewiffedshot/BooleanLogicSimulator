@@ -14,7 +14,7 @@ namespace BinaryLogic
         Circle hitbox;
         public Point Position { get { return hitbox.position; } set { hitbox.position = value; } }
 
-        public InHitbox(Point position, float radius)
+        public InHitbox(Point position, int radius)
         {
             hitbox = new Circle(position, radius);
         }
