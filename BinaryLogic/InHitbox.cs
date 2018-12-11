@@ -31,7 +31,7 @@ namespace BinaryLogic
 
         public void Draw(IRenderer renderer)
         {
-            throw new NotImplementedException();
+            renderer.DrawCircle(hitbox, Color.Green, 3);
         }
     }
 }

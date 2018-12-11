@@ -67,6 +67,8 @@ namespace BooleanLogicSimulator
                     return Key.T;
                 case Keys.Y:
                     return Key.Y;
+                case Keys.L:
+                    return Key.L;
                 case Keys.Add:
                     return Key.Plus;
                 case Keys.Subtract:

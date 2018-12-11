@@ -101,13 +101,13 @@ namespace BinaryLogic.Components
             if (i != null)
             {
                 result = false;
-                sender.WireMode(location, this);
+                sender.WireMode(location, this, true);
             }
 
             if (o != null)
             {
                 result = false;
-                sender.WireMode(location, this, true);
+                sender.WireMode(location, this);
             }
 
             return result;

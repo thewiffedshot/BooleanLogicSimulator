@@ -11,7 +11,7 @@ using System.Timers; // TODO: Must incorporate settable tickrate.
 
 namespace BinaryLogic
 {
-    public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y, Plus, Minus, Invalid }
+    public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y, L, Plus, Minus, Invalid }
     public enum MouseKey { Left, Right, Middle, Invalid }
 
     public class Scene 
@@ -169,7 +169,7 @@ namespace BinaryLogic
                     else
                     {
                         SelectComponent(location);
-                        Draw();
+                        Draw(true);
                     }
                     break;
                 case MouseKey.Right:
@@ -210,6 +210,9 @@ namespace BinaryLogic
             {
                 case Key.T:
                     AddComponent(new Switch(this, closest));
+                    break;
+                case Key.L:
+                    AddComponent(new Light(this, closest));
                     break;
                 case Key.Plus:
                     Scale(0.25f);
