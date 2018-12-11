@@ -119,23 +119,22 @@ namespace BinaryLogic
             throw new NotImplementedException();
         }
 
-        public override void Scale(Scene scene) // TODO: Deceptively hard.
+        public override void Scale(Scene scene) // TODO: Not absolutely finished, but sufficient.
         {
             Point startPoint = new Point(0, 0);
 
             if (outConnected != null)
             {
-                startPoint = outConnected.Position;
-                //lines[0].points[0] = inputs[0][0].outHitbox.Position; // Future implementations will need to include 'inConnected' field for multiple component outputs support.
+                startPoint = scene.ScaleFactor * outConnected.Position;
             }
             else if (inConnected != null)
             {
-                startPoint = inConnected.Position;
+                startPoint = scene.ScaleFactor * inConnected.Position;
             }
 
             Point endPoint = startPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
 
-            lines[0].points[0] = scene.ScaleFactor * startPoint;  // TODO: Finish wire scaling and get to important stuff.
+            lines[0].points[0] = startPoint;
             lines[0].points[1] = endPoint;
         }
     }
