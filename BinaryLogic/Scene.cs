@@ -27,7 +27,6 @@ namespace BinaryLogic
         public bool WirePlacementMode { get; private set; }
         public Point WireStart { get; private set; }
         public Point MouseLocation { get; private set; }
-        public bool WireInput { get; private set; }
         public Component WireInputComponent { get; private set; }
         public Component WireOutputComponent { get; private set; }
 
@@ -40,6 +39,25 @@ namespace BinaryLogic
             this.renderer = renderer;
             ScaleFactor = 1;
             Offset = new Point(0, 0);
+        }
+
+        public void Update()
+        {
+            foreach (Component component in components)
+            {
+                if (component is Switch)
+                {
+                    component.SetLevel(component, 0);
+                }
+
+                else if (component is Button)
+                {
+                    component.SetLevel(component, 0);
+                }
+            }
+
+            foreach (Component component in components)
+                component.Checked = false;
         }
 
         public void SetRenderer(IRenderer renderer)
@@ -121,10 +139,9 @@ namespace BinaryLogic
         public void WireMode(Point start, Component sender, bool input = false)
         {
             WirePlacementMode = true;
-            WireInput = input;
             WireStart = start;
 
-            if (WireInput)
+            if (input)
                 WireInputComponent = sender;
             else
                 WireOutputComponent = sender;
@@ -147,19 +164,6 @@ namespace BinaryLogic
                 case MouseKey.Left:
                     if (WirePlacementMode)
                     {
-                        if (WireInput)
-                        {
-                            WireOutputComponent = components.Where(c => c.InputClicked(location) != null)
-                                                            .OrderBy(c => c.ID)
-                                                            .LastOrDefault();
-                        }
-                        else
-                        {
-                            WireInputComponent = components.Where(c => c.OutputClicked(location) != null)
-                                                            .OrderBy(c => c.ID)
-                                                            .LastOrDefault();
-                        }
-
                         AddComponent(new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent));
                         WirePlacementMode = false;
                         WireStart = null;
@@ -184,7 +188,7 @@ namespace BinaryLogic
                     { 
                         foreach (Component c in components)
                             if (c is IClickable)
-                                ((IClickable)c).Click(location);
+                                ((IClickable)c).Click(location, this);
 
                         Draw();
                     }

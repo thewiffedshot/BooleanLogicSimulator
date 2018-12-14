@@ -16,27 +16,33 @@ namespace BinaryLogic
         InHitbox inConnected;   // Input hitbox of component where wire ends.
         OutHitbox outConnected; // Output hitbox of component where wire starts.
 
-        public Wire(Scene scene, Line wire, Component input, Component output)
+        public Wire(Scene scene, Line wire, Component input, Component output)  // TODO: Rewrite the checks properly using
+                                                                                //       'WireInputComponent' and 'WireOutputComponent' from the scene.
             : base(ComponentType.Wire, null, 3)
-        {
-            inputs = new List<Component>[1];
-
+        {  
             if (input != null)
             {
-                inputs[0] = new List<Component>()
+                inputs[0] = new List<Component>(1)
                 {
                     input
                 };
+
                 outConnected = input.outHitbox;
+                inHitboxes = new InHitbox[inputs.Length];
+                //inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 7.5f));
             }
 
             outputs = new List<Component>(0);
 
             if (output != null)
             {
-                outputs[0] = output;
+                outputs = new List<Component>(1)
+                {
+                    output
+                };
 
-                inConnected = output.inHitboxes.Where(h => h.Clicked(wire.points[1])).SingleOrDefault();
+                inConnected = output.inHitboxes.Where(h => h.AttachedComponent == this).SingleOrDefault();
+                //outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 7.5f));
             }
 
             lines = new Line[1];
@@ -44,35 +50,6 @@ namespace BinaryLogic
             startLine = wire;
 
             length = (int)Point.Distance(startLine.points[0], startLine.points[1]);
-        }
-
-        public override List<Component> Transmit(List<Component> outputs, bool signal) // TODO: Breadth first search.
-        {
-            List<Component> found = new List<Component>(0);
-
-            if (outputs == null) return found;
-            
-            foreach (Component output in outputs)
-            {
-                if (output is Wire)
-                {
-                    found.Concat(((Wire)output).Transmit(found, signal));
-                }
-                else
-                {
-                    var result = new List<Component>(0)
-                    {
-                        output
-                    };
-
-                    if (output.outputs != null)
-                        output.Set(signal);
-
-                    return result;
-                }
-            }
-
-            return null;
         }
 
         public override void Deselect()
@@ -83,6 +60,12 @@ namespace BinaryLogic
         public override void Draw(IRenderer renderer)
         {
             renderer.DrawLine(lines[0], Color, 3);
+
+            if (inputs[0].Count > 0)
+                inHitboxes[0].Draw(renderer);
+
+            if (outputs.Count > 0)
+                outHitbox.Draw(renderer);
         }
 
         public override bool Select(Point location, Scene sender)
@@ -90,10 +73,9 @@ namespace BinaryLogic
             Point higher = lines[0].points.OrderBy(y => y.Y).First();
             Point lower = lines[0].points.OrderBy(y => y.Y).Last();
 
-            Point colinear = new Point(higher.Y - lower.Y,
-                                       higher.X - lower.X);
+            Vector colinear = lines[0].CollinearVector;
 
-            float parameter = (higher.X - lower.X) / colinear.X;
+            float parameter = lines[0].Parameter;
 
             float lineX = colinear.X * parameter + higher.X;
             float lineY = colinear.Y * parameter + higher.Y;
@@ -136,6 +118,12 @@ namespace BinaryLogic
 
             lines[0].points[0] = startPoint;
             lines[0].points[1] = endPoint;
+
+            if (inConnected != null)
+                outHitbox = new OutHitbox(startPoint, (int)(scene.ScaleFactor * 7.5f));
+
+            if (outConnected != null)
+                inHitboxes[0] = new InHitbox(endPoint, (int)(scene.ScaleFactor * 7.5f));
         }
     }
 }

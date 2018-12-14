@@ -58,10 +58,5 @@ namespace BinaryLogic.Components
         {
             throw new NotImplementedException();
         }
-
-        public override List<Component> Transmit(List<Component> outputs, bool signal)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

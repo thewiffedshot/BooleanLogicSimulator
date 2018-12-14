@@ -64,7 +64,7 @@ namespace BinaryLogic.Components
                 rectangle.ChangeColor(color);
         }
 
-        public void Click(Point location)
+        public void Click(Point location, Scene sender)
         {
             if (hitbox.Clicked(location))
                 Flip();
@@ -101,13 +101,13 @@ namespace BinaryLogic.Components
             if (i != null)
             {
                 result = false;
-                sender.WireMode(location, this, true);
+                sender.WireMode(location, this);
             }
 
-            if (o != null)
+            else if (o != null)
             {
                 result = false;
-                sender.WireMode(location, this);
+                sender.WireMode(location, this, true);
             }
 
             return result;
@@ -132,11 +132,6 @@ namespace BinaryLogic.Components
             }
 
             Scale(scene);
-        }
-
-        public override List<Component> Transmit(List<Component> outputs, bool signal)
-        {
-            throw new NotImplementedException();
         }
 
         public override void Scale(Scene scene)

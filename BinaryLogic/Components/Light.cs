@@ -28,9 +28,9 @@ namespace BinaryLogic.Components
             rectangles[0] = new Rectangle(indent, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
                                                   (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
 
-            circles[0] = new Circle(new Point(position.X + (int)(scene.GetGridInterval() / 2f), 
-                                              position.Y + (int)(scene.GetGridInterval() / 2f)), 
-                                              (int)(3 * (float)scene.GetGridInterval() / 4));
+            circles[0] = new Circle(new Point(position.X + (int)(scene.GetGridInterval() / 3.5f), 
+                                              position.Y + (int)(scene.GetGridInterval() / 3.5f)), 
+                                              (int)(3 * (float)scene.GetGridInterval() / 2));
 
             startCircle = circles[0];
 
@@ -86,8 +86,8 @@ namespace BinaryLogic.Components
             rectangles[0] = new Rectangle(indent, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
                                                   (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
 
-            circles[0] = new Circle(new Point(Position.X + (int)(scene.GetGridInterval() / 2f),
-                                              Position.Y + (int)(scene.GetGridInterval() / 2f)),
+            circles[0] = new Circle(new Point(Position.X + (int)(scene.GetGridInterval() / 3.5f),
+                                              Position.Y + (int)(scene.GetGridInterval() / 3.5f)),
                                    (int)(scene.ScaleFactor * startCircle.radius));
 
             ChangeColor(Color);
@@ -101,8 +101,15 @@ namespace BinaryLogic.Components
             bool result = hitbox.Clicked(location);
 
             InHitbox i = InputClicked(location);
+            OutHitbox o = OutputClicked(location);
 
             if (i != null)
+            {
+                result = false;
+                sender.WireMode(location, this);
+            }
+
+            else if (o != null)
             {
                 result = false;
                 sender.WireMode(location, this, true);
@@ -112,11 +119,6 @@ namespace BinaryLogic.Components
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override List<Component> Transmit(List<Component> outputs, bool signal)
         {
             throw new NotImplementedException();
         }
