@@ -12,44 +12,66 @@ namespace BinaryLogic
     class Wire : Component
     {
         Line startLine;
-        int length = 0;
         InHitbox inConnected;   // Input hitbox of component where wire ends.
         OutHitbox outConnected; // Output hitbox of component where wire starts.
 
-        public Wire(Scene scene, Line wire, Component input, Component output)  // TODO: Rewrite the checks properly using
-                                                                                //       'WireInputComponent' and 'WireOutputComponent' from the scene.
-            : base(ComponentType.Wire, null, 3)
-        {  
-            if (input != null)
+        public Wire(Scene scene, Line wire, Component input, Component output) : // TODO: Need to add two more checks for appropriate missing output or input.
+            base(ComponentType.Wire, null, 3)
+        {
+            inHitboxes = new InHitbox[inputs.Length];
+            hitbox = new ComponentHitbox();
+
+            if (input != null && output != null)
             {
                 inputs[0] = new List<Component>(1)
                 {
                     input
                 };
 
-                outConnected = input.outHitbox;
-                inHitboxes = new InHitbox[inputs.Length];
-                //inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 7.5f));
+                input.outputs.Add(this);
+
+                outputs = new List<Component>(1)
+                {
+                    output
+                };
+
+                outConnected = scene.WireOutputHitbox;
+                inConnected = scene.WireInputHitbox;
+                output.inputs[inConnected.AttachedInputIndex].Add(this);
+
+                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 7.5f), 0);
+                outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 7.5f), 0);
             }
 
-            outputs = new List<Component>(0);
+            if (input != null && output == null)
+            {
+                inputs[0] = new List<Component>(1)
+                {
+                    input
+                };
 
-            if (output != null)
+                input.outputs.Add(this);
+                outConnected = scene.WireOutputHitbox;
+
+                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 7.5f), 0);
+            }
+
+            if (input == null && output != null)
             {
                 outputs = new List<Component>(1)
                 {
                     output
                 };
 
-                inConnected = output.inHitboxes.Where(h => h.AttachedComponent == this).SingleOrDefault();
-                //outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 7.5f));
+                inConnected = scene.WireInputHitbox;
+                output.inputs[inConnected.AttachedInputIndex].Add(this);
+                
+                outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 7.5f), 0);
             }
 
             lines = new Line[1];
-            lines[0] = wire;
+            lines[0] = new Line(scene.ScaleFactor * wire.points[0], scene.ScaleFactor * wire.points[1]);
             startLine = wire;
-
-            length = (int)Point.Distance(startLine.points[0], startLine.points[1]);
         }
 
         public override void Deselect()
@@ -61,21 +83,21 @@ namespace BinaryLogic
         {
             renderer.DrawLine(lines[0], Color, 3);
 
-            if (inputs[0].Count > 0)
+            if (!(inputs[0].Count > 0))
                 inHitboxes[0].Draw(renderer);
 
-            if (outputs.Count > 0)
+            if (!(outputs.Count > 0))
                 outHitbox.Draw(renderer);
         }
 
         public override bool Select(Point location, Scene sender)
         {
-            Point higher = lines[0].points.OrderBy(y => y.Y).First();
-            Point lower = lines[0].points.OrderBy(y => y.Y).Last();
+            Point higher = startLine.points.OrderBy(y => y.Y).First();
+            Point lower = startLine.points.OrderBy(y => y.Y).Last();
 
-            Vector colinear = lines[0].CollinearVector;
+            Vector colinear = startLine.CollinearVector;
 
-            float parameter = lines[0].Parameter;
+            float parameter = startLine.Parameter;
 
             float lineX = colinear.X * parameter + higher.X;
             float lineY = colinear.Y * parameter + higher.Y;
@@ -114,16 +136,16 @@ namespace BinaryLogic
                 startPoint = scene.ScaleFactor * inConnected.Position;
             }
 
-            Point endPoint = startPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+            Point endPoint = startPoint - scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
 
             lines[0].points[0] = startPoint;
             lines[0].points[1] = endPoint;
 
             if (inConnected != null)
-                outHitbox = new OutHitbox(startPoint, (int)(scene.ScaleFactor * 7.5f));
+                outHitbox = new OutHitbox(startPoint, (int)(scene.ScaleFactor * 7.5f), 0);
 
             if (outConnected != null)
-                inHitboxes[0] = new InHitbox(endPoint, (int)(scene.ScaleFactor * 7.5f));
+                inHitboxes[0] = new InHitbox(endPoint, (int)(scene.ScaleFactor * 7.5f), inHitboxes[0].AttachedInputIndex);
         }
     }
 }

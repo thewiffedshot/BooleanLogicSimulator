@@ -21,6 +21,11 @@ namespace BinaryLogic
             hitbox = rectangle;
         }
 
+        public ComponentHitbox()
+        {
+            hitbox = new Rectangle();
+        }
+
         public void ChangeColor(Color color)
         {
             throw new NotImplementedException();

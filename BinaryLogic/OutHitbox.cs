@@ -11,13 +11,13 @@ namespace BinaryLogic
 {
     public class OutHitbox : IDrawable
     {
-        public Component AttachedComponent { get; private set; }
+        public int AttachedOutputIndex { get; private set; }
         Circle hitbox;
         public Point Position { get { return hitbox.position; } set { hitbox.position = value; } }
 
-        public OutHitbox(Point position, int radius, Component component)
+        public OutHitbox(Point position, int radius, int outputIndex)
         {
-            AttachedComponent = component;
+            AttachedOutputIndex = outputIndex;
             hitbox = new Circle(position, radius);
         }
 

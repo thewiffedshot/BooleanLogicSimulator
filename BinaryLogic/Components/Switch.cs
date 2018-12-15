@@ -32,7 +32,7 @@ namespace BinaryLogic.Components
                                                                 (int)(rectangles[0].Width - 20 * scene.ScaleFactor),
                                                                 (int)(rectangles[0].Height - 10 * scene.ScaleFactor));
 
-            outHitbox = new OutHitbox(new Point(position.X + rectangles[0].Width, position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f));
+            outHitbox = new OutHitbox(new Point(position.X + rectangles[0].Width, position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f), 0);
 
             lines[0] = new Line(new Point(rectangles[1].position.X, 
                                           rectangles[1].position.Y + rectangles[1].Height / 4), 
@@ -101,13 +101,13 @@ namespace BinaryLogic.Components
             if (i != null)
             {
                 result = false;
-                sender.WireMode(location, this);
+                sender.WireMode(location, this, i);
             }
 
             else if (o != null)
             {
                 result = false;
-                sender.WireMode(location, this, true);
+                sender.WireMode(location, this, o, true);
             }
 
             return result;
@@ -151,7 +151,7 @@ namespace BinaryLogic.Components
 
             ChangeColor(Color);
 
-            outHitbox = new OutHitbox(new Point(Position.X + rectangles[0].Width, Position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f));
+            outHitbox = new OutHitbox(new Point(Position.X + rectangles[0].Width, Position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f), 0);
             hitbox.Position = Position;
 
             float yLine = 0;

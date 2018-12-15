@@ -25,10 +25,13 @@ namespace BinaryLogic
         public Component SelectedComponent { get; private set; }
 
         public bool WirePlacementMode { get; private set; }
+        public bool WireInput { get; private set; }
         public Point WireStart { get; private set; }
         public Point MouseLocation { get; private set; }
-        public Component WireInputComponent { get; private set; }
-        public Component WireOutputComponent { get; private set; }
+        private Component WireInputComponent { get; set; }
+        private Component WireOutputComponent { get; set; }
+        public InHitbox WireInputHitbox { get; private set; }
+        public OutHitbox WireOutputHitbox { get; private set; }
 
         public uint GlobalID { get; set; }
 
@@ -136,15 +139,22 @@ namespace BinaryLogic
             Grid.Draw(renderer);
         }
 
-        public void WireMode(Point start, Component sender, bool input = false)
+        public void WireMode(Point start, Component sender, object hitbox, bool input = false)
         {
             WirePlacementMode = true;
             WireStart = start;
+            WireInput = input;
 
             if (input)
+            {
                 WireInputComponent = sender;
+                WireOutputHitbox = (OutHitbox)hitbox;
+            }
             else
+            {
                 WireOutputComponent = sender;
+                WireInputHitbox = (InHitbox)hitbox;
+            }
         }
 
         public void MouseMove(Point location)
@@ -164,11 +174,43 @@ namespace BinaryLogic
                 case MouseKey.Left:
                     if (WirePlacementMode)
                     {
+                        if (WireInput)
+                        {
+                            WireOutputComponent = components
+                                                  .Where(c => c.InputClicked(location) != null)
+                                                  .Last();
+
+                            foreach (Component component in components)
+                            {
+                                if (component.hitbox.Clicked(location))
+                                    foreach (InHitbox hitbox in component.inHitboxes)
+                                    {
+                                        if (hitbox.Clicked(location))
+                                        {
+                                            WireInputHitbox = hitbox;
+                                        }
+                                    }
+                            }
+                        }
+                        else
+                        {
+                            WireInputComponent = components
+                                                 .Where(c => c.OutputClicked(location) != null)
+                                                 .Last();
+
+
+                            WireOutputHitbox = components
+                                               .Where(c => c.hitbox.Clicked(location))
+                                               .Last().outHitbox;
+                        }
+
                         AddComponent(new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent));
                         WirePlacementMode = false;
                         WireStart = null;
                         WireInputComponent = null;
                         WireOutputComponent = null;
+                        WireOutputHitbox = null;
+                        WireInputHitbox = null;
                     }
                     else
                     {
@@ -183,6 +225,8 @@ namespace BinaryLogic
                         WireStart = null;
                         WireInputComponent = null;
                         WireOutputComponent = null;
+                        WireOutputHitbox = null;
+                        WireInputHitbox = null;
                     }
                     else
                     { 
@@ -200,8 +244,10 @@ namespace BinaryLogic
                         WireStart = null;
                         WireInputComponent = null;
                         WireOutputComponent = null;
+                        WireOutputHitbox = null;
+                        WireInputHitbox = null;
                     }
-                    throw new NotImplementedException();
+                    break;
             }
         }
 

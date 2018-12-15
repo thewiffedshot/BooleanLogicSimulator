@@ -35,7 +35,7 @@ namespace BinaryLogic.Components
             startCircle = circles[0];
 
             inHitboxes = new InHitbox[1];
-            inHitboxes[0] = new InHitbox(new Point(position.X, position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f));
+            inHitboxes[0] = new InHitbox(new Point(position.X, position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f), 0);
         }
 
         public override void ChangeColor(Color color)
@@ -92,7 +92,7 @@ namespace BinaryLogic.Components
 
             ChangeColor(Color);
 
-            inHitboxes[0] = new InHitbox(new Point(Position.X, Position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f));
+            inHitboxes[0] = new InHitbox(new Point(Position.X, Position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f), 0);
             hitbox.Position = Position;
         }
 
@@ -106,13 +106,13 @@ namespace BinaryLogic.Components
             if (i != null)
             {
                 result = false;
-                sender.WireMode(location, this);
+                sender.WireMode(location, this, i);
             }
 
             else if (o != null)
             {
                 result = false;
-                sender.WireMode(location, this, true);
+                sender.WireMode(location, this, o, true);
             }
 
             return result;

@@ -28,7 +28,7 @@ namespace BinaryLogic
 
         public bool Signal { get; protected set; }
         public List<Component>[] inputs;
-        public List<Component> outputs;
+        public List<Component> outputs = new List<Component>(0);
          
         public float XIndent { get; protected set; }
         public float YIndent { get; protected set; }

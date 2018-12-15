@@ -31,6 +31,13 @@ namespace BinaryLogic
             Height = height;
         }
 
+        public Rectangle()
+        {
+            position = new Point(0, 0);
+            Width = 0;
+            Height = 0;
+        }
+
         public void Move(Direction direction, uint units = 1)
         {
             switch (direction)
