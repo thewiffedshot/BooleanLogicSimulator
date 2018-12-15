@@ -70,7 +70,7 @@ namespace BinaryLogic
             }
 
             lines = new Line[1];
-            lines[0] = new Line(scene.ScaleFactor * wire.points[0], scene.ScaleFactor * wire.points[1]);
+            lines[0] = new Line(wire.points[0], wire.points[1]);
             startLine = wire;
         }
 
@@ -123,7 +123,7 @@ namespace BinaryLogic
             throw new NotImplementedException();
         }
 
-        public override void Scale(Scene scene) // TODO: Not absolutely finished, but sufficient.
+        public override void Scale(Scene scene) // TODO: Finish scaling this properly please.
         {
             Point startPoint = new Point(0, 0);
 
@@ -138,8 +138,7 @@ namespace BinaryLogic
 
             Point endPoint = startPoint - scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
 
-            lines[0].points[0] = startPoint;
-            lines[0].points[1] = endPoint;
+            lines[0] = new Line(startPoint, endPoint);
 
             if (inConnected != null)
                 outHitbox = new OutHitbox(startPoint, (int)(scene.ScaleFactor * 7.5f), 0);

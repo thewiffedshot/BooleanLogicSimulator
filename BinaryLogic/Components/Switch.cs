@@ -153,6 +153,7 @@ namespace BinaryLogic.Components
 
             outHitbox = new OutHitbox(new Point(Position.X + rectangles[0].Width, Position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f), 0);
             hitbox.Position = Position;
+            // TODO: Scale hitbox accordingly.
 
             float yLine = 0;
 

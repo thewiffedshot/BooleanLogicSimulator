@@ -94,6 +94,7 @@ namespace BinaryLogic.Components
 
             inHitboxes[0] = new InHitbox(new Point(Position.X, Position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f), 0);
             hitbox.Position = Position;
+            // TODO: Scale hitbox accordingly.
         }
 
         public override bool Select(Point location, Scene sender)
