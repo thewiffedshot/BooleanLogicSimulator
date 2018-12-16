@@ -14,6 +14,7 @@ namespace BinaryLogic
         public int AttachedOutputIndex { get; private set; }
         Circle hitbox;
         public Point Position { get { return hitbox.position; } set { hitbox.position = value; } }
+        public int Radius { get { return hitbox.radius; } set { hitbox.radius = value; } }
 
         public OutHitbox(Point position, int radius, int outputIndex)
         {

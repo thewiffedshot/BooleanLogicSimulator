@@ -96,7 +96,7 @@ namespace BinaryLogic
         public abstract void Draw(IRenderer renderer);
         public abstract bool Select(Point location, Scene sender);
         public abstract void Translate(Scene scene, Direction direction, uint units);
-        public abstract void Scale(Scene scene);
+        public abstract void Scale(Scene scene, bool zoom);
 
         public InHitbox InputClicked(Point location)
         {

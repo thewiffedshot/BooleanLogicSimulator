@@ -70,8 +70,8 @@ namespace BinaryLogic
             }
 
             lines = new Line[1];
-            lines[0] = new Line(wire.points[0], wire.points[1]);
-            startLine = wire;
+            lines[0] = wire;
+            startLine = new Line((1 / scene.ScaleFactor) * wire.points[0], (1 / scene.ScaleFactor) * wire.points[1]);
         }
 
         public override void Deselect()
@@ -83,10 +83,10 @@ namespace BinaryLogic
         {
             renderer.DrawLine(lines[0], Color, 3);
 
-            if (!(inputs[0].Count > 0))
+            if (inHitboxes[0] != null)
                 inHitboxes[0].Draw(renderer);
 
-            if (!(outputs.Count > 0))
+            if (outHitbox != null)
                 outHitbox.Draw(renderer);
         }
 
@@ -123,20 +123,24 @@ namespace BinaryLogic
             throw new NotImplementedException();
         }
 
-        public override void Scale(Scene scene) // TODO: Finish scaling this properly please.
+        public override void Scale(Scene scene, bool zoom)
         {
-            Point startPoint = new Point(0, 0);
+            Point startPoint = new Point();
 
             if (outConnected != null)
             {
-                startPoint = scene.ScaleFactor * outConnected.Position;
+                startPoint = outConnected.Position;
             }
             else if (inConnected != null)
             {
-                startPoint = scene.ScaleFactor * inConnected.Position;
+                startPoint = inConnected.Position;
             }
 
-            Point endPoint = startPoint - scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+            Point endPoint = new Point();
+
+            // TODO: Fix end point inversion when scaling in some cases.
+
+            endPoint = startPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
 
             lines[0] = new Line(startPoint, endPoint);
 

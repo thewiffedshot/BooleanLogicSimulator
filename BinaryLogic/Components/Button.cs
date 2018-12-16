@@ -44,7 +44,7 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public override void Scale(Scene scene)
+        public override void Scale(Scene scene, bool zoom)
         {
             throw new NotImplementedException();
         }

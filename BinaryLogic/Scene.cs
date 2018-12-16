@@ -19,6 +19,7 @@ namespace BinaryLogic
         IRenderer renderer;
         public Grid Grid { get; set; }
         public float ScaleFactor { get; private set; }
+        private float LastScaleFactor { get; set; }
         public Point Offset { get; set; }
         public Color Background { get; set; }
         public List<Component> components = new List<Component>(0);
@@ -41,6 +42,7 @@ namespace BinaryLogic
             Background = background;
             this.renderer = renderer;
             ScaleFactor = 1;
+            LastScaleFactor = 1;
             Offset = new Point(0, 0);
         }
 
@@ -178,7 +180,7 @@ namespace BinaryLogic
                         {
                             WireOutputComponent = components
                                                   .Where(c => c.InputClicked(location) != null)
-                                                  .Last();
+                                                  .LastOrDefault();
 
                             foreach (Component component in components)
                             {
@@ -285,10 +287,18 @@ namespace BinaryLogic
                 ScaleFactor += scale;
                 Grid.Scale(scale);
 
-                foreach (Component component in components)
-                {
-                    component.Scale(this);
-                }
+                if (LastScaleFactor < ScaleFactor)
+                    foreach (Component component in components)
+                    {
+                        component.Scale(this, true);
+                    }
+                else
+                    foreach (Component component in components)
+                    {
+                        component.Scale(this, false);
+                    }
+
+                LastScaleFactor = ScaleFactor;
 
                 Draw();
             }

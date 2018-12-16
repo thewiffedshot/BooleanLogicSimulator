@@ -75,16 +75,14 @@ namespace BinaryLogic.Components
             Signal = result;
         }
 
-        public override void Scale(Scene scene)
+        public override void Scale(Scene scene, bool zoom)
         {
             Position = scene.ScaleFactor * StartPosition;
 
             Position = scene.Grid.SnapToGrid(Position);
 
-            Point indent = Position + scene.ScaleFactor * new Point((int)XIndent, (int)YIndent);
-
-            rectangles[0] = new Rectangle(indent, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
-                                                  (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
+            rectangles[0] = new Rectangle(Position, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
+                                                    (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
 
             circles[0] = new Circle(new Point(Position.X + (int)(scene.GetGridInterval() / 3.5f),
                                               Position.Y + (int)(scene.GetGridInterval() / 3.5f)),
@@ -92,7 +90,8 @@ namespace BinaryLogic.Components
 
             ChangeColor(Color);
 
-            inHitboxes[0] = new InHitbox(new Point(Position.X, Position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f), 0);
+            inHitboxes[0].Position = new Point(Position.X, Position.Y + rectangles[0].Height / 2);
+            inHitboxes[0].Radius = (int)(scene.ScaleFactor * 7.5f);
             hitbox.Position = Position;
             // TODO: Scale hitbox accordingly.
         }
