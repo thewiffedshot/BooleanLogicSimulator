@@ -182,28 +182,23 @@ namespace BinaryLogic
                                                   .Where(c => c.InputClicked(location) != null)
                                                   .LastOrDefault();
 
-                            foreach (Component component in components)
+                            if (WireOutputComponent != null)
+                            foreach (InHitbox hitbox in WireOutputComponent.inHitboxes)
                             {
-                                if (component.hitbox.Clicked(location))
-                                    foreach (InHitbox hitbox in component.inHitboxes)
-                                    {
-                                        if (hitbox.Clicked(location))
-                                        {
-                                            WireInputHitbox = hitbox;
-                                        }
-                                    }
+                                if (hitbox.Clicked(location))
+                                {
+                                    WireInputHitbox = hitbox;
+                                }
                             }
                         }
                         else
                         {
                             WireInputComponent = components
                                                  .Where(c => c.OutputClicked(location) != null)
-                                                 .Last();
+                                                 .LastOrDefault();
 
-
-                            WireOutputHitbox = components
-                                               .Where(c => c.hitbox.Clicked(location))
-                                               .Last().outHitbox;
+                            if (WireInputComponent != null)
+                                WireOutputHitbox = WireInputComponent.outHitbox;
                         }
 
                         AddComponent(new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent));

@@ -102,6 +102,7 @@ namespace BinaryLogic
         {
             foreach (InHitbox hitbox in inHitboxes)
             {
+                if (hitbox != null)
                 if (hitbox.Clicked(location))
                 {
                     return hitbox;

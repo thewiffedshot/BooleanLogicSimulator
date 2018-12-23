@@ -39,8 +39,8 @@ namespace BinaryLogic
                 inConnected = scene.WireInputHitbox;
                 output.inputs[inConnected.AttachedInputIndex].Add(this);
 
-                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 7.5f), 0);
-                outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 7.5f), 0);
+                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
+                outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
             }
 
             if (input != null && output == null)
@@ -53,7 +53,7 @@ namespace BinaryLogic
                 input.outputs.Add(this);
                 outConnected = scene.WireOutputHitbox;
 
-                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 7.5f), 0);
+                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
             }
 
             if (input == null && output != null)
@@ -66,7 +66,7 @@ namespace BinaryLogic
                 inConnected = scene.WireInputHitbox;
                 output.inputs[inConnected.AttachedInputIndex].Add(this);
                 
-                outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 7.5f), 0);
+                outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
             }
 
             lines = new Line[1];
@@ -83,10 +83,10 @@ namespace BinaryLogic
         {
             renderer.DrawLine(lines[0], Color, 3);
 
-            if (inHitboxes[0] != null)
+            if (inConnected == null)
                 inHitboxes[0].Draw(renderer);
 
-            if (outHitbox != null)
+            if (outConnected == null)
                 outHitbox.Draw(renderer);
         }
 
@@ -126,29 +126,32 @@ namespace BinaryLogic
         public override void Scale(Scene scene, bool zoom)
         {
             Point startPoint = new Point();
-
-            if (outConnected != null)
-            {
-                startPoint = outConnected.Position;
-            }
-            else if (inConnected != null)
-            {
-                startPoint = inConnected.Position;
-            }
-
             Point endPoint = new Point();
 
-            // TODO: Fix end point inversion when scaling in some cases.
-
-            endPoint = startPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+            if (outConnected != null && inConnected != null)
+            {
+                startPoint = outConnected.Position;
+                endPoint = inConnected.Position;
+            }
+            else if (inConnected == null && outConnected != null)
+            {
+                startPoint = outConnected.Position;
+                endPoint = startPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+            }
+            else if (inConnected != null && outConnected == null)
+            {
+                endPoint = inConnected.Position;
+                startPoint = endPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+            }
+            else
+                throw new InvalidOperationException("Wire can not exist without at least one attached IOhitbox.");
 
             lines[0] = new Line(startPoint, endPoint);
 
-            if (inConnected != null)
-                outHitbox = new OutHitbox(startPoint, (int)(scene.ScaleFactor * 7.5f), 0);
+            outHitbox = new OutHitbox(startPoint, (int)(scene.ScaleFactor * 5f), 0);
 
-            if (outConnected != null)
-                inHitboxes[0] = new InHitbox(endPoint, (int)(scene.ScaleFactor * 7.5f), inHitboxes[0].AttachedInputIndex);
+            if (inHitboxes[0] != null)
+                inHitboxes[0] = new InHitbox(endPoint, (int)(scene.ScaleFactor * 5f), inHitboxes[0].AttachedInputIndex);
         }
     }
 }
