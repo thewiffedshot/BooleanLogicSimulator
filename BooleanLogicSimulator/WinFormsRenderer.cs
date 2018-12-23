@@ -43,7 +43,7 @@ namespace BooleanLogicSimulator
             SolidBrush brush = new SolidBrush(color);
 
             //gfx.DrawEllipse(pen, circle.position.X, circle.position.Y, circle.radius, circle.radius);
-            gfx.FillEllipse(brush, circle.position.X, circle.position.Y, circle.radius, circle.radius);
+            gfx.FillEllipse(brush, circle.position.X - circle.radius, circle.position.Y - circle.radius, 2 * circle.radius, 2 * circle.radius);
         }
 
         public void DrawLine(Line line, Color color, uint thickness)

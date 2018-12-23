@@ -32,7 +32,7 @@ namespace BinaryLogic.Components
                                                                 (int)(rectangles[0].Width - 20 * scene.ScaleFactor),
                                                                 (int)(rectangles[0].Height - 10 * scene.ScaleFactor));
 
-            outHitbox = new OutHitbox(new Point(position.X + rectangles[0].Width, position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f), 0);
+            outHitbox = new OutHitbox(new Point(rectangles[0].position.X + rectangles[0].Width, rectangles[0].position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 5f), 0);
 
             lines[0] = new Line(new Point(rectangles[1].position.X, 
                                           rectangles[1].position.Y + rectangles[1].Height / 4), 
@@ -118,18 +118,24 @@ namespace BinaryLogic.Components
             switch (direction)
             {
                 case Direction.Down:
-                    Position.Y += (int)(scene.GetGridInterval() * units);
+                    StartPosition.Y += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
                     break;
                 case Direction.Up:
-                    Position.Y -= (int)(scene.GetGridInterval() * units);
+                    StartPosition.Y -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
                     break;
                 case Direction.Left:
-                    Position.X -= (int)(scene.GetGridInterval() * units);
+                    StartPosition.X -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
                     break;
                 case Direction.Right:
-                    Position.X += (int)(scene.GetGridInterval() * units);
+                    StartPosition.X += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
                     break;
             }
+
+            scene.Draw();
         }
 
         public override void Scale(Scene scene, bool zoom)
@@ -149,8 +155,8 @@ namespace BinaryLogic.Components
 
             ChangeColor(Color);
 
-            outHitbox.Position = new Point(Position.X + rectangles[0].Width, Position.Y + rectangles[0].Height / 2);
-            outHitbox.Radius = (int)(scene.ScaleFactor * 7.5f);
+            outHitbox.Position = new Point(rectangles[0].position.X + rectangles[0].Width, rectangles[0].position.Y + rectangles[0].Height / 2);
+            outHitbox.Radius = (int)(scene.ScaleFactor * 5f);
             hitbox.Position = Position;
             // TODO: Scale hitbox accordingly.
 

@@ -28,14 +28,14 @@ namespace BinaryLogic.Components
             rectangles[0] = new Rectangle(indent, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
                                                   (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
 
-            circles[0] = new Circle(new Point(position.X + (int)(scene.GetGridInterval() / 3.5f), 
-                                              position.Y + (int)(scene.GetGridInterval() / 3.5f)), 
-                                              (int)(3 * (float)scene.GetGridInterval() / 2));
+            circles[0] = new Circle(new Point(rectangles[0].position.X + rectangles[0].Width / 2,
+                                              rectangles[0].position.Y + rectangles[0].Height / 2), 
+                                              (int)((4f / 10) * rectangles[0].Width));
 
             startCircle = circles[0];
 
             inHitboxes = new InHitbox[1];
-            inHitboxes[0] = new InHitbox(new Point(position.X, position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 7.5f), 0);
+            inHitboxes[0] = new InHitbox(new Point(rectangles[0].position.X, rectangles[0].position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 5f), 0);
         }
 
         public override void ChangeColor(Color color)
@@ -81,17 +81,19 @@ namespace BinaryLogic.Components
 
             Position = scene.Grid.SnapToGrid(Position);
 
-            rectangles[0] = new Rectangle(Position, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
+            Point indent = Position + scene.ScaleFactor * new Point((int)XIndent, (int)YIndent);
+
+            rectangles[0] = new Rectangle(indent, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
                                                     (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
 
-            circles[0] = new Circle(new Point(Position.X + (int)(scene.GetGridInterval() / 3.5f),
-                                              Position.Y + (int)(scene.GetGridInterval() / 3.5f)),
-                                   (int)(scene.ScaleFactor * startCircle.radius));
+            circles[0] = new Circle(new Point(rectangles[0].position.X + rectangles[0].Width / 2,
+                                              rectangles[0].position.Y + rectangles[0].Height / 2),
+                                    (int)(scene.ScaleFactor * startCircle.radius));
 
             ChangeColor(Color);
 
-            inHitboxes[0].Position = new Point(Position.X, Position.Y + rectangles[0].Height / 2);
-            inHitboxes[0].Radius = (int)(scene.ScaleFactor * 7.5f);
+            inHitboxes[0].Position = new Point(rectangles[0].position.X, rectangles[0].position.Y + rectangles[0].Height / 2);
+            inHitboxes[0].Radius = (int)(scene.ScaleFactor * 5f);
             hitbox.Position = Position;
             // TODO: Scale hitbox accordingly.
         }
@@ -120,7 +122,27 @@ namespace BinaryLogic.Components
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)
         {
-            throw new NotImplementedException();
+            switch (direction)
+            {
+                case Direction.Down:
+                    StartPosition.Y += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+                case Direction.Up:
+                    StartPosition.Y -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+                case Direction.Left:
+                    StartPosition.X -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+                case Direction.Right:
+                    StartPosition.X += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+            }
+
+            scene.Draw();
         }
     }
 }

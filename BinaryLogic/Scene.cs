@@ -272,6 +272,22 @@ namespace BinaryLogic
                 case Key.Minus:
                     Scale(-0.25f);
                     break;
+                case Key.Up:
+                    if (SelectedComponent != null)
+                        SelectedComponent.Translate(this, Direction.Up, 1);
+                    break;
+                case Key.Down:
+                    if (SelectedComponent != null)
+                        SelectedComponent.Translate(this, Direction.Down, 1);
+                        break;
+                case Key.Right:
+                    if (SelectedComponent != null)
+                        SelectedComponent.Translate(this, Direction.Right, 1);
+                        break;
+                case Key.Left:
+                    if (SelectedComponent != null)
+                        SelectedComponent.Translate(this, Direction.Left, 1);
+                        break;
             }
         }
 

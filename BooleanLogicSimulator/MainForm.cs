@@ -48,7 +48,7 @@ namespace BooleanLogicSimulator
                 case Keys.Left:
                     return Key.Left;
                 case Keys.Right:
-                    return Key.T;
+                    return Key.Right;
                 case Keys.Shift:
                     return Key.Shift;
                 case Keys.Control:
