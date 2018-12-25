@@ -14,8 +14,8 @@ namespace BinaryLogic
     public abstract class Component : IInteractable
     {
         public uint ID { get; set; }
-        public uint Level { get; private set; }
-        public bool Checked { get; set; }
+        public uint Level { get; private set; } = 0;
+        public bool Checked { get; set; } = false;
         public Point Position { get; protected set; }
         public Point StartPosition { get; set; }
         public ComponentHitbox hitbox;
@@ -124,23 +124,19 @@ namespace BinaryLogic
             return null;
         }
 
-        public abstract void Process();
+        public abstract void Process(Scene scene);
 
-        public void SetLevel(Component component, uint level)
+        public void SetLevel(uint level)
         {
-            component.Set(level);
+            if (Checked) return;
 
-            foreach (Component c in component.outputs)
-            {
-                if (c.Checked) return;
-                    c.SetLevel(component, level + 1);
-            }
-        }
-
-        public void Set(uint level)
-        {
             Level = level;
             Checked = true;
+
+            foreach (Component c in outputs)
+            {  
+                c.SetLevel(level + 1);
+            }
         }
 
         public void Delete(Scene scene)

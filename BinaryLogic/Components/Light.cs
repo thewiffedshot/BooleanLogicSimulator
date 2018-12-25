@@ -32,7 +32,9 @@ namespace BinaryLogic.Components
                                               rectangles[0].position.Y + rectangles[0].Height / 2), 
                                               (int)((4f / 10) * rectangles[0].Width));
 
-            startCircle = circles[0];
+            startCircle = new Circle(new Point(rectangles[0].position.X + rectangles[0].Width / 2,
+                                              rectangles[0].position.Y + rectangles[0].Height / 2),
+                                              (int)((4f / 10) * rectangles[0].Width / scene.ScaleFactor));
 
             inHitboxes = new InHitbox[1];
             inHitboxes[0] = new InHitbox(new Point(rectangles[0].position.X, rectangles[0].position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 5f), 0);
@@ -60,7 +62,7 @@ namespace BinaryLogic.Components
             inHitboxes[0].Draw(renderer);
         }
 
-        public override void Process()
+        public override void Process(Scene scene)
         {
             bool result = false;
 
@@ -73,6 +75,7 @@ namespace BinaryLogic.Components
             }
 
             Signal = result;
+            Draw(scene.Renderer);
         }
 
         public override void Scale(Scene scene, bool zoom)
@@ -141,6 +144,9 @@ namespace BinaryLogic.Components
                     Scale(scene, false);
                     break;
             }
+
+            foreach (Wire wire in inputs[0])
+                wire.Scale(scene, true);
 
             scene.Draw();
         }

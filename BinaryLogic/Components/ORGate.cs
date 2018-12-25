@@ -29,7 +29,7 @@ namespace BinaryLogic.Components
             throw new NotImplementedException();
         }
 
-        public override void Process()
+        public override void Process(Scene scene)
         {
             throw new NotImplementedException();
         }

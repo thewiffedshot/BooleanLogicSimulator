@@ -16,7 +16,7 @@ namespace BinaryLogic
 
     public class Scene 
     {
-        IRenderer renderer;
+        public IRenderer Renderer { get; private set; }
         public Grid Grid { get; set; }
         public float ScaleFactor { get; private set; }
         private float LastScaleFactor { get; set; }
@@ -40,7 +40,7 @@ namespace BinaryLogic
         {
             Grid = grid;
             Background = background;
-            this.renderer = renderer;
+            this.Renderer = renderer;
             ScaleFactor = 1;
             LastScaleFactor = 1;
             Offset = new Point(0, 0);
@@ -52,13 +52,27 @@ namespace BinaryLogic
             {
                 if (component is Switch)
                 {
-                    component.SetLevel(component, 0);
+                    component.SetLevel(0);
                 }
 
                 else if (component is Button)
                 {
-                    component.SetLevel(component, 0);
+                    component.SetLevel(0);
                 }
+            }
+
+            uint maxLevel = components
+                            .OrderBy(c => c.Level)
+                            .Last().Level;
+
+            var ordered =   components
+                            .OrderBy(c => c.Level)
+                            .ToList();
+
+            foreach (Component component in ordered)
+            {
+                if (component.Level != 0)
+                    component.Process(this);
             }
 
             foreach (Component component in components)
@@ -67,7 +81,7 @@ namespace BinaryLogic
 
         public void SetRenderer(IRenderer renderer)
         {
-            this.renderer = renderer;
+            Renderer = renderer;
         }
 
         public void AddComponent(Component component)
@@ -116,11 +130,11 @@ namespace BinaryLogic
                 if (!componentsOnly)
                     Clear();
 
-                renderer.DrawLine(new Line(WireStart, MouseLocation), Color.Black, 3);
+                Renderer.DrawLine(new Line(WireStart, MouseLocation), Color.Black, 3);
 
                 foreach (Component component in components)
                 {
-                    component.Draw(renderer);
+                    component.Draw(Renderer);
                 }
             }
             else
@@ -130,15 +144,15 @@ namespace BinaryLogic
 
                 foreach (Component component in components)
                 {
-                    component.Draw(renderer);
+                    component.Draw(Renderer);
                 }
             }
         }
 
         public void Clear()
         {
-            renderer.Clear(Background);
-            Grid.Draw(renderer);
+            Renderer.Clear(Background);
+            Grid.Draw(Renderer);
         }
 
         public void WireMode(Point start, Component sender, object hitbox, bool input = false)

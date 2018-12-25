@@ -68,6 +68,8 @@ namespace BinaryLogic.Components
         {
             if (hitbox.Clicked(location))
                 Flip();
+
+            sender.Update();
         }
 
         public override void Deselect()
@@ -86,7 +88,7 @@ namespace BinaryLogic.Components
             outHitbox.Draw(renderer);
         }
 
-        public override void Process()
+        public override void Process(Scene scene)
         {
             throw new NotImplementedException();
         }
@@ -135,6 +137,9 @@ namespace BinaryLogic.Components
                     break;
             }
 
+            foreach (Wire wire in outputs)
+                wire.Scale(scene, true);
+
             scene.Draw();
         }
 
@@ -156,6 +161,7 @@ namespace BinaryLogic.Components
             ChangeColor(Color);
 
             outHitbox.Position = new Point(rectangles[0].position.X + rectangles[0].Width, rectangles[0].position.Y + rectangles[0].Height / 2);
+
             outHitbox.Radius = (int)(scene.ScaleFactor * 5f);
             hitbox.Position = Position;
             // TODO: Scale hitbox accordingly.

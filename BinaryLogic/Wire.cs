@@ -107,7 +107,7 @@ namespace BinaryLogic
                    location.Y > lower.Y && location.Y < higher.Y;
         }
 
-        public override void Process()
+        public override void Process(Scene scene)
         {
             Signal = false;
 
