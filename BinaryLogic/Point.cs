@@ -90,5 +90,10 @@ namespace BinaryLogic
 
             return (float)Math.Sqrt(p.X * p.X + p.Y * p.Y);
         }
+
+        public static int operator *(Point v1, Point v2)
+        {
+            return v1.X * v2.X + v1.Y * v2.Y;
+        }
     }
 }

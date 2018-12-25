@@ -238,6 +238,8 @@ namespace BinaryLogic
                         WireOutputComponent = null;
                         WireOutputHitbox = null;
                         WireInputHitbox = null;
+
+                        Draw();
                     }
                     else
                     { 

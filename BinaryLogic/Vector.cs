@@ -79,7 +79,12 @@ namespace BinaryLogic
             vector.Y /= l;
         }
 
-        private static float Length(Vector vector)
+        public static float Length(Vector vector)
+        {
+            return (float)Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
+        }
+
+        public static float Length(Point vector)
         {
             return (float)Math.Sqrt(vector.X * vector.X + vector.Y * vector.Y);
         }

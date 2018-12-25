@@ -92,19 +92,49 @@ namespace BinaryLogic
 
         public override bool Select(Point location, Scene sender)
         {
-            Point higher = startLine.points.OrderBy(y => y.Y).First();
-            Point lower = startLine.points.OrderBy(y => y.Y).Last();
+            Point segment = lines[0].points[1] - lines[0].points[0];
+            Point toStart = lines[0].points[0] - location;
+            Point toEnd = lines[0].points[1] - location;
 
-            Vector colinear = startLine.CollinearVector;
+            float segmentLength = Vector.Length(segment);
 
-            float parameter = startLine.Parameter;
+            float t = -(segment * toStart) / (segmentLength * segmentLength);
 
-            float lineX = colinear.X * parameter + higher.X;
-            float lineY = colinear.Y * parameter + higher.Y;
+            float distance = 999;
+            float threshold = 3;
 
-            return Math.Abs(lineX - location.X) <= Thickness &&
-                   Math.Abs(lineY - location.Y) <= Thickness &&
-                   location.Y > lower.Y && location.Y < higher.Y;
+            if (t <= 0)
+            {
+                distance = Vector.Length(toStart);
+
+                if (distance <= threshold)
+                {
+                    return true;
+                }
+            }
+            else if (t >= 1)
+            {
+                distance = Vector.Length(toEnd);
+
+                if (distance <= threshold)
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                float TS = Vector.Length(toStart);
+                float SEdotTS = segment * toStart;
+
+                distance = TS * TS - ((SEdotTS * SEdotTS) / (segmentLength * segmentLength));
+
+                if (distance <= threshold * threshold)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public override void Process(Scene scene)
