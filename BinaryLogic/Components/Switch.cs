@@ -161,10 +161,11 @@ namespace BinaryLogic.Components
             ChangeColor(Color);
 
             outHitbox.Position = new Point(rectangles[0].position.X + rectangles[0].Width, rectangles[0].position.Y + rectangles[0].Height / 2);
-
             outHitbox.Radius = (int)(scene.ScaleFactor * 5f);
+
             hitbox.Position = Position;
-            // TODO: Scale hitbox accordingly.
+            hitbox.Width = scene.GetGridInterval() * 2f;
+            hitbox.Height = scene.GetGridInterval() * 2f;
 
             float yLine = 0;
 

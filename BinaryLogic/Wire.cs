@@ -143,7 +143,7 @@ namespace BinaryLogic
 
             foreach (Component component in inputs[0])
             {
-                if (component.Signal == true)
+                if (component.Signal)
                     Signal = true;
             }
         }

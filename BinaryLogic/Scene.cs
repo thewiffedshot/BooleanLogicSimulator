@@ -40,7 +40,7 @@ namespace BinaryLogic
         {
             Grid = grid;
             Background = background;
-            this.Renderer = renderer;
+            Renderer = renderer;
             ScaleFactor = 1;
             LastScaleFactor = 1;
             Offset = new Point(0, 0);
@@ -277,8 +277,11 @@ namespace BinaryLogic
                 case Key.L:
                     AddComponent(new Light(this, closest));
                     break;
+                case Key.Q:
+                        AddComponent(new ANDGate(this, closest));
+                        break;
                 case Key.Plus:
-                    Scale(0.25f);
+                Scale(0.25f);
                     break;
                 case Key.Minus:
                     Scale(-0.25f);

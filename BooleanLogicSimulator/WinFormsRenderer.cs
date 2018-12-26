@@ -35,7 +35,10 @@ namespace BooleanLogicSimulator
 
         public void DrawArc(Arc arc, Color color, uint thickness)
         {
-            throw new NotImplementedException();
+            using (Pen pen = new Pen(color, thickness))
+            {
+                gfx.DrawBezier(pen, arc.ends[0].X, arc.ends[0].Y, arc.leads[0].X, arc.leads[0].Y, arc.leads[1].X, arc.leads[1].Y, arc.ends[1].X, arc.ends[1].Y);
+            }
         }
 
         public void DrawCircle(Circle circle, Color color, uint thickness)

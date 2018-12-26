@@ -10,13 +10,44 @@ namespace BinaryLogic.Components
 {
     public class ANDGate : Component
     {
-        public ANDGate(Scene scene, ComponentHitbox hitbox) : base(ComponentType.AND, hitbox, 3)
+        public ANDGate(Scene scene, Point position) 
+            : base(ComponentType.AND, new ComponentHitbox(new Rectangle(position, (int)scene.GetGridInterval() * 2, (int)scene.GetGridInterval() * 2)), 3)
         {
+            StartPosition = position / scene.ScaleFactor;
+            Position = position;
+            Signal = false;
+
+            lines = new Line[3];
+            arcs = new Arc[1];
+
+            Point indent = position + new Point((int)XIndent, (int)YIndent);
+
+            hitbox.Position = Position;
+
+            inHitboxes = new InHitbox[2];
+            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 4)), 5, 0);
+            inHitboxes[1] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(3 * hitbox.Height / 4)), 5, 1);
+
+            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), 5, 0);
+
+            lines[0] = new Line(indent, 
+                                new Point(indent.X, indent.Y + (int)(scene.GetGridInterval() * 2 - (2 * YIndent * scene.ScaleFactor))));
+
+            lines[1] = new Line(indent, 
+                                new Point(indent.X + (int)(scene.GetGridInterval() * 4f / 3), indent.Y));
+
+            lines[2] = new Line(lines[0].points[1],
+                                new Point(indent.X + (int)(scene.GetGridInterval() * 4f / 3), indent.Y + (int)(scene.GetGridInterval() * 2 - (2 * YIndent * scene.ScaleFactor))));
+
+            arcs[0] = new Arc(lines[1].points[1],
+                              lines[2].points[1],
+                              lines[1].points[1] + new Point((int)(scene.GetGridInterval() / 1.5f), (int)(scene.GetGridInterval() / 4f)),
+                              lines[2].points[1] + new Point((int)(scene.GetGridInterval() / 1.5f), -(int)(scene.GetGridInterval() / 4f)));
         }
 
         public override void ChangeColor(Color color)
         {
-            throw new NotImplementedException();
+            Color = color;               
         }
 
         public override void Deselect()
@@ -26,22 +57,89 @@ namespace BinaryLogic.Components
 
         public override void Draw(IRenderer renderer)
         {
-            throw new NotImplementedException();
+            foreach (Line line in lines)
+                renderer.DrawLine(line, Color, Thickness);
+
+            foreach (Arc arc in arcs)
+                renderer.DrawArc(arc, Color, Thickness);
+
+            foreach (InHitbox hitbox in inHitboxes)
+                hitbox.Draw(renderer);
+
+            outHitbox.Draw(renderer);
         }
 
         public override void Process(Scene scene)
         {
-            throw new NotImplementedException();
+            bool input1 = false;
+            bool input2 = false;
+
+            foreach (Component component in inputs[0])
+                if (component.Signal) input1 = true;
+
+            foreach (Component component in inputs[1])
+                if (component.Signal) input2 = true;
+
+            Signal = input1 && input2;
         }
 
         public override void Scale(Scene scene, bool zoom)
         {
-            throw new NotImplementedException();
+            Position = scene.ScaleFactor * StartPosition;
+            Position = scene.Grid.SnapToGrid(Position);
+
+            Point indent = Position + scene.ScaleFactor * new Point((int)XIndent, (int)YIndent);
+
+            ChangeColor(Color);
+
+            hitbox.Position = Position;
+            hitbox.Width = scene.GetGridInterval() * 2f;
+            hitbox.Height = scene.GetGridInterval() * 2f;
+
+            inHitboxes[0].Position = new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 4));
+            inHitboxes[0].Radius = (int)(scene.ScaleFactor * 5f);
+
+            inHitboxes[1].Position = new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(3 * hitbox.Height / 4));
+            inHitboxes[1].Radius = (int)(scene.ScaleFactor * 5f);
+
+            outHitbox.Position = new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2));
+            outHitbox.Radius = (int)(scene.ScaleFactor * 5f);
+
+            lines[0] = new Line(indent, 
+                                new Point(indent.X, indent.Y + (int)((scene.GetGridInterval() * 2) - (2 * YIndent * scene.ScaleFactor))));
+
+            lines[1] = new Line(indent, 
+                                new Point(indent.X + (int)(scene.GetGridInterval() * 4f / 3), indent.Y));
+
+            lines[2] = new Line(lines[0].points[1],
+                                new Point(indent.X + (int)(scene.GetGridInterval() * 4f / 3), indent.Y + (int)(scene.GetGridInterval() * 2 - (2 * YIndent * scene.ScaleFactor))));
+
+            arcs[0] = new Arc(lines[1].points[1],
+                              lines[2].points[1],
+                              lines[1].points[1] + new Point((int)(scene.GetGridInterval() / 1.5f), (int)(scene.GetGridInterval() / 4f)),
+                              lines[2].points[1] + new Point((int)(scene.GetGridInterval() / 1.5f), -(int)(scene.GetGridInterval() / 4f)));
         }
 
         public override bool Select(Point location, Scene sender)
         {
-            throw new NotImplementedException();
+            bool result = hitbox.Clicked(location);
+
+            InHitbox i = InputClicked(location);
+            OutHitbox o = OutputClicked(location);
+
+            if (i != null)
+            {
+                result = false;
+                sender.WireMode(location, this, i);
+            }
+
+            else if (o != null)
+            {
+                result = false;
+                sender.WireMode(location, this, o, true);
+            }
+
+            return result;
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)

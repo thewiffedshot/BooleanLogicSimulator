@@ -98,7 +98,8 @@ namespace BinaryLogic.Components
             inHitboxes[0].Position = new Point(rectangles[0].position.X, rectangles[0].position.Y + rectangles[0].Height / 2);
             inHitboxes[0].Radius = (int)(scene.ScaleFactor * 5f);
             hitbox.Position = Position;
-            // TODO: Scale hitbox accordingly.
+            hitbox.Width = scene.GetGridInterval() * 2f;
+            hitbox.Height = scene.GetGridInterval() * 2f;
         }
 
         public override bool Select(Point location, Scene sender)

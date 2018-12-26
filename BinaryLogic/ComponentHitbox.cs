@@ -13,8 +13,8 @@ namespace BinaryLogic
     {
         Rectangle hitbox;
         public Point Position { get { return hitbox.position; } set { hitbox.position = value; } }
-        public float Width { get { return hitbox.Width; } }
-        public float Height { get { return hitbox.Height; } }
+        public float Width { get { return hitbox.Width; } set { hitbox.Width = (int)value; } }
+        public float Height { get { return hitbox.Height; } set { hitbox.Height = (int)value; } }
 
         public ComponentHitbox(Rectangle rectangle)
         {
