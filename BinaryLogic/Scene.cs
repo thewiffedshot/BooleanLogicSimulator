@@ -115,11 +115,19 @@ namespace BinaryLogic
 
         public void DeselectComponent(Component component)
         {
-            if (SelectedComponent != null)
+            if (component != null)
             {
-                component.ChangeColor(Component.DefaultColor);
+                if (component is Wire)
+                {
+                    component.ChangeColor(component.Signal ? Color.Red : Color.Black);
+                }
+                else
+                {
+                    component.ChangeColor(Component.DefaultColor);
+                    component.ChangeColor(Component.DefaultColor);
+                }
+
                 SelectedComponent = null;
-                component.ChangeColor(Component.DefaultColor);
             }
         }
 
@@ -216,6 +224,7 @@ namespace BinaryLogic
                         }
 
                         AddComponent(new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent));
+                        Update();
                         WirePlacementMode = false;
                         WireStart = null;
                         WireInputComponent = null;

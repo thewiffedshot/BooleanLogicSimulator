@@ -53,7 +53,7 @@ namespace BinaryLogic
                 input.outputs.Add(this);
                 outConnected = scene.WireOutputHitbox;
 
-                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
+                inHitboxes[0] = new InHitbox(wire.points[1], (int)(scene.ScaleFactor * 5f), 0);
             }
 
             if (input == null && output != null)
@@ -72,6 +72,11 @@ namespace BinaryLogic
             lines = new Line[1];
             lines[0] = wire;
             startLine = new Line((1 / scene.ScaleFactor) * wire.points[0], (1 / scene.ScaleFactor) * wire.points[1]);
+
+            if (outHitbox == null)
+                outHitbox = new OutHitbox(lines[0].points[1], (int)(scene.ScaleFactor * 5f), 0);
+
+            Process(scene);
         }
 
         public override void Deselect()
@@ -90,8 +95,8 @@ namespace BinaryLogic
                 outHitbox.Draw(renderer);
         }
 
-        public override bool Select(Point location, Scene sender)
-        {
+        public override bool Select(Point location, Scene sender)      // TODO: Need to fix wire branch creation. 
+        {                                                              // Make sure IO hitboxes are properly checked when clicked
             Point segment = lines[0].points[1] - lines[0].points[0];
             Point toStart = lines[0].points[0] - location;
             Point toEnd = lines[0].points[1] - location;
@@ -109,7 +114,8 @@ namespace BinaryLogic
 
                 if (distance <= threshold)
                 {
-                    return true;
+                    sender.WireMode(location, this, inHitboxes[0]);
+                    return false;
                 }
             }
             else if (t >= 1)
@@ -118,7 +124,8 @@ namespace BinaryLogic
 
                 if (distance <= threshold)
                 {
-                    return true;
+                    sender.WireMode(location, this, outHitbox, true);
+                    return false;
                 }
             }
             else
@@ -146,6 +153,8 @@ namespace BinaryLogic
                 if (component.Signal)
                     Signal = true;
             }
+
+            ChangeColor(Signal ? Color.Red : Color.Black);
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)

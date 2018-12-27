@@ -137,6 +137,12 @@ namespace BinaryLogic
             {  
                 c.SetLevel(level + 1);
             }
+
+            if (this is Wire)
+                foreach (Component c in inputs[0])
+                {
+                    c.SetLevel(level + 1);
+                }
         }
 
         public void Delete(Scene scene)

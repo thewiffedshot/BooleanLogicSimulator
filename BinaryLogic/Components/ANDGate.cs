@@ -144,7 +144,36 @@ namespace BinaryLogic.Components
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)
         {
-            throw new NotImplementedException();
+            switch (direction)
+            {
+                case Direction.Down:
+                    StartPosition.Y += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+                case Direction.Up:
+                    StartPosition.Y -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+                case Direction.Left:
+                    StartPosition.X -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+                case Direction.Right:
+                    StartPosition.X += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+            }
+
+            foreach (Wire wire in outputs)
+                wire.Scale(scene, true);
+
+            foreach (Wire wire in inputs[0])
+                wire.Scale(scene, true);
+
+            foreach (Wire wire in inputs[1])
+                wire.Scale(scene, true);
+
+            scene.Draw();
         }
     }
 }
