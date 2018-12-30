@@ -53,7 +53,8 @@ namespace BinaryLogic
                 input.outputs.Add(this);
                 outConnected = scene.WireOutputHitbox;
 
-                inHitboxes[0] = new InHitbox(wire.points[1], (int)(scene.ScaleFactor * 5f), 0);
+                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
+                outHitbox = new OutHitbox(wire.points[1], (int)(scene.ScaleFactor * 5f), 0);
             }
 
             if (input == null && output != null)
@@ -65,16 +66,14 @@ namespace BinaryLogic
 
                 inConnected = scene.WireInputHitbox;
                 output.inputs[inConnected.AttachedInputIndex].Add(this);
-                
+
+                inHitboxes[0] = new InHitbox(wire.points[0], (int)(scene.ScaleFactor * 5f), 0);
                 outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
             }
 
             lines = new Line[1];
             lines[0] = wire;
             startLine = new Line((1 / scene.ScaleFactor) * wire.points[0], (1 / scene.ScaleFactor) * wire.points[1]);
-
-            if (outHitbox == null)
-                outHitbox = new OutHitbox(lines[0].points[1], (int)(scene.ScaleFactor * 5f), 0);
 
             Process(scene);
         }
@@ -108,27 +107,12 @@ namespace BinaryLogic
             float distance = 999;
             float threshold = 3;
 
-            if (t <= 0)
-            {
-                distance = Vector.Length(toStart);
+            InHitbox i = InputClicked(location);
+            OutHitbox o = OutputClicked(location);
 
-                if (distance <= threshold)
-                {
-                    sender.WireMode(location, this, inHitboxes[0]);
-                    return false;
-                }
-            }
-            else if (t >= 1)
-            {
-                distance = Vector.Length(toEnd);
+            bool result = false;
 
-                if (distance <= threshold)
-                {
-                    sender.WireMode(location, this, outHitbox, true);
-                    return false;
-                }
-            }
-            else
+            if (t > 0 && t < 1)
             {
                 float TS = Vector.Length(toStart);
                 float SEdotTS = segment * toStart;
@@ -137,11 +121,17 @@ namespace BinaryLogic
 
                 if (distance <= threshold * threshold)
                 {
-                    return true;
+                    result = true;
                 }
             }
 
-            return false;
+            if (o != null)
+            {
+                result = false;
+                sender.WireMode(location, this, o, true);
+            }
+
+            return result;
         }
 
         public override void Process(Scene scene)
@@ -187,10 +177,8 @@ namespace BinaryLogic
 
             lines[0] = new Line(startPoint, endPoint);
 
-            outHitbox = new OutHitbox(startPoint, (int)(scene.ScaleFactor * 5f), 0);
-
-            if (inHitboxes[0] != null)
-                inHitboxes[0] = new InHitbox(endPoint, (int)(scene.ScaleFactor * 5f), inHitboxes[0].AttachedInputIndex);
+            outHitbox.Position *= scene.ScaleFactor;
+            inHitboxes[0].Position *= scene.ScaleFactor;
         }
     }
 }
