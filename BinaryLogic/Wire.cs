@@ -107,7 +107,6 @@ namespace BinaryLogic
             float distance = 999;
             float threshold = 3;
 
-            InHitbox i = InputClicked(location);
             OutHitbox o = OutputClicked(location);
 
             bool result = false;
@@ -147,9 +146,11 @@ namespace BinaryLogic
             ChangeColor(Signal ? Color.Red : Color.Black);
         }
 
-        public override void Translate(Scene scene, Direction direction, uint units = 1)
+        public override void Translate(Scene scene, Direction direction, uint units = 1)  // TODO: Translate free end of wire.
         {
-            throw new NotImplementedException();
+            /*lines[0].Move(direction);
+            startLine.Move(direction);
+            Scale(scene, false);*/ 
         }
 
         public override void Scale(Scene scene, bool zoom)
@@ -166,19 +167,21 @@ namespace BinaryLogic
             {
                 startPoint = outConnected.Position;
                 endPoint = startPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
-            }
-            else if (inConnected != null && outConnected == null)
-            {
-                endPoint = inConnected.Position;
-                startPoint = endPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+
+                var newPointsOrdered = endPoint.Y > startPoint.Y ?
+                                       new { point1 = startPoint, point2 = endPoint } : 
+                                       new { point1 = endPoint, point2 = startPoint };
+
+                if ((endPoint - startPoint) * (startLine.points[1] - startLine.points[0]) < 0)
+                    endPoint = newPointsOrdered.point2 + 2 * (newPointsOrdered.point2 - newPointsOrdered.point1);
             }
             else
                 throw new InvalidOperationException("Wire can not exist without at least one attached IOhitbox.");
 
             lines[0] = new Line(startPoint, endPoint);
 
-            outHitbox.Position *= scene.ScaleFactor;
-            inHitboxes[0].Position *= scene.ScaleFactor;
+            outHitbox.Position = lines[0].points[1];
+            inHitboxes[0].Position = lines[0].points[0];
         }
     }
 }
