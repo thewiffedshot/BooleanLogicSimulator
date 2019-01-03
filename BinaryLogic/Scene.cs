@@ -11,7 +11,7 @@ using System.Timers; // TODO: Must incorporate settable tickrate.
 
 namespace BinaryLogic
 {
-    public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y, L, Plus, Minus, Invalid }
+    public enum Key { Up, Down, Left, Right, Shift, Control, Space, Q, W, E, R, T, Y, L, Plus, Minus, Delete, Invalid }
     public enum MouseKey { Left, Right, Middle, Invalid }
 
     public class Scene 
@@ -75,6 +75,44 @@ namespace BinaryLogic
                     component.Process(this);
             }
 
+            var wires = components
+                        .OfType<Wire>()
+                        .OrderBy(w => w.Level)
+                        .ToList();
+
+            uint maxWireLevel = wires.LastOrDefault().Level;
+
+            List<Wire>[] selected = new List<Wire>[maxWireLevel];
+
+            for (uint i = 1; i <= maxWireLevel; i++)
+            {
+                selected[i - 1] = wires
+                              .Where(w => w.Level == i)
+                              .ToList();
+            }
+
+            foreach (List<Wire> selectedWires in selected)
+            {
+                bool signal = false;
+
+                foreach (Wire wire in selectedWires)
+                {
+                    foreach (Component component in components)
+                    {
+                        if (component.Level == wire.Level - 1)
+                        {
+                            component.Process(this);
+                            signal = signal || component.Signal;
+                        }
+                    }
+
+                    wire.Signal = signal;
+
+                    wire.Process(this);
+                    wire.Draw(Renderer);
+                }
+            }
+
             foreach (Component component in components)
                 component.Checked = false;
         }
@@ -128,6 +166,38 @@ namespace BinaryLogic
                 }
 
                 SelectedComponent = null;
+            }
+        }
+        
+        public void RemoveComponent(Component component)
+        {
+            if (component != null)
+            {
+                foreach (List<Component> list in component.inputs)
+                {
+                    foreach (Component c in list)
+                    {
+                        c.outputs.Remove(component);
+
+                        if (c is Wire)
+                            ((Wire)c).InConnected = null;
+                    }
+                }
+
+                foreach (Component c in component.outputs)
+                {
+                    foreach (List<Component> list in c.inputs)
+                    {
+                        list.Remove(component);
+                    }
+
+                    if (c is Wire)
+                        ((Wire)c).OutConnected = null;
+                }
+
+                components.Remove(component);
+                Update();
+                Draw();
             }
         }
 
@@ -223,8 +293,12 @@ namespace BinaryLogic
                                 WireOutputHitbox = WireInputComponent.outHitbox;
                         }
 
-                        AddComponent(new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent));
+                        Wire wire = new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent);
+
+                        AddComponent(wire);
+
                         Update();
+
                         WirePlacementMode = false;
                         WireStart = null;
                         WireInputComponent = null;
@@ -311,6 +385,10 @@ namespace BinaryLogic
                     if (SelectedComponent != null)
                         SelectedComponent.Translate(this, Direction.Left, 1);
                         break;
+                case Key.Delete:
+                    if (SelectedComponent != null)
+                        RemoveComponent(SelectedComponent);
+                    break;
             }
         }
 

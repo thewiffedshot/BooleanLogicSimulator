@@ -73,6 +73,8 @@ namespace BooleanLogicSimulator
                     return Key.Plus;
                 case Keys.Subtract:
                     return Key.Minus;
+                case Keys.Delete:
+                    return Key.Delete;
                 default:
                     return Key.Invalid;
             }

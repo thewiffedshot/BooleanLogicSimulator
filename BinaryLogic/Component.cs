@@ -14,7 +14,7 @@ namespace BinaryLogic
     public abstract class Component : IInteractable
     {
         public uint ID { get; set; }
-        public uint Level { get; private set; } = 0;
+        public uint Level { get; set; } = 0;
         public bool Checked { get; set; } = false;
         public Point Position { get; protected set; }
         public Point StartPosition { get; set; }
@@ -26,10 +26,10 @@ namespace BinaryLogic
         public Color Color { get; protected set; }
         public readonly static Color DefaultColor = Color.Black;
 
-        public bool Signal { get; protected set; }
+        public bool Signal { get; set; }
         public List<Component>[] inputs;
         public List<Component> outputs = new List<Component>(0);
-         
+
         public float XIndent { get; protected set; }
         public float YIndent { get; protected set; }
         protected Line[] lines = new Line[0];
@@ -91,7 +91,7 @@ namespace BinaryLogic
         {
             Color = color;
         }
-        
+
         public abstract void Deselect();
         public abstract void Draw(IRenderer renderer);
         public abstract bool Select(Point location, Scene sender);
@@ -103,10 +103,10 @@ namespace BinaryLogic
             foreach (InHitbox hitbox in inHitboxes)
             {
                 if (hitbox != null)
-                if (hitbox.Clicked(location))
-                {
-                    return hitbox;
-                }
+                    if (hitbox.Clicked(location))
+                    {
+                        return hitbox;
+                    }
             }
 
             return null;
@@ -131,18 +131,16 @@ namespace BinaryLogic
             if (Checked) return;
 
             Level = level;
+
             Checked = true;
 
             foreach (Component c in outputs)
-            {  
-                c.SetLevel(level + 1);
-            }
-
-            if (this is Wire)
-                foreach (Component c in inputs[0])
-                {
+            {
+                if (!(c is Wire) || !(this is Wire))
                     c.SetLevel(level + 1);
-                }
+                else
+                    c.SetLevel(level);
+            }
         }
 
         public void Delete(Scene scene)

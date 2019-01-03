@@ -90,7 +90,7 @@ namespace BinaryLogic.Components
 
         public override void Process(Scene scene)
         {
-            throw new NotImplementedException();
+            
         }
 
         public override bool Select(Point location, Scene sender)

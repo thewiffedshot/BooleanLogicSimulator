@@ -12,8 +12,9 @@ namespace BinaryLogic
     class Wire : Component
     {
         Line startLine;
-        InHitbox inConnected;   // Input hitbox of component where wire ends.
-        OutHitbox outConnected; // Output hitbox of component where wire starts.
+        public InHitbox InConnected { get; set; }   // Input hitbox of component where wire ends.
+        public OutHitbox OutConnected { get; set; } // Output hitbox of component where wire starts.
+        bool WireChecked { get; set; } = false;
 
         public Wire(Scene scene, Line wire, Component input, Component output) : // TODO: Need to add two more checks for appropriate missing output or input.
             base(ComponentType.Wire, null, 3)
@@ -35,12 +36,12 @@ namespace BinaryLogic
                     output
                 };
 
-                outConnected = scene.WireOutputHitbox;
-                inConnected = scene.WireInputHitbox;
-                output.inputs[inConnected.AttachedInputIndex].Add(this);
+                OutConnected = scene.WireOutputHitbox;
+                InConnected = scene.WireInputHitbox;
+                output.inputs[InConnected.AttachedInputIndex].Add(this);
 
-                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
-                outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
+                inHitboxes[0] = new InHitbox(OutConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
+                outHitbox = new OutHitbox(InConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
             }
 
             if (input != null && output == null)
@@ -51,9 +52,9 @@ namespace BinaryLogic
                 };
 
                 input.outputs.Add(this);
-                outConnected = scene.WireOutputHitbox;
+                OutConnected = scene.WireOutputHitbox;
 
-                inHitboxes[0] = new InHitbox(outConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
+                inHitboxes[0] = new InHitbox(OutConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
                 outHitbox = new OutHitbox(wire.points[1], (int)(scene.ScaleFactor * 5f), 0);
             }
 
@@ -64,11 +65,11 @@ namespace BinaryLogic
                     output
                 };
 
-                inConnected = scene.WireInputHitbox;
-                output.inputs[inConnected.AttachedInputIndex].Add(this);
+                InConnected = scene.WireInputHitbox;
+                output.inputs[InConnected.AttachedInputIndex].Add(this);
 
                 inHitboxes[0] = new InHitbox(wire.points[0], (int)(scene.ScaleFactor * 5f), 0);
-                outHitbox = new OutHitbox(inConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
+                outHitbox = new OutHitbox(InConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
             }
 
             lines = new Line[1];
@@ -87,10 +88,10 @@ namespace BinaryLogic
         {
             renderer.DrawLine(lines[0], Color, 3);
 
-            if (inConnected == null)
+            if (InConnected == null)
                 inHitboxes[0].Draw(renderer);
 
-            if (outConnected == null)
+            if (OutConnected == null)
                 outHitbox.Draw(renderer);
         }
 
@@ -108,6 +109,7 @@ namespace BinaryLogic
             float threshold = 3;
 
             OutHitbox o = OutputClicked(location);
+            InHitbox i = InputClicked(location);
 
             bool result = false;
 
@@ -124,6 +126,12 @@ namespace BinaryLogic
                 }
             }
 
+            /*if (sender.WirePlacementMode && i != null)
+            {
+                result = false;
+                sender.WireMode(location, this, i);
+            }
+            else */
             if (o != null)
             {
                 result = false;
@@ -135,13 +143,13 @@ namespace BinaryLogic
 
         public override void Process(Scene scene)
         {
-            Signal = false;
+            /*Signal = false;
 
             foreach (Component component in inputs[0])
             {
                 if (component.Signal)
                     Signal = true;
-            }
+            }*/
 
             ChangeColor(Signal ? Color.Red : Color.Black);
         }
@@ -158,25 +166,39 @@ namespace BinaryLogic
             Point startPoint = new Point();
             Point endPoint = new Point();
 
-            if (outConnected != null && inConnected != null)
+            if (OutConnected != null && InConnected != null)
             {
-                startPoint = outConnected.Position;
-                endPoint = inConnected.Position;
+                startPoint = OutConnected.Position;
+                endPoint = InConnected.Position;
             }
-            else if (inConnected == null && outConnected != null)
+            else if (InConnected == null && OutConnected != null)
             {
-                startPoint = outConnected.Position;
+                startPoint = OutConnected.Position;
                 endPoint = startPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
 
                 var newPointsOrdered = endPoint.Y > startPoint.Y ?
-                                       new { point1 = startPoint, point2 = endPoint } : 
+                                       new { point1 = startPoint, point2 = endPoint } :
                                        new { point1 = endPoint, point2 = startPoint };
 
                 if ((endPoint - startPoint) * (startLine.points[1] - startLine.points[0]) < 0)
                     endPoint = newPointsOrdered.point2 + 2 * (newPointsOrdered.point2 - newPointsOrdered.point1);
             }
+            else if (InConnected != null && OutConnected == null)
+            {
+                endPoint = InConnected.Position;
+                startPoint = endPoint - scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+
+                var newPointsOrdered = endPoint.Y > startPoint.Y ?
+                                       new { point1 = startPoint, point2 = endPoint } :
+                                       new { point1 = endPoint, point2 = startPoint };
+
+                if ((endPoint - startPoint) * (startLine.points[1] - startLine.points[0]) < 0)
+                    startPoint = newPointsOrdered.point2 + 2 * (newPointsOrdered.point2 - newPointsOrdered.point1);
+            }
             else
-                throw new InvalidOperationException("Wire can not exist without at least one attached IOhitbox.");
+            {
+                scene.RemoveComponent(this);
+            }
 
             lines[0] = new Line(startPoint, endPoint);
 
