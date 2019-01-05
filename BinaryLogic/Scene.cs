@@ -29,8 +29,8 @@ namespace BinaryLogic
         public bool WireInput { get; private set; }
         public Point WireStart { get; private set; }
         public Point MouseLocation { get; private set; }
-        private Component WireInputComponent { get; set; }
-        private Component WireOutputComponent { get; set; }
+        public Component WireInputComponent { get; set; }
+        public Component WireOutputComponent { get; set; }
         public InHitbox WireInputHitbox { get; private set; }
         public OutHitbox WireOutputHitbox { get; private set; }
 
@@ -74,7 +74,7 @@ namespace BinaryLogic
                 if (component.Level != 0)
                     component.Process(this);
             }
-
+            
             var wires = components
                         .OfType<Wire>()
                         .OrderBy(w => w.Level)
@@ -87,8 +87,8 @@ namespace BinaryLogic
             for (uint i = 1; i <= maxWireLevel; i++)
             {
                 selected[i - 1] = wires
-                              .Where(w => w.Level == i)
-                              .ToList();
+                                  .Where(w => w.Level == i)
+                                  .ToList();
             }
 
             foreach (List<Wire> selectedWires in selected)
@@ -97,16 +97,21 @@ namespace BinaryLogic
 
                 foreach (Wire wire in selectedWires)
                 {
-                    foreach (Component component in components)
+                    foreach (Component component in components) 
                     {
-                        if (component.Level == wire.Level - 1)
+
+                        if (component.Level == wire.Level - 1) // Search for path to current wire before setting the signal.
                         {
+                            foreach (Component c in component.outputs)
+                                if (c is Wire)
+                                    ((Wire)c).Propagate(new List<Wire>(), component.Signal);
+
                             component.Process(this);
-                            signal = signal || component.Signal;
+                            //signal = signal || component.Signal;
                         }
                     }
 
-                    wire.Signal = signal;
+                    //wire.Signal = signal;
 
                     wire.Process(this);
                     wire.Draw(Renderer);
@@ -115,6 +120,38 @@ namespace BinaryLogic
 
             foreach (Component component in components)
                 component.Checked = false;
+        }
+
+        bool WireAsNode(Component current, List<Component> checkedComponents, Component toFind)
+        {
+            if (checkedComponents.Contains(current))
+                return false;
+
+            checkedComponents.Add(current);
+
+            if (current == toFind)
+                return true;        
+
+            bool found = false;
+
+            if (current is Wire)
+            {
+                foreach (Component component in current.inputs[0])
+                {
+                    found = found || WireAsNode(component, checkedComponents, toFind);
+                }
+
+                foreach (Component component in current.outputs)
+                {
+                    found = found || WireAsNode(component, checkedComponents, toFind);
+                }
+            }
+            else if (current.Level == toFind.Level - 1 || current.Level == toFind.Level - 1)
+            {
+                return false;
+            }
+
+            return found;
         }
 
         public void SetRenderer(IRenderer renderer)
@@ -268,30 +305,38 @@ namespace BinaryLogic
                 case MouseKey.Left:
                     if (WirePlacementMode)
                     {
-                        if (WireInput)
+                        foreach (Component component in components)
+                            component.Select(location, this);
+
+                        if (WireInput && WireOutputComponent == null)
                         {
                             WireOutputComponent = components
                                                   .Where(c => c.InputClicked(location) != null)
-                                                  .LastOrDefault();
-
-                            if (WireOutputComponent != null)
-                            foreach (InHitbox hitbox in WireOutputComponent.inHitboxes)
-                            {
-                                if (hitbox.Clicked(location))
-                                {
-                                    WireInputHitbox = hitbox;
-                                }
-                            }
+                                                  .LastOrDefault();           
                         }
-                        else
+
+                        if (!WireInput && WireInputComponent == null) 
                         {
                             WireInputComponent = components
                                                  .Where(c => c.OutputClicked(location) != null)
                                                  .LastOrDefault();
-
-                            if (WireInputComponent != null)
-                                WireOutputHitbox = WireInputComponent.outHitbox;
                         }
+
+                        if (WireOutputComponent != null && WireOutputComponent is Wire)
+                        {
+                            WireInputHitbox = WireOutputComponent.inHitboxes[0];
+                        }
+                        else if (WireOutputComponent != null)
+                        foreach (InHitbox hitbox in WireOutputComponent.inHitboxes)
+                        {
+                            if (hitbox.Clicked(location))
+                            {
+                                WireInputHitbox = hitbox;
+                            }
+                        }
+
+                        if (WireInputComponent != null)
+                            WireOutputHitbox = WireInputComponent.outHitbox;
 
                         Wire wire = new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent);
 

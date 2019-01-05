@@ -126,16 +126,22 @@ namespace BinaryLogic
                 }
             }
 
-            /*if (sender.WirePlacementMode && i != null)
+            if (sender.WirePlacementMode)
             {
-                result = false;
-                sender.WireMode(location, this, i);
+                if (sender.WireInput && i != null)
+                {
+                    sender.WireOutputComponent = this;
+                }
+                else if (!sender.WireInput && o != null)
+                {
+                    sender.WireInputComponent = this;
+                }
             }
-            else */
-            if (o != null)
+            else if (o != null)
             {
                 result = false;
-                sender.WireMode(location, this, o, true);
+                if (!sender.WirePlacementMode)
+                    sender.WireMode(location, this, o, true);
             }
 
             return result;
@@ -152,6 +158,22 @@ namespace BinaryLogic
             }*/
 
             ChangeColor(Signal ? Color.Red : Color.Black);
+        }
+
+        public void Propagate(List<Wire> wiresChecked, bool signal)
+        {
+            wiresChecked.Add(this);
+
+            Signal = signal;
+            ChangeColor(Signal ? Color.Red : Color.Black);
+
+            foreach (Component component in inputs[0])
+                if (component is Wire && !wiresChecked.Contains(component))
+                    ((Wire)component).Propagate(wiresChecked, signal);
+
+            foreach (Component component in outputs)
+                if (component is Wire && !wiresChecked.Contains(component))
+                    ((Wire)component).Propagate(wiresChecked, signal);
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)  // TODO: Translate free end of wire.

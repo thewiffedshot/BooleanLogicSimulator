@@ -69,6 +69,10 @@ namespace BinaryLogic.Components
             if (hitbox.Clicked(location))
                 Flip();
 
+            /*foreach (Component component in outputs)
+                if (component is Wire)
+                    ((Wire)component).Propagate(new List<Wire>(), Signal);*/
+
             sender.Update();
         }
 
@@ -103,13 +107,15 @@ namespace BinaryLogic.Components
             if (i != null)
             {
                 result = false;
-                sender.WireMode(location, this, i);
+                if (!sender.WirePlacementMode)
+                    sender.WireMode(location, this, i);
             }
 
             else if (o != null)
             {
                 result = false;
-                sender.WireMode(location, this, o, true);
+                if (!sender.WirePlacementMode)
+                    sender.WireMode(location, this, o, true);
             }
 
             return result;
