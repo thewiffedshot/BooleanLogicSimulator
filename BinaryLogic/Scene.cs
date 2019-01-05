@@ -65,17 +65,43 @@ namespace BinaryLogic
                             .OrderBy(c => c.Level)
                             .Last().Level;
 
-            var ordered =   components
+            var ordered   = components
                             .OrderBy(c => c.Level)
                             .ToList();
 
-            foreach (Component component in ordered)
+            var orderedNotWires = ordered
+                                  .Where(c => !(c is Wire))
+                                  .OrderBy(c => c.Level)
+                                  .ToList();
+
+            List<Component> previousComponents = new List<Component>(0); // new Wire(this, new Line(new Point(), new Point()), WireInputComponent, WireOutputComponent); // Placeholder object.
+            bool signal = false;
+
+            foreach (Component component in orderedNotWires)
             {
-                if (component.Level != 0)
-                    component.Process(this);
+                if (previousComponents.Count == 0 || component.Level == previousComponents[0].Level)
+                {
+                    previousComponents.Add(component);
+                }
+                else
+                {
+                    foreach (Component c in previousComponents)
+                    {
+                        signal = signal || c.Signal;
+                    }
+
+                    foreach (Component c in previousComponents[0].outputs)
+                    {
+                        if (c is Wire)
+                            ((Wire)c).Propagate(new List<Wire>(), signal);
+                    }
+
+                    signal = false;
+                    previousComponents = new List<Component>(0);
+                }
             }
-            
-            var wires = components
+
+            /*var wires = components
                         .OfType<Wire>()
                         .OrderBy(w => w.Level)
                         .ToList();
@@ -100,23 +126,23 @@ namespace BinaryLogic
                     foreach (Component component in components) 
                     {
 
-                        if (component.Level == wire.Level - 1) // Search for path to current wire before setting the signal.
+                        if (component.Level == wire.Level - 1 && WireAsNode(wire, new List<Component>(), component)) // Search for path to current wire before setting the signal.
                         {
-                            foreach (Component c in component.outputs)
+                            /*foreach (Component c in component.outputs)
                                 if (c is Wire)
                                     ((Wire)c).Propagate(new List<Wire>(), component.Signal);
 
                             component.Process(this);
-                            //signal = signal || component.Signal;
+                            signal = signal || component.Signal;
                         }
                     }
 
-                    //wire.Signal = signal;
+                    wire.Propagate(new List<Wire>(), signal);
 
                     wire.Process(this);
                     wire.Draw(Renderer);
                 }
-            }
+            }*/
 
             foreach (Component component in components)
                 component.Checked = false;
@@ -146,9 +172,9 @@ namespace BinaryLogic
                     found = found || WireAsNode(component, checkedComponents, toFind);
                 }
             }
-            else if (current.Level == toFind.Level - 1 || current.Level == toFind.Level - 1)
+            else if (current == toFind)
             {
-                return false;
+                return true;
             }
 
             return found;
