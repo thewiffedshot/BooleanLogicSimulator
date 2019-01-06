@@ -9,7 +9,7 @@ using Point = BinaryLogic.Point;
 
 namespace BinaryLogic
 {
-    public class ComponentHitbox : IDrawable
+    internal class ComponentHitbox : IDrawable
     {
         Rectangle hitbox;
         public Point Position { get { return hitbox.position; } set { hitbox.position = value; } }

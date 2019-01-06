@@ -9,7 +9,7 @@ using Point = BinaryLogic.Point;
 
 namespace BinaryLogic
 {
-    public class InHitbox : IDrawable
+    internal class InHitbox : IDrawable
     {
         public int AttachedInputIndex { get; private set; }
         Circle hitbox;

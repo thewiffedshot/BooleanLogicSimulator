@@ -8,7 +8,7 @@ using BinaryLogic.Interfaces;
 
 namespace BinaryLogic.Components
 {
-    public class ORGate : Component
+    internal class ORGate : Component
     {
         public ORGate(ComponentType componentType, ComponentHitbox hitbox) : base(componentType, hitbox, 3)
         {

@@ -9,7 +9,7 @@ using Point = BinaryLogic.Point;
 
 namespace BinaryLogic.Components
 {
-    public class Switch : Component, IClickable
+    internal class Switch : Component, IClickable
     {
         public Switch(Scene scene, Point position)
             : base(ComponentType.Switch, new ComponentHitbox(new Rectangle(position, (int)(2 * scene.GetGridInterval()), (int)(2 * scene.GetGridInterval()))), 3)
@@ -69,10 +69,6 @@ namespace BinaryLogic.Components
             if (hitbox.Clicked(location))
                 Flip();
 
-            /*foreach (Component component in outputs)
-                if (component is Wire)
-                    ((Wire)component).Propagate(new List<Wire>(), Signal);*/
-
             sender.Update();
         }
 
@@ -94,7 +90,9 @@ namespace BinaryLogic.Components
 
         public override void Process(Scene scene)
         {
-            
+            foreach (Component component in outputs)
+                if (component is Wire)
+                    ((Wire)component).Propagate(new List<Wire>(), this);
         }
 
         public override bool Select(Point location, Scene sender)

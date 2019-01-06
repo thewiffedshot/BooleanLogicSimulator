@@ -22,17 +22,17 @@ namespace BinaryLogic
         private float LastScaleFactor { get; set; }
         public Point Offset { get; set; }
         public Color Background { get; set; }
-        public List<Component> components = new List<Component>(0);
-        public Component SelectedComponent { get; private set; }
+        internal List<Component> components = new List<Component>(0);
+        internal Component SelectedComponent { get; private set; }
 
         public bool WirePlacementMode { get; private set; }
         public bool WireInput { get; private set; }
         public Point WireStart { get; private set; }
         public Point MouseLocation { get; private set; }
-        public Component WireInputComponent { get; set; }
-        public Component WireOutputComponent { get; set; }
-        public InHitbox WireInputHitbox { get; private set; }
-        public OutHitbox WireOutputHitbox { get; private set; }
+        internal Component WireInputComponent { get; set; }
+        internal Component WireOutputComponent { get; set; }
+        internal InHitbox WireInputHitbox { get; private set; }
+        internal OutHitbox WireOutputHitbox { get; private set; }
 
         public uint GlobalID { get; set; }
 
@@ -69,115 +69,11 @@ namespace BinaryLogic
                             .OrderBy(c => c.Level)
                             .ToList();
 
-            var orderedNotWires = ordered
-                                  .Where(c => !(c is Wire))
-                                  .OrderBy(c => c.Level)
-                                  .ToList();
-
-            List<Component> previousComponents = new List<Component>(0); // new Wire(this, new Line(new Point(), new Point()), WireInputComponent, WireOutputComponent); // Placeholder object.
-            bool signal = false;
-
-            foreach (Component component in orderedNotWires)
-            {
-                if (previousComponents.Count == 0 || component.Level == previousComponents[0].Level)
-                {
-                    previousComponents.Add(component);
-                }
-                else
-                {
-                    foreach (Component c in previousComponents)
-                    {
-                        signal = signal || c.Signal;
-                    }
-
-                    foreach (Component c in previousComponents[0].outputs)
-                    {
-                        if (c is Wire)
-                            ((Wire)c).Propagate(new List<Wire>(), signal);
-                    }
-
-                    signal = false;
-                    previousComponents = new List<Component>(0);
-                }
-            }
-
-            /*var wires = components
-                        .OfType<Wire>()
-                        .OrderBy(w => w.Level)
-                        .ToList();
-
-            uint maxWireLevel = wires.LastOrDefault().Level;
-
-            List<Wire>[] selected = new List<Wire>[maxWireLevel];
-
-            for (uint i = 1; i <= maxWireLevel; i++)
-            {
-                selected[i - 1] = wires
-                                  .Where(w => w.Level == i)
-                                  .ToList();
-            }
-
-            foreach (List<Wire> selectedWires in selected)
-            {
-                bool signal = false;
-
-                foreach (Wire wire in selectedWires)
-                {
-                    foreach (Component component in components) 
-                    {
-
-                        if (component.Level == wire.Level - 1 && WireAsNode(wire, new List<Component>(), component)) // Search for path to current wire before setting the signal.
-                        {
-                            /*foreach (Component c in component.outputs)
-                                if (c is Wire)
-                                    ((Wire)c).Propagate(new List<Wire>(), component.Signal);
-
-                            component.Process(this);
-                            signal = signal || component.Signal;
-                        }
-                    }
-
-                    wire.Propagate(new List<Wire>(), signal);
-
-                    wire.Process(this);
-                    wire.Draw(Renderer);
-                }
-            }*/
+            foreach (Component component in ordered)
+                component.Process(this);
 
             foreach (Component component in components)
                 component.Checked = false;
-        }
-
-        bool WireAsNode(Component current, List<Component> checkedComponents, Component toFind)
-        {
-            if (checkedComponents.Contains(current))
-                return false;
-
-            checkedComponents.Add(current);
-
-            if (current == toFind)
-                return true;        
-
-            bool found = false;
-
-            if (current is Wire)
-            {
-                foreach (Component component in current.inputs[0])
-                {
-                    found = found || WireAsNode(component, checkedComponents, toFind);
-                }
-
-                foreach (Component component in current.outputs)
-                {
-                    found = found || WireAsNode(component, checkedComponents, toFind);
-                }
-            }
-            else if (current == toFind)
-            {
-                return true;
-            }
-
-            return found;
         }
 
         public void SetRenderer(IRenderer renderer)
@@ -185,7 +81,7 @@ namespace BinaryLogic
             Renderer = renderer;
         }
 
-        public void AddComponent(Component component)
+        internal void AddComponent(Component component)
         {
             component.ID = GlobalID++;
 
@@ -214,7 +110,7 @@ namespace BinaryLogic
             Draw(true);
         }
 
-        public void DeselectComponent(Component component)
+        internal void DeselectComponent(Component component)
         {
             if (component != null)
             {
@@ -232,7 +128,7 @@ namespace BinaryLogic
             }
         }
         
-        public void RemoveComponent(Component component)
+        internal void RemoveComponent(Component component)
         {
             if (component != null)
             {
@@ -259,6 +155,7 @@ namespace BinaryLogic
                 }
 
                 components.Remove(component);
+                component.Dispose();
                 Update();
                 Draw();
             }
@@ -296,7 +193,7 @@ namespace BinaryLogic
             Grid.Draw(Renderer);
         }
 
-        public void WireMode(Point start, Component sender, object hitbox, bool input = false)
+        internal void WireMode(Point start, Component sender, object hitbox, bool input = false)
         {
             WirePlacementMode = true;
             WireStart = start;
@@ -367,8 +264,6 @@ namespace BinaryLogic
                         Wire wire = new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent);
 
                         AddComponent(wire);
-
-                        Update();
 
                         WirePlacementMode = false;
                         WireStart = null;

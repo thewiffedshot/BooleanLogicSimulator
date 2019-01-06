@@ -8,7 +8,7 @@ using BinaryLogic.Interfaces;
 
 namespace BinaryLogic.Components
 {
-    public class NOTGate : Component
+    internal class NOTGate : Component
     {
         public NOTGate(ComponentType componentType, ComponentHitbox hitbox) : base(componentType, hitbox, 3)
         {

@@ -11,7 +11,7 @@ namespace BinaryLogic
 {
     public enum ComponentType { AND, OR, XOR, NOT, Wire, Switch, Button, Light };
 
-    public abstract class Component : IInteractable
+    internal abstract class Component : IInteractable, IDisposable
     {
         public uint ID { get; set; }
         public uint Level { get; set; } = 0;
@@ -158,6 +158,35 @@ namespace BinaryLogic
                 {
                     inputSlot.Remove(this);
                 }
+        }
+
+        public void Dispose()                               // Might need to add edge cases for some components.
+        {
+            if (this is Wire)
+            {
+                foreach (Component component in outputs)
+                    if (component is Wire)
+                    {
+                        component.inputs[0].Remove(this);
+                    }
+
+                foreach (Component component in inputs[0])
+                    if (component is Wire)
+                    {
+                        component.outputs.Remove(this);
+                    }
+
+                foreach (Component source in ((Wire)this).sources)
+                    foreach (Component component in source.outputs)
+                        if (component is Wire)
+                            ((Wire)component).Propagate(new List<Wire>(0), source, false, true);
+            }
+            else
+            {
+                foreach (Component component in outputs)
+                    if (component is Wire)
+                        ((Wire)component).Propagate(new List<Wire>(), this, true);
+            }
         }
     }
 }

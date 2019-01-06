@@ -8,7 +8,7 @@ using BinaryLogic.Interfaces;
 
 namespace BinaryLogic.Components
 {
-    public class Light : Component
+    internal class Light : Component
     {
         Circle startCircle;
 

@@ -42,8 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\ANDGate.cs" />
-    <Compile Include="Arc.cs" />
-    <Compile Include="Circle.cs" />
+    <Compile Include="Utility\Arc.cs" />
+    <Compile Include="Utility\Circle.cs" />
     <Compile Include="Component.cs" />
     <Compile Include="ComponentHitbox.cs" />
     <Compile Include="Components\Button.cs" />
@@ -59,14 +59,14 @@
     <Compile Include="Interfaces\IHoldable.cs" />
     <Compile Include="Interfaces\IInteractable.cs" />
     <Compile Include="Interfaces\ISelectable.cs" />
-    <Compile Include="Line.cs" />
+    <Compile Include="Utility\Line.cs" />
     <Compile Include="Components\ORGate.cs" />
     <Compile Include="OutHitbox.cs" />
-    <Compile Include="Point.cs" />
+    <Compile Include="Utility\Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rectangle.cs" />
+    <Compile Include="Utility\Rectangle.cs" />
     <Compile Include="Scene.cs" />
-    <Compile Include="Vector.cs" />
+    <Compile Include="Utility\Vector.cs" />
     <Compile Include="Wire.cs" />
   </ItemGroup>
   <ItemGroup />

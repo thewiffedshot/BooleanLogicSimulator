@@ -8,7 +8,7 @@ using BinaryLogic.Interfaces;
 
 namespace BinaryLogic.Components
 {
-    public class ANDGate : Component
+    internal class ANDGate : Component
     {
         public ANDGate(Scene scene, Point position) 
             : base(ComponentType.AND, new ComponentHitbox(new Rectangle(position, (int)scene.GetGridInterval() * 2, (int)scene.GetGridInterval() * 2)), 3)
@@ -81,6 +81,10 @@ namespace BinaryLogic.Components
                 if (component.Signal) input2 = true;
 
             Signal = input1 && input2;
+
+            foreach (Component component in outputs)
+                if (component is Wire)
+                    ((Wire)component).Propagate(new List<Wire>(0), this);
         }
 
         public override void Scale(Scene scene, bool zoom)

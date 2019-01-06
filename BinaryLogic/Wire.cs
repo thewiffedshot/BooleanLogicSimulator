@@ -9,11 +9,12 @@ using BinaryLogic;
 
 namespace BinaryLogic
 {
-    class Wire : Component
+    internal class Wire : Component
     {
         Line startLine;
         public InHitbox InConnected { get; set; }   // Input hitbox of component where wire ends.
         public OutHitbox OutConnected { get; set; } // Output hitbox of component where wire starts.
+        public List<Component> sources = new List<Component>(0);
         bool WireChecked { get; set; } = false;
 
         public Wire(Scene scene, Line wire, Component input, Component output) : // TODO: Need to add two more checks for appropriate missing output or input.
@@ -76,6 +77,7 @@ namespace BinaryLogic
             lines[0] = wire;
             startLine = new Line((1 / scene.ScaleFactor) * wire.points[0], (1 / scene.ScaleFactor) * wire.points[1]);
 
+            scene.Update();
             Process(scene);
         }
 
@@ -149,31 +151,37 @@ namespace BinaryLogic
 
         public override void Process(Scene scene)
         {
-            /*Signal = false;
+            bool signal = false;
 
-            foreach (Component component in inputs[0])
-            {
-                if (component.Signal)
-                    Signal = true;
-            }*/
+            foreach (Component source in sources)
+                signal = signal || source.Signal;
+
+            Signal = signal;
 
             ChangeColor(Signal ? Color.Red : Color.Black);
         }
 
-        public void Propagate(List<Wire> wiresChecked, bool signal)
-        {
-            wiresChecked.Add(this);
+        public void Propagate(List<Wire> wiresChecked, Component source, bool remove = false, bool clear = false)  // TODO: Incorporate some sort of lock flag in scene                                                                                                                   
+        {                                                                                                          // so it doesn't just delete a component that's being evaluated
+            wiresChecked.Add(this);                                                                                // through recursion.
 
-            Signal = signal;
-            ChangeColor(Signal ? Color.Red : Color.Black);
+            if (clear == true)
+                sources = new List<Component>(0);
+
+            if (remove && sources.Contains(source))
+                sources.Remove(source);
+            else if (!remove && !sources.Contains(source))
+                sources.Add(source);
 
             foreach (Component component in inputs[0])
                 if (component is Wire && !wiresChecked.Contains(component))
-                    ((Wire)component).Propagate(wiresChecked, signal);
+                    ((Wire)component).Propagate(wiresChecked, source, remove, clear);
 
             foreach (Component component in outputs)
                 if (component is Wire && !wiresChecked.Contains(component))
-                    ((Wire)component).Propagate(wiresChecked, signal);
+                    ((Wire)component).Propagate(wiresChecked, source, remove, clear);
+
+            if (sources.Count == 0) Dispose();      // Wire cannot exist with no sources attached. 
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)  // TODO: Translate free end of wire.
@@ -183,7 +191,7 @@ namespace BinaryLogic
             Scale(scene, false);*/ 
         }
 
-        public override void Scale(Scene scene, bool zoom)
+        public override void Scale(Scene scene, bool zoom)      // TODO: Wire scaling is bugged when there is an output (non-wire) component attached.
         {
             Point startPoint = new Point();
             Point endPoint = new Point();

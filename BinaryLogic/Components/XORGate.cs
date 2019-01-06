@@ -8,7 +8,7 @@ using BinaryLogic.Interfaces;
 
 namespace BinaryLogic.Components
 {
-    public class XORGate : Component
+    internal class XORGate : Component
     {
         public XORGate(ComponentType componentType, ComponentHitbox hitbox) : base(componentType, hitbox, 3)
         {

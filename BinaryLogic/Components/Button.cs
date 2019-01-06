@@ -8,7 +8,7 @@ using BinaryLogic.Interfaces;
 
 namespace BinaryLogic.Components
 {
-    public class Button : Component, IHoldable
+    internal class Button : Component, IHoldable
     {
         public Button(ComponentType componentType, ComponentHitbox hitbox) : base(componentType, hitbox, 3)
         {
