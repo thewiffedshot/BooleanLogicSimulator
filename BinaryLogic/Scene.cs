@@ -327,10 +327,13 @@ namespace BinaryLogic
                     AddComponent(new Light(this, closest));
                     break;
                 case Key.Q:
-                        AddComponent(new ANDGate(this, closest));
-                        break;
+                    AddComponent(new ANDGate(this, closest));
+                    break;
+                case Key.E:
+                    AddComponent(new NOTGate(this, closest));
+                    break;
                 case Key.Plus:
-                Scale(0.25f);
+                    Scale(0.25f);
                     break;
                 case Key.Minus:
                     Scale(-0.25f);
