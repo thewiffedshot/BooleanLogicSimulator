@@ -120,7 +120,7 @@ namespace BinaryLogic
             {
                 return outHitbox;
             }
-
+            
             return null;
         }
 

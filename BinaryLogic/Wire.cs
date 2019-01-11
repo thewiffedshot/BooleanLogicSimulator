@@ -90,15 +90,19 @@ namespace BinaryLogic
         {
             renderer.DrawLine(lines[0], Color, 3);
 
-            if (InConnected == null)
+            if (InConnected == null || 
+                outputs
+                .Where(c => !(c is Wire))
+                .LastOrDefault() != null)
+
                 inHitboxes[0].Draw(renderer);
 
-            if (OutConnected == null)
+            if (OutConnected != null)
                 outHitbox.Draw(renderer);
         }
 
-        public override bool Select(Point location, Scene sender)      // TODO: Need to fix wire branch creation. 
-        {                                                              // Make sure IO hitboxes are properly checked when clicked
+        public override bool Select(Point location, Scene sender)    
+        {                                                              
             Point segment = lines[0].points[1] - lines[0].points[0];
             Point toStart = lines[0].points[0] - location;
             Point toEnd = lines[0].points[1] - location;
@@ -132,18 +136,29 @@ namespace BinaryLogic
             {
                 if (sender.WireInput && i != null)
                 {
-                    sender.WireOutputComponent = this;
+                    result = false;
+
+                    foreach (Component component in inputs[0])
+                    {
+                        if (component is Wire && component == sender.WireInputComponent)
+                            result = true;
+                    }
+
+                    if (!result)
+                        sender.WireOutputComponent = this;
+
+                    result = false;
                 }
                 else if (!sender.WireInput && o != null)
                 {
+                    result = false;
                     sender.WireInputComponent = this;
                 }
             }
             else if (o != null)
             {
                 result = false;
-                if (!sender.WirePlacementMode)
-                    sender.WireMode(location, this, o, true);
+                sender.WireMode(location, this, o, true);
             }
 
             return result;
@@ -204,26 +219,26 @@ namespace BinaryLogic
             else if (InConnected == null && OutConnected != null)
             {
                 startPoint = OutConnected.Position;
-                endPoint = startPoint + scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+                endPoint = startPoint + (scene.ScaleFactor * startLine.Parameter) * startLine.CollinearVector;
 
                 var newPointsOrdered = endPoint.Y > startPoint.Y ?
                                        new { point1 = startPoint, point2 = endPoint } :
                                        new { point1 = endPoint, point2 = startPoint };
 
                 if ((endPoint - startPoint) * (startLine.points[1] - startLine.points[0]) < 0)
-                    endPoint = newPointsOrdered.point2 + 2 * (newPointsOrdered.point2 - newPointsOrdered.point1);
+                    endPoint = newPointsOrdered.point2 + (newPointsOrdered.point2 - newPointsOrdered.point1);
             }
             else if (InConnected != null && OutConnected == null)
             {
                 endPoint = InConnected.Position;
-                startPoint = endPoint - scene.ScaleFactor * startLine.Parameter * startLine.CollinearVector;
+                startPoint = endPoint - (scene.ScaleFactor * startLine.Parameter) * startLine.CollinearVector;
 
                 var newPointsOrdered = endPoint.Y > startPoint.Y ?
                                        new { point1 = startPoint, point2 = endPoint } :
                                        new { point1 = endPoint, point2 = startPoint };
 
                 if ((endPoint - startPoint) * (startLine.points[1] - startLine.points[0]) < 0)
-                    startPoint = newPointsOrdered.point2 + 2 * (newPointsOrdered.point2 - newPointsOrdered.point1);
+                    startPoint = newPointsOrdered.point2 + (newPointsOrdered.point2 - newPointsOrdered.point1);
             }
             else
             {

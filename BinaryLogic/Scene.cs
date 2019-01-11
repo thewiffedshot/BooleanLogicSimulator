@@ -231,18 +231,18 @@ namespace BinaryLogic
                         foreach (Component component in components)
                             component.Select(location, this);
 
-                        if (WireInput && WireOutputComponent == null)
+                        if (WireOutputComponent == null)
                         {
                             WireOutputComponent = components
-                                                  .Where(c => c.InputClicked(location) != null)
-                                                  .LastOrDefault();           
-                        }
-
-                        if (!WireInput && WireInputComponent == null) 
+                                                    .Where(c => c.InputClicked(location) != null)
+                                                    .LastOrDefault();           
+                        }     
+                        
+                        if (WireInputComponent == null)
                         {
                             WireInputComponent = components
-                                                 .Where(c => c.OutputClicked(location) != null)
-                                                 .LastOrDefault();
+                                                    .Where(c => c.OutputClicked(location) != null)
+                                                    .LastOrDefault();
                         }
 
                         if (WireOutputComponent != null && WireOutputComponent is Wire)
