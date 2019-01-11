@@ -46,7 +46,7 @@ namespace BinaryLogic.Components
 
             if (Signal)
             {
-                lines[0].points[0].Y = (int)(rectangles[1].position.Y + 3 * (float)rectangles[1].Height / 4); // Constants must be explicitly noted.
+                lines[0].points[0].Y = (int)(rectangles[1].position.Y + 3 * (float)rectangles[1].Height / 4); // TODO: Constants must be explicitly noted.
                 lines[0].points[1].Y = (int)(rectangles[1].position.Y + 3 * (float)rectangles[1].Height / 4);
             }
             else

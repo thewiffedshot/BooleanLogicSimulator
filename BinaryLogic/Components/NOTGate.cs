@@ -10,38 +10,44 @@ namespace BinaryLogic.Components
 {
     internal class NOTGate : Component
     {
+        Circle startCircle = new Circle(new Point(), 0);
+
         public NOTGate(Scene scene, Point position)
             : base(ComponentType.NOT, new ComponentHitbox(new Rectangle(position, (int) scene.GetGridInterval() * 2, (int) scene.GetGridInterval() * 2)), 3)
-        {
+        {   
             StartPosition = position / scene.ScaleFactor;
             Position = position;
             Signal = false;
-
+            
             lines = new Line[3];
             circles = new Circle[1];
-
+            
             Point indent = position + new Point((int)XIndent, (int)YIndent);
-
+            
             hitbox.Position = Position;
-
+               
             inHitboxes = new InHitbox[1];
             inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 2)), 5, 0);
-
+            
             outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), 5, 0);
 
             lines[0] = new Line(indent,
                                 new Point(indent.X, indent.Y + (int)(scene.GetGridInterval() * 2 - (2 * YIndent * scene.ScaleFactor))));
-
+            
             lines[1] = new Line(indent,
-                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 2 * XIndent), indent.Y + (int)(scene.GetGridInterval() - YIndent)));
+                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 4 * XIndent), indent.Y + (int)(scene.GetGridInterval() - YIndent)));
 
             lines[2] = new Line(lines[0].points[1],
-                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 2 * XIndent), indent.Y + (int)(scene.GetGridInterval() - YIndent)));
+                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 4 * XIndent), indent.Y + (int)(scene.GetGridInterval() - YIndent)));
+
+            circles[0] = new Circle(new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 3 * XIndent), indent.Y + (int)(scene.GetGridInterval() - YIndent)), (int)(XIndent));
+
+            startCircle = circles[0];
         }
 
         public override void ChangeColor(Color color)
         {
-            throw new NotImplementedException();
+            Color = color;
         }
 
         public override void Deselect()
@@ -53,26 +59,115 @@ namespace BinaryLogic.Components
         {
             foreach (Line line in lines)
                 renderer.DrawLine(line, Color, 3);
+
+            foreach (Circle circle in circles)
+                renderer.DrawCircle(circle, Color, 3, false);
+
+            if (inHitboxes[0] != null)
+                inHitboxes[0].Draw(renderer);
+
+            if (outHitbox != null)
+                outHitbox.Draw(renderer);
         }
 
         public override void Process(Scene scene)
         {
-            throw new NotImplementedException();
+            bool input = false;
+
+            foreach (Component component in inputs[0])
+                if (component.Signal) input = true;
+
+            Signal = !input;
+
+            foreach (Component component in outputs)
+                if (component is Wire)
+                    ((Wire)component).Propagate(new List<Wire>(0), this);
         }
 
         public override void Scale(Scene scene, bool zoom)
         {
-            throw new NotImplementedException();
+            Position = scene.ScaleFactor * StartPosition;
+            Position = scene.Grid.SnapToGrid(Position);
+
+            Point indent = Position + scene.ScaleFactor * new Point((int)XIndent, (int)YIndent);
+
+            ChangeColor(Color);
+
+            hitbox.Position = Position;
+            hitbox.Width = scene.GetGridInterval() * 2f;
+            hitbox.Height = scene.GetGridInterval() * 2f;
+
+            inHitboxes[0].Position = new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 2));
+            inHitboxes[0].Radius = (int)(scene.ScaleFactor * 5f);
+
+            outHitbox.Position = new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2));
+            outHitbox.Radius = (int)(scene.ScaleFactor * 5f);
+
+            lines[0] = new Line(indent,
+                                new Point(indent.X, indent.Y + (int)(scene.GetGridInterval() * 2 - (2 * YIndent * scene.ScaleFactor))));
+
+            lines[1] = new Line(indent,
+                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 4 * XIndent * scene.ScaleFactor), indent.Y + (int)(scene.GetGridInterval() - YIndent * scene.ScaleFactor)));
+
+            lines[2] = new Line(lines[0].points[1],
+                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 4 * XIndent * scene.ScaleFactor), indent.Y + (int)(scene.GetGridInterval() - YIndent * scene.ScaleFactor)));
+
+            circles[0] = new Circle(new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 3 * XIndent * scene.ScaleFactor), indent.Y + (int)(scene.GetGridInterval() - YIndent * scene.ScaleFactor)), startCircle.radius * (int)(scene.ScaleFactor));
         }
 
         public override bool Select(Point location, Scene sender)
         {
-            throw new NotImplementedException();
+            bool result = hitbox.Clicked(location);
+
+            InHitbox i = InputClicked(location);
+            OutHitbox o = OutputClicked(location);
+
+            if (i != null)
+            {
+                result = false;
+                if (!sender.WirePlacementMode)
+                    sender.WireMode(location, this, i);
+            }
+
+            else if (o != null)
+            {
+                result = false;
+                if (!sender.WirePlacementMode)
+                    sender.WireMode(location, this, o, true);
+            }
+
+            return result;
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)
         {
-            throw new NotImplementedException();
+            switch (direction)
+            {
+                case Direction.Down:
+                    StartPosition.Y += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+                case Direction.Up:
+                    StartPosition.Y -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+                case Direction.Left:
+                    StartPosition.X -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+                case Direction.Right:
+                    StartPosition.X += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
+                    Scale(scene, false);
+                    break;
+            }
+
+            foreach (Wire wire in outputs)
+                wire.Scale(scene, true);
+
+            foreach (Wire wire in inputs[0])
+                wire.Scale(scene, true);
+
+            scene.Draw();
         }
     }
 }

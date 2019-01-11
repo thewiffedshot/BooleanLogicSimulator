@@ -41,12 +41,14 @@ namespace BooleanLogicSimulator
             }
         }
 
-        public void DrawCircle(Circle circle, Color color, uint thickness)
+        public void DrawCircle(Circle circle, Color color, uint thickness, bool fill)
         {
-            SolidBrush brush = new SolidBrush(color);
-
-            //gfx.DrawEllipse(pen, circle.position.X, circle.position.Y, circle.radius, circle.radius);
-            gfx.FillEllipse(brush, circle.position.X - circle.radius, circle.position.Y - circle.radius, 2 * circle.radius, 2 * circle.radius);
+            if (fill)
+                using (SolidBrush brush = new SolidBrush(color)) 
+                    gfx.FillEllipse(brush, circle.position.X - circle.radius, circle.position.Y - circle.radius, 2 * circle.radius, 2 * circle.radius);
+            else
+                using (Pen pen = new Pen(color, thickness))
+                    gfx.DrawEllipse(pen, circle.position.X - circle.radius, circle.position.Y - circle.radius, 2 * circle.radius, 2 * circle.radius);
         }
 
         public void DrawLine(Line line, Color color, uint thickness)

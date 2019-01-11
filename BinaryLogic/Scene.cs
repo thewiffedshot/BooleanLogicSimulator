@@ -250,11 +250,13 @@ namespace BinaryLogic
                             WireInputHitbox = WireOutputComponent.inHitboxes[0];
                         }
                         else if (WireOutputComponent != null)
-                        foreach (InHitbox hitbox in WireOutputComponent.inHitboxes)
                         {
-                            if (hitbox.Clicked(location))
+                            foreach (InHitbox hitbox in WireOutputComponent.inHitboxes)
                             {
-                                WireInputHitbox = hitbox;
+                                if (hitbox.Clicked(location))
+                                {
+                                    WireInputHitbox = hitbox;
+                                }
                             }
                         }
 
@@ -264,13 +266,12 @@ namespace BinaryLogic
                         Wire wire = new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent);
 
                         AddComponent(wire);
+                        
+                        // Update output component on wire creation.
+                        if (WireOutputComponent != null && !(WireOutputComponent is Wire))
+                            WireOutputComponent.Process(this);
 
-                        WirePlacementMode = false;
-                        WireStart = null;
-                        WireInputComponent = null;
-                        WireOutputComponent = null;
-                        WireOutputHitbox = null;
-                        WireInputHitbox = null;
+                        EndPlacementMode();
                     }
                     else
                     {
@@ -281,12 +282,7 @@ namespace BinaryLogic
                 case MouseKey.Right:
                     if (WirePlacementMode)
                     {
-                        WirePlacementMode = false;
-                        WireStart = null;
-                        WireInputComponent = null;
-                        WireOutputComponent = null;
-                        WireOutputHitbox = null;
-                        WireInputHitbox = null;
+                        EndPlacementMode();
 
                         Draw();
                     }
@@ -302,15 +298,20 @@ namespace BinaryLogic
                 default:
                     if (WirePlacementMode)
                     {
-                        WirePlacementMode = false;
-                        WireStart = null;
-                        WireInputComponent = null;
-                        WireOutputComponent = null;
-                        WireOutputHitbox = null;
-                        WireInputHitbox = null;
+                        EndPlacementMode();
                     }
                     break;
             }
+        }
+
+        void EndPlacementMode()
+        {
+            WirePlacementMode = false;
+            WireStart = null;
+            WireInputComponent = null;
+            WireOutputComponent = null;
+            WireOutputHitbox = null;
+            WireInputHitbox = null;
         }
 
         public void KeyStroke(Key key, Point mouseLocation)
