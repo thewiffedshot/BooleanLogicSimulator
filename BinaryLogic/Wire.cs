@@ -199,14 +199,34 @@ namespace BinaryLogic
             if (sources.Count == 0) Dispose();      // Wire cannot exist with no sources attached. 
         }
 
-        public override void Translate(Scene scene, Direction direction, uint units = 1)  // TODO: Translate free end of wire.
+        public override void Translate(Scene scene, Direction direction, uint units = 1)  // TODO: Translate wire.
         {
-            /*lines[0].Move(direction);
-            startLine.Move(direction);
-            Scale(scene, false);*/ 
+            throw new NotImplementedException();
+
+            /*startLine.Move(direction);
+            lines[0].Move(direction);
+
+            if (InConnected != null)
+                InConnected.Move(direction);
+
+            if (OutConnected != null)
+                OutConnected.Move(direction);
+
+            Scale(scene, false);
+
+            foreach (Component component in inputs[0])
+                if (component is Wire)
+                    component.Scale(scene, false);
+
+            foreach (Component component in outputs)
+                if (component is Wire)
+                    component.Scale(scene, false);
+
+            scene.Scale(0f);
+            scene.Draw();*/
         }
 
-        public override void Scale(Scene scene, bool zoom)      // TODO: Wire scaling is bugged when there is an output (non-wire) component attached.
+        public override void Scale(Scene scene, bool zoom) 
         {
             Point startPoint = new Point();
             Point endPoint = new Point();
@@ -215,6 +235,19 @@ namespace BinaryLogic
             {
                 startPoint = OutConnected.Position;
                 endPoint = InConnected.Position;
+
+                /*startPoint = OutConnected.Position;
+                endPoint = startPoint + (scene.ScaleFactor * startLine.Parameter) * startLine.CollinearVector;
+
+                var newPointsOrdered = endPoint.Y > startPoint.Y ?
+                                       new { point1 = startPoint, point2 = endPoint } :
+                                       new { point1 = endPoint, point2 = startPoint };
+
+                if ((endPoint - startPoint) * (startLine.points[1] - startLine.points[0]) < 0)
+                    endPoint = newPointsOrdered.point2 + (newPointsOrdered.point2 - newPointsOrdered.point1);
+
+                InConnected.Position = endPoint;
+                OutConnected.Position = startPoint;*/
             }
             else if (InConnected == null && OutConnected != null)
             {
@@ -227,6 +260,9 @@ namespace BinaryLogic
 
                 if ((endPoint - startPoint) * (startLine.points[1] - startLine.points[0]) < 0)
                     endPoint = newPointsOrdered.point2 + (newPointsOrdered.point2 - newPointsOrdered.point1);
+
+                InConnected.Position = endPoint;
+                OutConnected.Position = startPoint;
             }
             else if (InConnected != null && OutConnected == null)
             {
@@ -239,6 +275,9 @@ namespace BinaryLogic
 
                 if ((endPoint - startPoint) * (startLine.points[1] - startLine.points[0]) < 0)
                     startPoint = newPointsOrdered.point2 + (newPointsOrdered.point2 - newPointsOrdered.point1);
+
+                InConnected.Position = endPoint;
+                OutConnected.Position = startPoint;
             }
             else
             {
@@ -248,7 +287,10 @@ namespace BinaryLogic
             lines[0] = new Line(startPoint, endPoint);
 
             outHitbox.Position = lines[0].points[1];
+            outHitbox.Radius = (int)(scene.ScaleFactor * 5f);
+
             inHitboxes[0].Position = lines[0].points[0];
+            inHitboxes[0].Radius = (int)(scene.ScaleFactor * 5f);
         }
     }
 }

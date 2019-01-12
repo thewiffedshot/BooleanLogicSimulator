@@ -10,8 +10,31 @@ namespace BinaryLogic.Components
 {
     internal class ORGate : Component
     {
-        public ORGate(ComponentType componentType, ComponentHitbox hitbox) : base(componentType, hitbox, 3)
+        public ORGate(Scene scene, Point position) 
+            : base(ComponentType.AND, new ComponentHitbox(new Rectangle(position, (int)scene.GetGridInterval() * 2, (int)scene.GetGridInterval() * 2)), 3)
         {
+            StartPosition = position / scene.ScaleFactor;
+            Position = position;
+            Signal = false;
+
+            arcs = new Arc[3];
+
+            Point indent = position + new Point((int)XIndent, (int)YIndent);
+
+            hitbox.Position = Position;
+
+            inHitboxes = new InHitbox[2];
+            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 4)), 5, 0);
+            inHitboxes[1] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(3 * hitbox.Height / 4)), 5, 1);
+
+            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), 5, 0);
+
+            arcs[0] = new Arc(indent,
+                              indent + new Point(0, (int)(scene.GetGridInterval() * 2) - (int)(2 * YIndent)),
+                              indent + new Point((int)(scene.GetGridInterval() / 3 * 2), (int)(scene.GetGridInterval() / 2)),
+                              indent + new Point((int)(scene.GetGridInterval() / 3), (int)(scene.GetGridInterval() / 2)));
+
+
         }
 
         public override void ChangeColor(Color color)
@@ -26,7 +49,8 @@ namespace BinaryLogic.Components
 
         public override void Draw(IRenderer renderer)
         {
-            throw new NotImplementedException();
+            //foreach (Arc arc in arcs)
+                renderer.DrawArc(arcs[0], Color, 3);
         }
 
         public override void Process(Scene scene)

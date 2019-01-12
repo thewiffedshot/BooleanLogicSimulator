@@ -22,6 +22,17 @@ namespace BinaryLogic
             }
         }
 
+        public Vector(Vector vector, bool normalize = true)
+        {
+            X = vector.X;
+            Y = vector.Y;
+
+            if (normalize)
+            {
+                Normalize(this);
+            }
+        }
+
         public static Vector operator +(Vector p1, Vector p2)
         {
             return new Vector(p1.X + p2.X, p1.Y + p2.Y);
@@ -74,7 +85,7 @@ namespace BinaryLogic
 
         private static void Normalize(Vector vector)
         {
-            float l = Vector.Length(vector);
+            float l = Length(vector);
             vector.X /= l;
             vector.Y /= l;
         }

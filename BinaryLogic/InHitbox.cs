@@ -32,6 +32,25 @@ namespace BinaryLogic
             throw new NotImplementedException();
         }
 
+        public void Move(Direction direction, uint units = 1)
+        {
+            switch (direction)
+            {
+                case Direction.Up:
+                    Position.Y -= (int)units;
+                    break;
+                case Direction.Down:
+                    Position.Y += (int)units;
+                    break;
+                case Direction.Right:
+                    Position.X += (int)units;
+                    break;
+                case Direction.Left:
+                    Position.X -= (int)units;
+                    break;
+            }
+        }
+
         public void Draw(IRenderer renderer)
         {
             renderer.DrawCircle(hitbox, Color.Green, 3);

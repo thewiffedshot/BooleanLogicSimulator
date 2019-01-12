@@ -266,6 +266,9 @@ namespace BinaryLogic
                         Wire wire = new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent);
 
                         AddComponent(wire);
+
+                        if (WireInputComponent is Wire)
+                            ((Wire)WireInputComponent).InConnected = wire.inHitboxes[0];
                         
                         // Update output component on wire creation.
                         if (WireOutputComponent != null && !(WireOutputComponent is Wire))
@@ -332,6 +335,9 @@ namespace BinaryLogic
                     break;
                 case Key.E:
                     AddComponent(new NOTGate(this, closest));
+                    break;
+                case Key.W:
+                    AddComponent(new ORGate(this, closest));
                     break;
                 case Key.Plus:
                     Scale(0.25f);

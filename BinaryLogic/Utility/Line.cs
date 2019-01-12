@@ -56,6 +56,8 @@ namespace BinaryLogic
                     points[1].X -= (int)units;
                     break;
             }
+
+            SetParameter();
         }
     }
 }
