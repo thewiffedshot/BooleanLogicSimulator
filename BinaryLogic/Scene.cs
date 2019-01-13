@@ -267,8 +267,8 @@ namespace BinaryLogic
 
                         AddComponent(wire);
 
-                        if (WireInputComponent is Wire)
-                            ((Wire)WireInputComponent).InConnected = wire.inHitboxes[0];
+                        /*if (WireInputComponent is Wire)
+                            ((Wire)WireInputComponent).InConnected = wire.inHitboxes[0];*/
                         
                         // Update output component on wire creation.
                         if (WireOutputComponent != null && !(WireOutputComponent is Wire))
