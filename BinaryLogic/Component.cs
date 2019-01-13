@@ -11,8 +11,14 @@ namespace BinaryLogic
 {
     public enum ComponentType { AND, OR, XOR, NOT, Wire, Switch, Button, Light };
 
-    internal abstract class Component : IInteractable, IDisposable
-    {
+    internal abstract class Component : IInteractable, IDisposable  // Components need to be IDisposable in order to properly
+    {                                                               // handle deletion from complex relations via recursion.
+        // Constants
+        public readonly float IOHitboxRadius = 5f;
+        public readonly float SwitchOnFactor = 0.75f;
+        public readonly float SwitchOffFactor = 0.25f;
+        // ============================================
+
         public uint ID { get; set; }
         public uint Level { get; set; } = 0;
         public bool Checked { get; set; } = false;
@@ -160,8 +166,8 @@ namespace BinaryLogic
                 }
         }
 
-        public void Dispose()                               // Might need to add edge cases for some components.
-        {
+        public void Dispose()         // Might need to add edge cases for some components
+        {                             // later down the line
             if (this is Wire)
             {
                 foreach (Component component in outputs)

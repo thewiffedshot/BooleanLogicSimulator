@@ -13,7 +13,7 @@ namespace BinaryLogic.Components
         Circle startCircle = new Circle(new Point(), 0);
 
         public NOTGate(Scene scene, Point position)
-            : base(ComponentType.NOT, new ComponentHitbox(new Rectangle(position, (int) scene.GetGridInterval() * 2, (int) scene.GetGridInterval() * 2)), 3)
+            : base(ComponentType.NOT, new ComponentHitbox(new Rectangle(position, (int) scene.GetGridInterval() * 2, (int) scene.GetGridInterval() * 2)))
         {   
             StartPosition = position / scene.ScaleFactor;
             Position = position;
@@ -27,20 +27,22 @@ namespace BinaryLogic.Components
             hitbox.Position = Position;
                
             inHitboxes = new InHitbox[1];
-            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 2)), 5, 0);
+            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 2)), (int)IOHitboxRadius, 0);
             
-            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), 5, 0);
+            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), (int)IOHitboxRadius, 0);
+
+            uint interval = scene.GetGridInterval();
 
             lines[0] = new Line(indent,
-                                new Point(indent.X, indent.Y + (int)(scene.GetGridInterval() * 2 - (2 * YIndent * scene.ScaleFactor))));
+                                new Point(indent.X, indent.Y + (int)(interval * 2 - (2 * YIndent * scene.ScaleFactor))));
             
             lines[1] = new Line(indent,
-                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 4 * XIndent), indent.Y + (int)(scene.GetGridInterval() - YIndent)));
+                                new Point(indent.X + (int)(interval * 2f - 4 * XIndent), indent.Y + (int)(interval - YIndent)));
 
             lines[2] = new Line(lines[0].points[1],
-                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 4 * XIndent), indent.Y + (int)(scene.GetGridInterval() - YIndent)));
+                                new Point(indent.X + (int)(interval * 2f - 4 * XIndent), indent.Y + (int)(interval - YIndent)));
 
-            circles[0] = new Circle(new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 3 * XIndent), indent.Y + (int)(scene.GetGridInterval() - YIndent)), (int)(XIndent));
+            circles[0] = new Circle(new Point(indent.X + (int)(interval * 2f - 3 * XIndent), indent.Y + (int)(interval - YIndent)), (int)(XIndent));
 
             startCircle = circles[0];
         }
@@ -93,26 +95,29 @@ namespace BinaryLogic.Components
 
             ChangeColor(Color);
 
-            hitbox.Position = Position;
-            hitbox.Width = scene.GetGridInterval() * 2f;
-            hitbox.Height = scene.GetGridInterval() * 2f;
 
             inHitboxes[0].Position = new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 2));
-            inHitboxes[0].Radius = (int)(scene.ScaleFactor * 5f);
+            inHitboxes[0].Radius = (int)(scene.ScaleFactor * IOHitboxRadius);
 
             outHitbox.Position = new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2));
-            outHitbox.Radius = (int)(scene.ScaleFactor * 5f);
+            outHitbox.Radius = (int)(scene.ScaleFactor * IOHitboxRadius);
+
+            uint interval = scene.GetGridInterval();
+
+            hitbox.Position = Position;
+            hitbox.Width = interval * 2f;
+            hitbox.Height = interval * 2f;
 
             lines[0] = new Line(indent,
-                                new Point(indent.X, indent.Y + (int)(scene.GetGridInterval() * 2 - (2 * YIndent * scene.ScaleFactor))));
+                                new Point(indent.X, indent.Y + (int)(interval * 2 - (2 * YIndent * scene.ScaleFactor))));
 
             lines[1] = new Line(indent,
-                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 4 * XIndent * scene.ScaleFactor), indent.Y + (int)(scene.GetGridInterval() - YIndent * scene.ScaleFactor)));
+                                new Point(indent.X + (int)(interval * 2f - 4 * XIndent * scene.ScaleFactor), indent.Y + (int)(interval - YIndent * scene.ScaleFactor)));
 
             lines[2] = new Line(lines[0].points[1],
-                                new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 4 * XIndent * scene.ScaleFactor), indent.Y + (int)(scene.GetGridInterval() - YIndent * scene.ScaleFactor)));
+                                new Point(indent.X + (int)(interval * 2f - 4 * XIndent * scene.ScaleFactor), indent.Y + (int)(interval - YIndent * scene.ScaleFactor)));
 
-            circles[0] = new Circle(new Point(indent.X + (int)(scene.GetGridInterval() * 2f - 3 * XIndent * scene.ScaleFactor), indent.Y + (int)(scene.GetGridInterval() - YIndent * scene.ScaleFactor)), startCircle.radius * (int)(scene.ScaleFactor));
+            circles[0] = new Circle(new Point(indent.X + (int)(interval * 2f - 3 * XIndent * scene.ScaleFactor), indent.Y + (int)(interval - YIndent * scene.ScaleFactor)), startCircle.radius * (int)(scene.ScaleFactor));
         }
 
         public override bool Select(Point location, Scene sender)

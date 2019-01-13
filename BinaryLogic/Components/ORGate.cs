@@ -11,7 +11,7 @@ namespace BinaryLogic.Components
     internal class ORGate : Component
     {
         public ORGate(Scene scene, Point position) 
-            : base(ComponentType.AND, new ComponentHitbox(new Rectangle(position, (int)scene.GetGridInterval() * 2, (int)scene.GetGridInterval() * 2)), 3)
+            : base(ComponentType.OR, new ComponentHitbox(new Rectangle(position, (int)scene.GetGridInterval() * 2, (int)scene.GetGridInterval() * 2)))
         {
             StartPosition = position / scene.ScaleFactor;
             Position = position;
@@ -24,10 +24,10 @@ namespace BinaryLogic.Components
             hitbox.Position = Position;
 
             inHitboxes = new InHitbox[2];
-            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 4)), 5, 0);
-            inHitboxes[1] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(3 * hitbox.Height / 4)), 5, 1);
+            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 4)), (int)IOHitboxRadius, 0);
+            inHitboxes[1] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(3 * hitbox.Height / 4)), (int)IOHitboxRadius, 1);
 
-            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), 5, 0);
+            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), (int)IOHitboxRadius, 0);
 
             uint interval = scene.GetGridInterval();
 
@@ -109,13 +109,13 @@ namespace BinaryLogic.Components
             hitbox.Height = interval * 2f;
 
             inHitboxes[0].Position = new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 4));
-            inHitboxes[0].Radius = (int)(scene.ScaleFactor * 5f);
+            inHitboxes[0].Radius = (int)(scene.ScaleFactor * IOHitboxRadius);
 
             inHitboxes[1].Position = new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(3 * hitbox.Height / 4));
-            inHitboxes[1].Radius = (int)(scene.ScaleFactor * 5f);
+            inHitboxes[1].Radius = (int)(scene.ScaleFactor * IOHitboxRadius);
 
             outHitbox.Position = new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2));
-            outHitbox.Radius = (int)(scene.ScaleFactor * 5f);
+            outHitbox.Radius = (int)(scene.ScaleFactor * IOHitboxRadius);
 
 
             arcs[0] = new Arc(indent,

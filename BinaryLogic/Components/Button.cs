@@ -10,7 +10,8 @@ namespace BinaryLogic.Components
 {
     internal class Button : Component, IHoldable
     {
-        public Button(ComponentType componentType, ComponentHitbox hitbox) : base(componentType, hitbox, 3)
+        public Button(ComponentType componentType, ComponentHitbox hitbox)  // TODO: Implement button.
+            : base(componentType, hitbox) 
         {
         }
 

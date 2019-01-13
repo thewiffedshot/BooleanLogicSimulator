@@ -12,7 +12,8 @@ namespace BinaryLogic.Components
     {
         Circle startCircle;
 
-        public Light(Scene scene, Point position) : base(ComponentType.Light, new ComponentHitbox(new Rectangle(position, (int)(2 * scene.GetGridInterval()), (int)(2 * scene.GetGridInterval()))), 3)
+        public Light(Scene scene, Point position) 
+            : base(ComponentType.Light, new ComponentHitbox(new Rectangle(position, (int)(2 * scene.GetGridInterval()), (int)(2 * scene.GetGridInterval()))))
         {
             StartPosition = position / scene.ScaleFactor;
             Position = position;
@@ -22,11 +23,13 @@ namespace BinaryLogic.Components
             circles = new Circle[1];
 
             hitbox.Position = Position;
+
             Point indent = position + new Point((int)XIndent, (int)YIndent);
 
+            uint interval = scene.GetGridInterval();
 
-            rectangles[0] = new Rectangle(indent, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
-                                                  (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
+            rectangles[0] = new Rectangle(indent, (int)(2 * interval - 2 * XIndent * scene.ScaleFactor),
+                                                  (int)(2 * interval - 2 * YIndent * scene.ScaleFactor));
 
             circles[0] = new Circle(new Point(rectangles[0].position.X + rectangles[0].Width / 2,
                                               rectangles[0].position.Y + rectangles[0].Height / 2), 
@@ -37,7 +40,7 @@ namespace BinaryLogic.Components
                                               (int)((4f / 10) * rectangles[0].Width / scene.ScaleFactor));
 
             inHitboxes = new InHitbox[1];
-            inHitboxes[0] = new InHitbox(new Point(rectangles[0].position.X, rectangles[0].position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * 5f), 0);
+            inHitboxes[0] = new InHitbox(new Point(rectangles[0].position.X, rectangles[0].position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * IOHitboxRadius), 0);
         }
 
         public override void ChangeColor(Color color)
@@ -86,8 +89,14 @@ namespace BinaryLogic.Components
 
             Point indent = Position + scene.ScaleFactor * new Point((int)XIndent, (int)YIndent);
 
-            rectangles[0] = new Rectangle(indent, (int)(2 * scene.GetGridInterval() - 2 * XIndent * scene.ScaleFactor),
-                                                    (int)(2 * scene.GetGridInterval() - 2 * YIndent * scene.ScaleFactor));
+            uint interval = scene.GetGridInterval();
+
+            hitbox.Position = Position;
+            hitbox.Width = interval * 2f;
+            hitbox.Height = interval * 2f;
+
+            rectangles[0] = new Rectangle(indent, (int)(2 * interval - 2 * XIndent * scene.ScaleFactor),
+                                                    (int)(2 * interval - 2 * YIndent * scene.ScaleFactor));
 
             circles[0] = new Circle(new Point(rectangles[0].position.X + rectangles[0].Width / 2,
                                               rectangles[0].position.Y + rectangles[0].Height / 2),
@@ -96,10 +105,7 @@ namespace BinaryLogic.Components
             ChangeColor(Color);
 
             inHitboxes[0].Position = new Point(rectangles[0].position.X, rectangles[0].position.Y + rectangles[0].Height / 2);
-            inHitboxes[0].Radius = (int)(scene.ScaleFactor * 5f);
-            hitbox.Position = Position;
-            hitbox.Width = scene.GetGridInterval() * 2f;
-            hitbox.Height = scene.GetGridInterval() * 2f;
+            inHitboxes[0].Radius = (int)(scene.ScaleFactor * IOHitboxRadius);
         }
 
         public override bool Select(Point location, Scene sender)

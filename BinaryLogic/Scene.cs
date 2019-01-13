@@ -48,8 +48,8 @@ namespace BinaryLogic
 
         public void Update()
         {
-            foreach (Component component in components)
-            {
+            foreach (Component component in components)  // Recursively set levels of components
+            {                                            // starting from level 0 (signal sources)
                 if (component is Switch)
                 {
                     component.SetLevel(0);
@@ -333,11 +333,14 @@ namespace BinaryLogic
                 case Key.Q:
                     AddComponent(new ANDGate(this, closest));
                     break;
-                case Key.E:
+                case Key.W:
                     AddComponent(new NOTGate(this, closest));
                     break;
-                case Key.W:
+                case Key.E:
                     AddComponent(new ORGate(this, closest));
+                    break;
+                case Key.R:
+                    AddComponent(new XORGate(this, closest));
                     break;
                 case Key.Plus:
                     Scale(0.25f);
