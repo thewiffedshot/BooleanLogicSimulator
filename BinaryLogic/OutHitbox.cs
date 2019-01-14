@@ -13,13 +13,15 @@ namespace BinaryLogic
     {
         public int AttachedOutputIndex { get; private set; }
         Circle hitbox;
+        public Component Component { get; set; }
         public Point Position { get { return hitbox.position; } set { hitbox.position = value; } }
         public int Radius { get { return hitbox.radius; } set { hitbox.radius = value; } }
 
-        public OutHitbox(Point position, int radius, int outputIndex)
+        public OutHitbox(Point position, Component component, int radius, int outputIndex)
         {
             AttachedOutputIndex = outputIndex;
             hitbox = new Circle(position, radius);
+            Component = component;
         }
 
         public bool Clicked(Point location)

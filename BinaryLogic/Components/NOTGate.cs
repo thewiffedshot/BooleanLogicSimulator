@@ -27,9 +27,9 @@ namespace BinaryLogic.Components
             hitbox.Position = Position;
                
             inHitboxes = new InHitbox[1];
-            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 2)), (int)IOHitboxRadius, 0);
+            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 2)), this, (int)IOHitboxRadius, 0);
             
-            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), (int)IOHitboxRadius, 0);
+            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), this, (int)IOHitboxRadius, 0);
 
             uint interval = scene.GetGridInterval();
 
@@ -95,6 +95,11 @@ namespace BinaryLogic.Components
 
             ChangeColor(Color);
 
+            uint interval = scene.GetGridInterval();
+
+            hitbox.Position = Position;
+            hitbox.Width = interval * 2f;
+            hitbox.Height = interval * 2f;
 
             inHitboxes[0].Position = new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 2));
             inHitboxes[0].Radius = (int)(scene.ScaleFactor * IOHitboxRadius);
@@ -102,11 +107,6 @@ namespace BinaryLogic.Components
             outHitbox.Position = new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2));
             outHitbox.Radius = (int)(scene.ScaleFactor * IOHitboxRadius);
 
-            uint interval = scene.GetGridInterval();
-
-            hitbox.Position = Position;
-            hitbox.Width = interval * 2f;
-            hitbox.Height = interval * 2f;
 
             lines[0] = new Line(indent,
                                 new Point(indent.X, indent.Y + (int)(interval * 2 - (2 * YIndent * scene.ScaleFactor))));
@@ -150,21 +150,19 @@ namespace BinaryLogic.Components
             {
                 case Direction.Down:
                     StartPosition.Y += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Up:
                     StartPosition.Y -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Left:
                     StartPosition.X -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Right:
                     StartPosition.X += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
             }
+
+            Scale(scene, false);
 
             foreach (Wire wire in outputs)
                 wire.Scale(scene, true);

@@ -31,7 +31,7 @@ namespace BinaryLogic.Components
 
             hitbox.Position = Position;
 
-            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), (int)IOHitboxRadius, 0);
+            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), this, (int)IOHitboxRadius, 0);
 
             uint interval = scene.GetGridInterval();
             int radius = (int)(interval - XIndent);
@@ -126,21 +126,19 @@ namespace BinaryLogic.Components
             {
                 case Direction.Down:
                     StartPosition.Y += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Up:
                     StartPosition.Y -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Left:
                     StartPosition.X -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Right:
                     StartPosition.X += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
             }
+
+            Scale(scene, false);
 
             foreach (Wire wire in outputs)
                 wire.Scale(scene, true);

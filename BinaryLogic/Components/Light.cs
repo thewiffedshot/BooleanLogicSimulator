@@ -40,7 +40,7 @@ namespace BinaryLogic.Components
                                               (int)((4f / 10) * rectangles[0].Width / scene.ScaleFactor));
 
             inHitboxes = new InHitbox[1];
-            inHitboxes[0] = new InHitbox(new Point(rectangles[0].position.X, rectangles[0].position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * IOHitboxRadius), 0);
+            inHitboxes[0] = new InHitbox(new Point(rectangles[0].position.X, rectangles[0].position.Y + rectangles[0].Height / 2), this, (int)(scene.ScaleFactor * IOHitboxRadius), 0);
         }
 
         public override void ChangeColor(Color color)
@@ -138,21 +138,19 @@ namespace BinaryLogic.Components
             {
                 case Direction.Down:
                     StartPosition.Y += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Up:
                     StartPosition.Y -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Left:
                     StartPosition.X -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Right:
                     StartPosition.X += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
             }
+
+            Scale(scene, false);
 
             foreach (Wire wire in inputs[0])
                 wire.Scale(scene, true);

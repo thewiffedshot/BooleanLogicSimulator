@@ -33,7 +33,7 @@ namespace BinaryLogic.Components
                                                                 (int)(rectangles[0].Width - 20 * scene.ScaleFactor),
                                                                 (int)(rectangles[0].Height - 10 * scene.ScaleFactor));
 
-            outHitbox = new OutHitbox(new Point(rectangles[0].position.X + rectangles[0].Width, rectangles[0].position.Y + rectangles[0].Height / 2), (int)(scene.ScaleFactor * IOHitboxRadius), 0);
+            outHitbox = new OutHitbox(new Point(rectangles[0].position.X + rectangles[0].Width, rectangles[0].position.Y + rectangles[0].Height / 2), this, (int)(scene.ScaleFactor * IOHitboxRadius), 0);
 
             lines[0] = new Line(new Point(rectangles[1].position.X, 
                                           rectangles[1].position.Y + rectangles[1].Height / 4), 
@@ -126,21 +126,19 @@ namespace BinaryLogic.Components
             {
                 case Direction.Down:
                     StartPosition.Y += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Up:
                     StartPosition.Y -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Left:
                     StartPosition.X -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Right:
                     StartPosition.X += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
             }
+
+            Scale(scene, false);
 
             foreach (Wire wire in outputs)
                 wire.Scale(scene, true);
@@ -158,6 +156,10 @@ namespace BinaryLogic.Components
 
             uint interval = scene.GetGridInterval();
 
+            hitbox.Position = Position;
+            hitbox.Width = interval * 2f;
+            hitbox.Height = interval * 2f;
+
             rectangles[0] = new Rectangle(indent, (int)(2 * interval - 2 * XIndent * scene.ScaleFactor),
                                                   (int)(2 * interval - 2 * YIndent * scene.ScaleFactor));
 
@@ -170,9 +172,6 @@ namespace BinaryLogic.Components
             outHitbox.Position = new Point(rectangles[0].position.X + rectangles[0].Width, rectangles[0].position.Y + rectangles[0].Height / 2);
             outHitbox.Radius = (int)(scene.ScaleFactor * IOHitboxRadius);
 
-            hitbox.Position = Position;
-            hitbox.Width = interval * 2f;
-            hitbox.Height = interval * 2f;
 
             float yLine = 0;
 

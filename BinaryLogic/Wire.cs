@@ -41,8 +41,8 @@ namespace BinaryLogic
                 InConnected = scene.WireInputHitbox;
                 output.inputs[InConnected.AttachedInputIndex].Add(this);
 
-                inHitboxes[0] = new InHitbox(OutConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
-                outHitbox = new OutHitbox(InConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
+                inHitboxes[0] = new InHitbox(OutConnected.Position, this, (int)(scene.ScaleFactor * 5f), 0);
+                outHitbox = new OutHitbox(InConnected.Position, this, (int)(scene.ScaleFactor * 5f), 0);
             }
 
             if (input != null && output == null)
@@ -55,8 +55,8 @@ namespace BinaryLogic
                 input.outputs.Add(this);
                 OutConnected = scene.WireOutputHitbox;
 
-                inHitboxes[0] = new InHitbox(OutConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
-                outHitbox = new OutHitbox(wire.points[1], (int)(scene.ScaleFactor * 5f), 0);
+                inHitboxes[0] = new InHitbox(OutConnected.Position, this, (int)(scene.ScaleFactor * 5f), 0);
+                outHitbox = new OutHitbox(wire.points[1], this, (int)(scene.ScaleFactor * 5f), 0);
             }
 
             if (input == null && output != null)
@@ -69,8 +69,8 @@ namespace BinaryLogic
                 InConnected = scene.WireInputHitbox;
                 output.inputs[InConnected.AttachedInputIndex].Add(this);
 
-                inHitboxes[0] = new InHitbox(wire.points[0], (int)(scene.ScaleFactor * 5f), 0);
-                outHitbox = new OutHitbox(InConnected.Position, (int)(scene.ScaleFactor * 5f), 0);
+                inHitboxes[0] = new InHitbox(wire.points[0], this, (int)(scene.ScaleFactor * 5f), 0);
+                outHitbox = new OutHitbox(InConnected.Position, this, (int)(scene.ScaleFactor * 5f), 0);
             }
 
             lines = new Line[1];
@@ -215,7 +215,7 @@ namespace BinaryLogic
             Point startPoint = new Point();
             Point endPoint = new Point();
 
-            if (OutConnected != null && InConnected != null)
+            if (OutConnected != null && InConnected != null && (!(InConnected.Component is Wire) || !(OutConnected.Component is Wire)))
             {
                 startPoint = OutConnected.Position;
                 endPoint = InConnected.Position;

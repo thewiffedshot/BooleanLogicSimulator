@@ -24,10 +24,10 @@ namespace BinaryLogic.Components
             hitbox.Position = Position;
 
             inHitboxes = new InHitbox[2];
-            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 4)), (int)IOHitboxRadius, 0);
-            inHitboxes[1] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(3 * hitbox.Height / 4)), (int)IOHitboxRadius, 1);
+            inHitboxes[0] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(hitbox.Height / 4)), this, (int)IOHitboxRadius, 0);
+            inHitboxes[1] = new InHitbox(new Point(hitbox.Position.X + (int)XIndent, hitbox.Position.Y + (int)(3 * hitbox.Height / 4)), this, (int)IOHitboxRadius, 1);
 
-            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), (int)IOHitboxRadius, 0);
+            outHitbox = new OutHitbox(new Point(hitbox.Position.X + (int)hitbox.Width, hitbox.Position.Y + (int)(hitbox.Height / 2)), this, (int)IOHitboxRadius, 0);
 
             uint interval = scene.GetGridInterval();
 
@@ -183,21 +183,19 @@ namespace BinaryLogic.Components
             {
                 case Direction.Down:
                     StartPosition.Y += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Up:
                     StartPosition.Y -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Left:
                     StartPosition.X -= (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
                 case Direction.Right:
                     StartPosition.X += (int)(scene.GetGridInterval() / scene.ScaleFactor * units);
-                    Scale(scene, false);
                     break;
             }
+
+            Scale(scene, false);
 
             foreach (Wire wire in outputs)
                 wire.Scale(scene, true);
