@@ -272,11 +272,8 @@ namespace BinaryLogic
 
                         AddComponent(wire);
 
-                        if (WireInputComponent is Wire)
+                        if (WireInputComponent is Wire && WireOutputComponent is Wire)
                             ((Wire)WireInputComponent).InConnected = wire.inHitboxes[0];
-
-                        if (WireOutputComponent is Wire)
-                            ((Wire)WireOutputComponent).OutConnected = wire.outHitbox;
 
                         // Update output component on wire creation.
                         if (WireOutputComponent != null && !(WireOutputComponent is Wire))
@@ -360,26 +357,41 @@ namespace BinaryLogic
                     Scale(-0.25f);
                     break;
                 case Key.Up:
-                    if (SelectedComponent != null)
-                        SelectedComponent.Translate(this, Direction.Up, 1);
+                        if (SelectedComponent != null)
+                            SelectedComponent.Translate(this, Direction.Up, 1);
+                        else
+                            TranslateScene(Direction.Up);
                     break;
                 case Key.Down:
-                    if (SelectedComponent != null)
-                        SelectedComponent.Translate(this, Direction.Down, 1);
+                        if (SelectedComponent != null)
+                            SelectedComponent.Translate(this, Direction.Down, 1);
+                        else
+                            TranslateScene(Direction.Down);
                         break;
                 case Key.Right:
-                    if (SelectedComponent != null)
-                        SelectedComponent.Translate(this, Direction.Right, 1);
+                        if (SelectedComponent != null)
+                            SelectedComponent.Translate(this, Direction.Right, 1);
+                        else
+                            TranslateScene(Direction.Right);
                         break;
                 case Key.Left:
-                    if (SelectedComponent != null)
-                        SelectedComponent.Translate(this, Direction.Left, 1);
+                        if (SelectedComponent != null)
+                            SelectedComponent.Translate(this, Direction.Left, 1);
+                        else
+                            TranslateScene(Direction.Left);
                         break;
                 case Key.Delete:
                     if (SelectedComponent != null)
                         RemoveComponent(SelectedComponent);
                     break;
             }
+        }
+
+        void TranslateScene(Direction direction, uint units = 1)
+        {
+            foreach (Component component in components)
+                if (!(component is Wire))
+                    component.Translate(this, direction, units);
         }
 
         public uint GetGridInterval()

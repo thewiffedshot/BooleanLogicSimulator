@@ -253,6 +253,10 @@ namespace BinaryLogic
 
             outHitbox.Position = lines[0].points[1];
             inHitboxes[0].Position = lines[0].points[0];
+
+            foreach (Component output in outputs)
+                if (output is Wire)
+                    output.Scale(scene, zoom);
         }
     }
 }
