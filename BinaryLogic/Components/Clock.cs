@@ -148,11 +148,14 @@ namespace BinaryLogic.Components
 
         public void Click(Point location, Scene sender)
         {
-            tFactor += 1;
-            tFactor %= 5;
-            tFactor += tFactor == 0 ? 1 : 0;
+            if (hitbox.Clicked(location))
+            {
+                tFactor += 1;
+                tFactor %= 5;
+                tFactor += tFactor == 0 ? 1 : 0;
 
-            timer.Interval = tInterval * tFactor;
+                timer.Interval = tInterval * tFactor;
+            }
         }
 
         async void OnTimedEvent(Object sender, ElapsedEventArgs e)
@@ -162,6 +165,9 @@ namespace BinaryLogic.Components
             foreach (Component component in outputs)
                 if (component is Wire)
                     ((Wire)component).Propagate(new List<Wire>(0), this);
+
+            activeScene.Update();
+            activeScene.Draw(true);
         }
     }
 }

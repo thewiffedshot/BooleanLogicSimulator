@@ -175,6 +175,9 @@ namespace BinaryLogic
         {                             // later down the line
             if (this is Wire)
             {
+                foreach (Component source in ((Wire)this).sources)
+                    ((Wire)this).Propagate(new List<Wire>(0), source, true, true);
+
                 foreach (Component component in outputs)
                     if (component is Wire)
                     {
@@ -186,11 +189,6 @@ namespace BinaryLogic
                     {
                         component.outputs.Remove(this);
                     }
-
-                foreach (Component source in ((Wire)this).sources)
-                    foreach (Component component in source.outputs)
-                        if (component is Wire)
-                            ((Wire)component).Propagate(new List<Wire>(0), source, false, true);
             }
             else
             {

@@ -145,7 +145,10 @@ namespace BinaryLogic
                     }
 
                     if (!result)
+                    {
                         sender.WireOutputComponent = this;
+                        sender.WireInputHitbox = i;
+                    }
 
                     result = false;
                 }
@@ -153,6 +156,7 @@ namespace BinaryLogic
                 {
                     result = false;
                     sender.WireInputComponent = this;
+                    sender.WireOutputHitbox = o;
                 }
             }
             else if (o != null)
@@ -188,15 +192,19 @@ namespace BinaryLogic
             else if (!remove && !sources.Contains(source))
                 sources.Add(source);
 
-            foreach (Component component in inputs[0])
-                if (component is Wire && !wiresChecked.Contains(component))
-                    ((Wire)component).Propagate(wiresChecked, source, remove, clear);
+            lock (inputs[0])
+            {
+                foreach (Component component in inputs[0])
+                    if (component is Wire && !wiresChecked.Contains(component))
+                        ((Wire)component).Propagate(wiresChecked, source, remove, clear);
+            }
 
-            foreach (Component component in outputs)
-                if (component is Wire && !wiresChecked.Contains(component))
-                    ((Wire)component).Propagate(wiresChecked, source, remove, clear);
-
-            if (sources.Count == 0) Dispose();      // Wire cannot exist with no sources attached. 
+            lock (outputs)
+            {
+                foreach (Component component in outputs)
+                    if (component is Wire && !wiresChecked.Contains(component))
+                        ((Wire)component).Propagate(wiresChecked, source, remove, clear);
+            }
 
             if (source is Clock)
             {
@@ -205,17 +213,17 @@ namespace BinaryLogic
             }
         }
 
-        public override void Translate(Scene scene, Direction direction, uint units = 1)  // TODO: Translate wire.
+        public override void Translate(Scene scene, Direction direction, uint units = 1)
         {
             throw new NotImplementedException();
         }
 
-        public override void Scale(Scene scene, bool zoom)
+        public override void Scale(Scene scene, bool zoom)  // TODO: Fix branch connecting wires scaling before release???
         {
             Point startPoint = new Point();
             Point endPoint = new Point();
 
-            if (OutConnected != null && InConnected != null && (!(InConnected.Component is Wire) || !(OutConnected.Component is Wire)))
+            if (OutConnected != null && InConnected != null)
             {
                 startPoint = OutConnected.Position;
                 endPoint = InConnected.Position;
@@ -243,10 +251,6 @@ namespace BinaryLogic
 
                 if ((endPoint - startPoint) * (startLine.points[1] - startLine.points[0]) < 0)
                     startPoint = newPointsOrdered.point2 + (newPointsOrdered.point2 - newPointsOrdered.point1);
-            }
-            else
-            {
-                scene.RemoveComponent(this);
             }
 
             lines[0] = new Line(startPoint, endPoint);
