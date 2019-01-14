@@ -13,20 +13,24 @@ namespace BooleanLogicSimulator
 {
     class WinFormsRenderer : IRenderer
     {
-        Graphics gfx;
+        Form form;
 
-        public WinFormsRenderer(Graphics gfx)
+        public WinFormsRenderer(Form form)
         {
-            this.gfx = gfx;
+            this.form = form;
         }
 
         public void Clear(Color clearColor)
         {
+            Graphics gfx = form.CreateGraphics();
+
             gfx.Clear(clearColor);
         }
 
         public void ClearArea(BinaryLogic.Rectangle area, Color color)
         {
+            Graphics gfx = form.CreateGraphics();
+
             using (Pen pen = new Pen(color))
             {
                 gfx.DrawRectangle(pen, area.position.X, area.position.Y, area.Width, area.Height);
@@ -35,6 +39,8 @@ namespace BooleanLogicSimulator
 
         public void DrawArc(Arc arc, Color color, uint thickness)
         {
+            Graphics gfx = form.CreateGraphics();
+
             using (Pen pen = new Pen(color, thickness))
             {
                 gfx.DrawBezier(pen, arc.ends[0].X, arc.ends[0].Y, arc.leads[0].X, arc.leads[0].Y, arc.leads[1].X, arc.leads[1].Y, arc.ends[1].X, arc.ends[1].Y);
@@ -43,6 +49,8 @@ namespace BooleanLogicSimulator
 
         public void DrawCircle(Circle circle, Color color, uint thickness, bool fill)
         {
+            Graphics gfx = form.CreateGraphics();
+
             if (fill)
                 using (SolidBrush brush = new SolidBrush(color)) 
                     gfx.FillEllipse(brush, circle.position.X - circle.radius, circle.position.Y - circle.radius, 2 * circle.radius, 2 * circle.radius);
@@ -53,8 +61,13 @@ namespace BooleanLogicSimulator
 
         public void DrawLine(Line line, Color color, uint thickness)
         {
+            Graphics gfx = form.CreateGraphics();
+
             using (Pen pen = new Pen(color, thickness))
-                gfx.DrawLine(pen, line.points[0].X, line.points[0].Y, line.points[1].X, line.points[1].Y);
+                lock (this)
+                {
+                    gfx.DrawLine(pen, line.points[0].X, line.points[0].Y, line.points[1].X, line.points[1].Y);
+                }
         }
     }
 }

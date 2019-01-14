@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\ANDGate.cs" />
+    <Compile Include="Components\Clock.cs" />
     <Compile Include="Utility\Arc.cs" />
     <Compile Include="Utility\Circle.cs" />
     <Compile Include="Component.cs" />

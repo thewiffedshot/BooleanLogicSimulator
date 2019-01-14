@@ -59,6 +59,11 @@ namespace BinaryLogic
                 {
                     component.SetLevel(0);
                 }
+
+                else if (component is Clock)
+                {
+                    component.SetLevel(0);
+                }
             }
 
             uint maxLevel = components
@@ -341,6 +346,9 @@ namespace BinaryLogic
                     break;
                 case Key.R:
                     AddComponent(new XORGate(this, closest));
+                    break;
+                case Key.Y:
+                    AddComponent(new Clock(this, closest));
                     break;
                 case Key.Plus:
                     Scale(0.25f);

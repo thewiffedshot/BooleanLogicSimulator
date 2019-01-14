@@ -9,14 +9,16 @@ using System.Drawing;
 
 namespace BinaryLogic
 {
-    public enum ComponentType { AND, OR, XOR, NOT, Wire, Switch, Button, Light };
+    public enum ComponentType { AND, OR, XOR, NOT, Clock, Wire, Switch, Button, Light };
 
     internal abstract class Component : IInteractable, IDisposable  // Components need to be IDisposable in order to properly
     {                                                               // handle deletion from complex relations via recursion.
         // Constants
-        public readonly float IOHitboxRadius = 5f;
-        public readonly float SwitchOnFactor = 0.75f;
-        public readonly float SwitchOffFactor = 0.25f;
+        protected readonly float IOHitboxRadius = 5f;
+        protected readonly float SwitchOnFactor = 0.75f;
+        protected readonly float SwitchOffFactor = 0.25f;
+
+        protected readonly double tInterval = 250;   // Timer set interval (in milliseconds)
         // ============================================
 
         public uint ID { get; set; }
@@ -82,6 +84,9 @@ namespace BinaryLogic
                     inputs = new List<Component>[0];
                     break;
                 case ComponentType.Button:
+                    inputs = new List<Component>[0];
+                    break;
+                case ComponentType.Clock:
                     inputs = new List<Component>[0];
                     break;
                 case ComponentType.Light:

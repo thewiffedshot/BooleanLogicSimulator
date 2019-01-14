@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BinaryLogic.Interfaces;
-using BinaryLogic;
+using BinaryLogic.Components;
 
 namespace BinaryLogic
 {
@@ -197,6 +197,12 @@ namespace BinaryLogic
                     ((Wire)component).Propagate(wiresChecked, source, remove, clear);
 
             if (sources.Count == 0) Dispose();      // Wire cannot exist with no sources attached. 
+
+            if (source is Clock)
+            {
+                Process(((Clock)source).activeScene);
+                Draw(((Clock)source).activeScene.Renderer);
+            }
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)  // TODO: Translate wire.

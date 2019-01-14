@@ -25,7 +25,7 @@ namespace BooleanLogicSimulator
             InitializeComponent();
 
             grid = new Grid(new Point(Size.Width, Size.Height));
-            renderer = new WinFormsRenderer(CreateGraphics());
+            renderer = new WinFormsRenderer(this);
             scene = new Scene(grid, Color.White, renderer);
         }
 
