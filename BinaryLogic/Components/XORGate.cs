@@ -151,6 +151,10 @@ namespace BinaryLogic.Components
                               indent + new Point((int)(interval / 2), (int)(interval * 2 / 3f)),
                               indent + new Point(0, (int)(interval * 2) - (int)(2 * YIndent))
                                      + new Point((int)(interval / 2), -(int)(interval * 2 / 3f)));
+
+            foreach (Component output in outputs)
+                if (output is Wire)
+                    output.Scale(scene, zoom);
         }
 
         public override bool Select(Point location, Scene sender)
@@ -198,7 +202,7 @@ namespace BinaryLogic.Components
             Scale(scene, false);
 
             foreach (Wire wire in outputs)
-                wire.Scale(scene, true);
+                wire.Scale(scene, false);
 
             foreach (Wire wire in inputs[0])
                 wire.Scale(scene, true);

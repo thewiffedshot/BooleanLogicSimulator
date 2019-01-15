@@ -75,7 +75,8 @@ namespace BinaryLogic
                             .ToList();
 
             foreach (Component component in ordered)
-                component.Process(this);
+                if (!(component is Wire))
+                    component.Process(this);
 
             foreach (Component component in components)
                 component.Checked = false;
@@ -137,7 +138,20 @@ namespace BinaryLogic
         {
             if (component != null)
             {
-                component.Dispose();
+                //component.Dispose();
+                foreach (var cs in component.inputs)
+                    foreach (var c in cs)
+                        if (c is Wire)
+                        {
+                            ((Wire)c).InConnected = null;
+                        }
+
+                foreach (var c in component.outputs)
+                    if (c is Wire)
+                    {
+                        ((Wire)c).OutConnected = null;
+                    }
+
                 components.Remove(component);
 
                 foreach (Component c in components)
@@ -145,35 +159,6 @@ namespace BinaryLogic
 
                 Update();
                 Draw();
-
-                /*if (component is Wire)
-                    foreach (Component source in ((Wire)component).sources)
-                        ((Wire)component).Propagate(new List<Wire>(0), source, true);
-
-                foreach (List<Component> list in component.inputs)
-                {
-                    foreach (Component c in list)
-                    {
-                        c.outputs.Remove(component);
-
-                        if (c is Wire)
-                            ((Wire)c).InConnected = null;
-                    }
-                }
-
-                foreach (Component c in component.outputs)
-                {
-                    foreach (List<Component> list in c.inputs)
-                    {
-                        list.Remove(component);
-                    }
-
-                    if (c is Wire)
-                    {
-                        ((Wire)c).OutConnected = null;
-                    }
-                }*/
-
             }
         }
 
@@ -282,7 +267,14 @@ namespace BinaryLogic
                         Wire wire = new Wire(this, new Line(WireStart, location), WireInputComponent, WireOutputComponent);
 
                         if (WireInputComponent is Wire && WireOutputComponent is Wire)
-                            ((Wire)WireInputComponent).InConnected = wire.inHitboxes[0];
+                        {
+                            //((Wire)WireInputComponent).InConnected = wire.inHitboxes[0];
+                            wire.outHitbox = ((Wire)WireInputComponent).OutConnected;
+                            wire.inHitboxes[0] = ((Wire)WireOutputComponent).InConnected;
+
+                            wire.InConnected = wire.inHitboxes[0];
+                            //wire.OutConnected = wire.outHitbox;
+                        }
 
                         AddComponent(wire);
 
@@ -371,25 +363,25 @@ namespace BinaryLogic
                     if (SelectedComponent != null && !(SelectedComponent is Wire))
                         SelectedComponent.Translate(this, Direction.Up, 1);
                     else
-                        TranslateScene(Direction.Up);
+                        TranslateScene(Direction.Down);
                     break;
                 case Key.Down:
                     if (SelectedComponent != null && !(SelectedComponent is Wire))
                         SelectedComponent.Translate(this, Direction.Down, 1);
                     else
-                        TranslateScene(Direction.Down);
+                        TranslateScene(Direction.Up);
                     break;
                 case Key.Right:
                     if (SelectedComponent != null && !(SelectedComponent is Wire))
                         SelectedComponent.Translate(this, Direction.Right, 1);
                     else
-                        TranslateScene(Direction.Right);
+                        TranslateScene(Direction.Left);
                     break;
                 case Key.Left:
                     if (SelectedComponent != null && !(SelectedComponent is Wire))
                         SelectedComponent.Translate(this, Direction.Left, 1);
                     else
-                        TranslateScene(Direction.Left);
+                        TranslateScene(Direction.Right);
                     break;
                 case Key.Delete:
                     if (SelectedComponent != null)
@@ -418,15 +410,15 @@ namespace BinaryLogic
                 Grid.Scale(scale);
 
                 if (LastScaleFactor < ScaleFactor)
+                {
                     foreach (Component component in components)
-                    {
-                        component.Scale(this, true);
-                    }
+                        if (!(component is Wire))
+                            component.Scale(this, true);
+                }
                 else
                     foreach (Component component in components)
-                    {
-                        component.Scale(this, false);
-                    }
+                        if (!(component is Wire))
+                            component.Scale(this, false);
 
                 LastScaleFactor = ScaleFactor;
 

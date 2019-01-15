@@ -83,7 +83,6 @@ namespace BinaryLogic
             return new Point((int)(p.X / scalar), (int)(p.Y / scalar));
         }
 
-
         public static float Distance(Point p1, Point p2)
         {
             Point p = p1 - p2;

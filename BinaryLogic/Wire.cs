@@ -15,6 +15,7 @@ namespace BinaryLogic
         public InHitbox InConnected { get; set; }   // Input hitbox of component where wire ends.
         public OutHitbox OutConnected { get; set; } // Output hitbox of component where wire starts.
         public List<Component> sources = new List<Component>(0);
+        Scene Scene = null;
         bool WireChecked { get; set; } = false;
 
         public Wire(Scene scene, Line wire, Component input, Component output) : // TODO: Need to add two more checks for appropriate missing output or input.
@@ -22,6 +23,8 @@ namespace BinaryLogic
         {
             inHitboxes = new InHitbox[inputs.Length];
             hitbox = new ComponentHitbox();
+
+            Scene = scene;
 
             if (input != null && output != null)
             {
@@ -94,8 +97,9 @@ namespace BinaryLogic
                 outputs
                 .Where(c => !(c is Wire))
                 .LastOrDefault() != null)
-
-                inHitboxes[0].Draw(renderer);
+            
+                if (inHitboxes[0] != null)
+            inHitboxes[0].Draw(renderer);
 
             if (OutConnected != null)
                 outHitbox.Draw(renderer);
@@ -177,7 +181,8 @@ namespace BinaryLogic
 
             Signal = signal;
 
-            ChangeColor(Signal ? Color.Red : Color.Black);
+            if (Color != Color.Orange)
+                ChangeColor(Signal ? Color.Red : Color.Black);
         }
 
         public void Propagate(List<Wire> wiresChecked, Component source, bool remove = false, bool clear = false)  // TODO: Incorporate some sort of lock flag in scene                                                                                                                   
@@ -211,11 +216,39 @@ namespace BinaryLogic
                 Process(((Clock)source).activeScene);
                 Draw(((Clock)source).activeScene.Renderer);
             }
+
+            bool signal = false;
+
+            foreach (Component src in sources)
+                signal = signal || src.Signal;
+
+            Signal = signal;
+
+            if (Color != Color.Orange)
+                ChangeColor(Signal ? Color.Red : Color.Black);
+
+            Draw(Scene.Renderer);
         }
 
         public override void Translate(Scene scene, Direction direction, uint units = 1)
         {
-            throw new NotImplementedException();
+            /*if (InConnected != null)
+            {
+                InConnected.Move(direction, units);
+
+                if (InConnected.Component is Wire && ((Wire)InConnected.Component).OutConnected != null)
+                    ((Wire)InConnected.Component).OutConnected.Move(direction, units);
+            }
+
+            if (OutConnected != null)
+            {
+                OutConnected.Move(direction, units);
+
+                if (OutConnected.Component is Wire && ((Wire)OutConnected.Component).InConnected != null)
+                    ((Wire)OutConnected.Component).InConnected.Move(direction, units);
+            }
+
+            Scale(scene, false);*/
         }
 
         public override void Scale(Scene scene, bool zoom)  // TODO: Fix branch connecting wires scaling before release???
@@ -256,11 +289,12 @@ namespace BinaryLogic
             lines[0] = new Line(startPoint, endPoint);
 
             outHitbox.Position = lines[0].points[1];
-            inHitboxes[0].Position = lines[0].points[0];
+
+            if (inHitboxes[0] != null)
+                inHitboxes[0].Position = lines[0].points[0];
 
             foreach (Component output in outputs)
-                if (output is Wire)
-                    output.Scale(scene, zoom);
+                output.Scale(scene, zoom);
         }
     }
 }

@@ -118,6 +118,10 @@ namespace BinaryLogic.Components
                                 new Point(indent.X + (int)(interval * 2f - 4 * XIndent * scene.ScaleFactor), indent.Y + (int)(interval - YIndent * scene.ScaleFactor)));
 
             circles[0] = new Circle(new Point(indent.X + (int)(interval * 2f - 3 * XIndent * scene.ScaleFactor), indent.Y + (int)(interval - YIndent * scene.ScaleFactor)), startCircle.radius * (int)(scene.ScaleFactor));
+
+            foreach (Component output in outputs)
+                if (output is Wire)
+                    output.Scale(scene, zoom);
         }
 
         public override bool Select(Point location, Scene sender)
@@ -165,7 +169,7 @@ namespace BinaryLogic.Components
             Scale(scene, false);
 
             foreach (Wire wire in outputs)
-                wire.Scale(scene, true);
+                wire.Scale(scene, false);
 
             foreach (Wire wire in inputs[0])
                 wire.Scale(scene, true);

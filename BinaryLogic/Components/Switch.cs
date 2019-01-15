@@ -141,7 +141,7 @@ namespace BinaryLogic.Components
             Scale(scene, false);
 
             foreach (Wire wire in outputs)
-                wire.Scale(scene, true);
+                wire.Scale(scene, false);
 
             scene.Draw();
         }
@@ -184,6 +184,10 @@ namespace BinaryLogic.Components
                                           (int)(rectangles[1].position.Y + yLine)),
                                 new Point(rectangles[1].position.X + rectangles[1].Width,
                                           (int)(rectangles[1].position.Y + yLine)));
+
+            foreach (Component output in outputs)
+                if (output is Wire)
+                    output.Scale(scene, zoom);
         }
     }
 }
